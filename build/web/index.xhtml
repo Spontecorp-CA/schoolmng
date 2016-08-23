@@ -1,0 +1,114 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <!-- Meta, title, CSS, favicons, etc. -->
+            <meta charset="utf-8"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <title>Facelet Title</title>
+        </f:facet>
+
+        <f:facet name="middle">
+            <!-- Bootstrap -->
+            <h:outputStylesheet library="bootstrap" name="css/bootstrap.css"/>
+            <!-- NProgress -->
+            <h:outputStylesheet library="css" name="nprogress.css"/>
+            <!-- Animate.css -->
+            <h:outputStylesheet library="css" name="animate.min.css"/>
+        </f:facet>
+
+        <f:facet name="middle">
+            <!-- Font Awesome -->
+            <h:outputStylesheet library="css" name="font-awesome.css"/>
+            <!-- Custom Theme Style -->
+            <h:outputStylesheet library="css" name="custom.css"/>                    
+        </f:facet>
+    </h:head>
+
+    <h:body class="login">
+        <div>
+            <a class="hiddenanchor" id="signup"></a>
+            <a class="hiddenanchor" id="signin"></a>
+
+            <div class="login_wrapper">
+                <div class="animate form login_form">
+                    <section class="login_content">
+                        <form>
+                            <h1>Ingreso</h1>
+                            <div>
+                                <input type="text" class="form-control" placeholder="Usuario" required="" />
+                            </div>
+                            <div>
+                                <input type="password" class="form-control" placeholder="Clave" required="" />
+                            </div>
+                            <div>
+                                <a class="btn btn-default submit" href="page1.xhtml">Log in</a>
+                                <a class="reset_pass" href="#">Lost your password?</a>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <div class="separator">
+                                <p class="change_link">Registrarse
+                                    <a href="#signup" class="to_register"> Crear Cuenta </a>
+                                </p>
+
+                                <div class="clearfix"></div>
+                                <br />
+
+                                <div>
+                                    <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                                    <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+
+                <div id="register" class="animate form registration_form">
+                    <section class="login_content">
+                        <form>
+                            <h1>Crear Cuenta</h1>
+                            <div>
+                                <input type="text" class="form-control" placeholder="Usuario" required="" />
+                            </div>
+                            <div>
+                                <input type="email" class="form-control" placeholder="Correo" required="" />
+                            </div>
+                            <div>
+                                <input type="password" class="form-control" placeholder="Clave" required="" />
+                            </div>
+                            <div>
+                                <a class="btn btn-default submit" href="page1.xhtml">Submit</a>
+                            </div>
+
+                            <div class="clearfix"></div>
+
+                            <div class="separator">
+                                <p class="change_link">¿Ya está registrado?
+                                    <a href="#signin" class="to_register"> Ingresar </a>
+                                </p>
+
+                                <div class="clearfix"></div>
+                                <br />
+
+                                <div>
+                                    <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
+                                    <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" />
+        <h:outputScript library="bootstrap" name="js/bootstrap.js"/>
+    </h:body>
+</html>
+
