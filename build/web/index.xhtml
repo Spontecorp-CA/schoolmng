@@ -1,8 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <f:facet name="first">
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -38,16 +40,33 @@
             <div class="login_wrapper">
                 <div class="animate form login_form">
                     <section class="login_content">
-                        <form>
+                        <form jsf:id="form">
                             <h1>Ingreso</h1>
                             <div>
-                                <input type="text" class="form-control" placeholder="Usuario" required="" />
+                                <p:inputText id="usuarioTxt" value="#{loginController.usuario}"
+                                             placeholder="Usuario"
+                                             required="true"
+                                             requiredMessage="Debe colocar un usuario"
+                                             styleClass="form-control"/>
+                                <p:message for="usuarioTxt" />
+<!--                                <input type="text" class="form-control" placeholder="Usuario" required="" 
+                                       jsf:value="#{loginController.usuario}"/>-->
                             </div>
                             <div>
-                                <input type="password" class="form-control" placeholder="Clave" required="" />
+<!--                                <input type="password" class="form-control" placeholder="Clave" required="" 
+                                       jsf:value="#{loginController.password}"/>-->
+                                <p:password id="pswTxt" value="#{loginController.password}"
+                                                placeholder="Clave"
+                                                required="true"
+                                                requiredMessage="Debe colocar la clave"
+                                                styleClass="form-control"/>
+                                <p:message for="pswTxt" />
                             </div>
                             <div>
-                                <a class="btn btn-default submit" href="page1.xhtml">Log in</a>
+                                <!--<a class="btn btn-default submit" href="page1.xhtml">Log in</a>-->
+                                <p:commandButton value="Ingresar" 
+                                                 action="#{loginController.verifyUser()}"
+                                                 styleClass="btn btn-default" />
                                 <a class="reset_pass" href="#">Lost your password?</a>
                             </div>
 
