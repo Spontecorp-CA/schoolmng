@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.entities;
 
 import java.io.Serializable;
@@ -43,7 +38,7 @@ public class User implements Serializable {
     @Size(max = 45)
     @Column(name = "usr")
     private String usr;
-    @Size(max = 45)
+    @Size(max = 128)
     @Column(name = "psw")
     private String psw;
     @Column(name = "status")

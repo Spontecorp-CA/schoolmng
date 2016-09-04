@@ -40,7 +40,7 @@
             <div class="login_wrapper">
                 <div class="animate form login_form">
                     <section class="login_content">
-                        <form jsf:id="form">
+                        <h:form>
                             <h1>Ingreso</h1>
                             <div>
                                 <p:inputText id="usuarioTxt" value="#{loginController.usuario}"
@@ -73,6 +73,7 @@
                             <div class="clearfix"></div>
 
                             <div class="separator">
+                                <p:messages autoUpdate="true" showDetail="true"/>
                                 <p class="change_link">Registrarse
                                     <a href="#signup" class="to_register"> Crear Cuenta </a>
                                 </p>
@@ -81,17 +82,17 @@
                                 <br />
 
                                 <div>
-                                    <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
-                                    <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                                    <h1><i class="fa fa-book"></i> Colegio Belagua</h1>
+                                    <p>©2016 Todos los Derechos Reservados. Spontecorp, C.A.</p>
                                 </div>
                             </div>
-                        </form>
+                        </h:form>
                     </section>
                 </div>
 
                 <div id="register" class="animate form registration_form">
                     <section class="login_content">
-                        <form>
+                        <h:form>
                             <h1>Crear Cuenta</h1>
                             <div>
                                 <input type="text" class="form-control" placeholder="Usuario" required="" />
@@ -121,7 +122,7 @@
                                     <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
                                 </div>
                             </div>
-                        </form>
+                        </h:form>
                     </section>
                 </div>
             </div>
