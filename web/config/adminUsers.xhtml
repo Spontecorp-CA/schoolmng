@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
+
+            <ui:define name="pageName">
+                Administración de Usuarios
+            </ui:define>
+
+            <ui:define name="content">
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!-- subtitulo de la página -->
+                                    Creación de Usuario
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+                                <!-- contenido de la página -->
+
+                                <form jsf:id="form" class="form-horizontal form-label-left">
+                                    <span class="section">Información Personal</span>
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombre">
+                                            Nombre <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h:inputText id="nombre" 
+                                                         styleClass="form-control col-md-7 col-xs-12" 
+                                                         pt:placeholder="Agregue el nombre" 
+                                                         required="true"
+                                                         requiredMessage="Debe colocar el nombre"/>
+                                        </div>
+
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellido">
+                                            Apellido <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h:inputText id="apellido" 
+                                                         styleClass="form-control col-md-7 col-xs-12" 
+                                                         pt:placeholder="Agregue el apellido" 
+                                                         required="true" 
+                                                         requiredMessage="Debe colocar el apellido"/>
+                                        </div>
+                                    </div>
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                               for="ci">C.I. <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h:inputText id="ci" 
+                                                   pt:placeholder="Agregue la Cédula de Identidad" 
+                                                   styleClass="form-control col-md-7 col-xs-12"
+                                                   required="true" 
+                                                   requiredMessage="Debe colocar la C.I."/>
+
+
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                               for="rol">Tipo de Usuario <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h:selectOneMenu id="rol" 
+                                                             value="#{adminUsersController.rol}"
+                                                             styleClass="form-control">
+                                                <f:selectItems var="rol" 
+                                                               value="#{adminUsersController.roles}"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <h:commandButton id="cancel"
+                                                             value="Cancelar"
+                                                             styleClass="btn btn-primary"
+                                                             action="#{adminUsersController.cancelAction()}"
+                                                             immediate="true"/>
+                                            <h:commandButton id="send"
+                                                             value="Aceptar"
+                                                             styleClass="btn btn-success"
+                                                             actionListener="#{adminUsersController.createUser()}"
+                                                             action="#{adminUsersController.cancelAction()}"/>
+                                            
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+
+        
+        <!-- validator -->
+        <h:outputScript library="js" name="validator.js"/>
+        
+        <!-- validator -->
+        <script>
+            /*initialize the validator function*/
+            validator.message.date = 'no es una fecha real';
+
+            /*validate a field on "blur" event, a 'select' on 'change' event and a '.required' classed multifield on 'keyup': */
+            $('form')
+                    .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+                    .on('change', 'select.required', validator.checkField)
+                    .on('keypress', 'input[required][pattern]', validator.keypress);
+
+            $('.multi.required').on('keyup blur', 'input', function () {
+                validator.checkField.apply($(this).siblings().last()[0]);
+            });
+
+            $('form').submit(function (e) {
+                e.preventDefault();
+                var submit = true;
+
+                // evaluate the form using generic validaing
+                if (!validator.checkAll($(this))) {
+                    submit = false;
+                }
+
+                if (submit)
+                    this.submit();
+
+                return false;
+            });
+        </script>
+        </ui:composition>
+    </body>
+</html>
