@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
     <h:head>
         <!--h:outputStylesheet name="./css/default.css"/>
@@ -33,6 +34,7 @@
             <h:outputStylesheet library="css" name="custom.css"/>                    
         </f:facet>
         <title>Facelets Template</title>
+        <f:event type="preRenderView" listener="#{mainTemplateController.verifySession()}"/>
     </h:head>
 
     <h:body class="nav-md footer_fixed">
@@ -235,12 +237,14 @@
 
                 <!-- top navigation -->
                 <div class="top_nav">
+                    <h:form>
                     <div class="nav_menu">
                         <nav>
                             <div class="nav toggle">
                                 <a id="menu_toggle"><i class="fa fa-bars"></i></a>
                             </div>
 
+                            
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
                                     <a href="javascript:;" 
@@ -259,10 +263,15 @@
                                             </a>
                                         </li>
                                         <li><a href="javascript:;">Help</a></li>
-                                        <li><a href="login.xhtml">
+                                        <li><h:commandLink actionListener="#{loginController.closeSession()}"
+                                                           action="/index?faces-redirect=true">
+                                                <i class="fa fa-sign-out pull-right"></i>
+                                                <h:outputText value="Log Out"/>
+                                            </h:commandLink>
+<!--                                            <a href="login.xhtml">
                                                 <i class="fa fa-sign-out pull-right"></i> 
                                                 Log Out
-                                            </a>
+                                            </a>-->
                                         </li>
                                     </ul>
                                 </li>
@@ -348,6 +357,7 @@
                             </ul>
                         </nav>
                     </div>
+                    </h:form>       
                 </div>
                 <!-- /top navigation -->
 
