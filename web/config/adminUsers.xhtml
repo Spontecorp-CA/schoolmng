@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:jsf="http://xmlns.jcp.org/jsf"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <head>
         <title></title>
@@ -41,11 +42,13 @@
                                             Nombre <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <h:inputText id="nombre" 
+                                            <p:inputText id="nombre" 
                                                          styleClass="form-control col-md-7 col-xs-12" 
                                                          pt:placeholder="Agregue el nombre" 
+                                                         value="#{adminUsersController.datosPersona.nombre}"
                                                          required="true"
                                                          requiredMessage="Debe colocar el nombre"/>
+                                                
                                         </div>
 
                                     </div>
@@ -54,9 +57,10 @@
                                             Apellido <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <h:inputText id="apellido" 
+                                            <p:inputText id="apellido" 
                                                          styleClass="form-control col-md-7 col-xs-12" 
                                                          pt:placeholder="Agregue el apellido" 
+                                                         value="#{adminUsersController.datosPersona.apellido}"
                                                          required="true" 
                                                          requiredMessage="Debe colocar el apellido"/>
                                         </div>
@@ -66,9 +70,10 @@
                                                for="ci">C.I. <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <h:inputText id="ci" 
+                                            <p:inputText id="ci" 
                                                    pt:placeholder="Agregue la Cédula de Identidad" 
                                                    styleClass="form-control col-md-7 col-xs-12"
+                                                   value="#{adminUsersController.datosPersona.ci}"
                                                    required="true" 
                                                    requiredMessage="Debe colocar la C.I."/>
 
@@ -81,11 +86,13 @@
                                                for="rol">Tipo de Usuario <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <h:selectOneMenu id="rol" 
+                                            <h:selectOneMenu id="rol"
+                                                             required="true"
                                                              value="#{adminUsersController.rol}"
                                                              styleClass="form-control">
                                                 <f:selectItems var="rol" 
                                                                value="#{adminUsersController.roles}"/>
+                                                <f:converter converterId="edu.school.entities.converters.RolConverter"/>
                                             </h:selectOneMenu>
                                         </div>
                                     </div>
@@ -97,55 +104,21 @@
                                                              styleClass="btn btn-primary"
                                                              action="#{adminUsersController.cancelAction()}"
                                                              immediate="true"/>
-                                            <h:commandButton id="send"
+                                            <h:commandButton id="ok"
                                                              value="Aceptar"
                                                              styleClass="btn btn-success"
-                                                             actionListener="#{adminUsersController.createUser()}"
-                                                             action="#{adminUsersController.cancelAction()}"/>
-                                            
+                                                             actionListener="#{adminUsersController.createUser()}"/>
                                         </div>
                                     </div>
+                                    
+                                    <div class="clearfix"></div>
+                                    <p:messages autoUpdate="true" showDetail="true"/>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </ui:define>
-
-        
-        <!-- validator -->
-        <h:outputScript library="js" name="validator.js"/>
-        
-        <!-- validator -->
-        <script>
-            /*initialize the validator function*/
-            validator.message.date = 'no es una fecha real';
-
-            /*validate a field on "blur" event, a 'select' on 'change' event and a '.required' classed multifield on 'keyup': */
-            $('form')
-                    .on('blur', 'input[required], input.optional, select.required', validator.checkField)
-                    .on('change', 'select.required', validator.checkField)
-                    .on('keypress', 'input[required][pattern]', validator.keypress);
-
-            $('.multi.required').on('keyup blur', 'input', function () {
-                validator.checkField.apply($(this).siblings().last()[0]);
-            });
-
-            $('form').submit(function (e) {
-                e.preventDefault();
-                var submit = true;
-
-                // evaluate the form using generic validaing
-                if (!validator.checkAll($(this))) {
-                    submit = false;
-                }
-
-                if (submit)
-                    this.submit();
-
-                return false;
-            });
-        </script>
         </ui:composition>
     </body>
 </html>

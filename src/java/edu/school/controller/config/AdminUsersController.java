@@ -1,5 +1,6 @@
 package edu.school.controller.config;
 
+import edu.school.ejb.DatosPersonaFacadeLocal;
 import edu.school.ejb.RolFacadeLocal;
 import edu.school.ejb.UserFacadeLocal;
 import edu.school.ejb.UserHasRolFacadeLocal;
@@ -15,6 +16,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
@@ -30,6 +33,8 @@ public class AdminUsersController implements Serializable{
     private RolFacadeLocal rolFacade;
     @EJB
     private UserHasRolFacadeLocal uhrFacade;
+    @EJB
+    private DatosPersonaFacadeLocal datosPersonaFacade;
     
     @Inject
     private User user;
@@ -69,7 +74,6 @@ public class AdminUsersController implements Serializable{
     }
     
     public void createUser(){
-        System.out.println("Está en el método createUser");
         switch(rol.getName()){
             case Constantes.ROL_ADMINISTRATIVO:
                 Adminitrativo administrativo = new Adminitrativo();
@@ -83,15 +87,20 @@ public class AdminUsersController implements Serializable{
                 representante.setDatosPersonaId(datosPersona);
         }
         
+        datosPersonaFacade.create(datosPersona);
         user.setCi(datosPersona.getCi());
-        UserHasRol uhr = new UserHasRol();
-        uhr.setUserId(user);
-        uhr.setRolId(rol);
-        System.out.println("Llegó a crear el usuario con " 
-                            + user.getCi() + " "
-                            + datosPersona.getNombre() + " "
-                            + datosPersona.getApellido() + " y "
-                            + uhr.getRolId().getName());
+        userHasRol.setUserId(user);
+        userHasRol.setRolId(rol);
+        
+        userFacade.create(user);
+        uhrFacade.create(userHasRol);
+        FacesContext.getCurrentInstance()
+                .addMessage(null, 
+                        new FacesMessage(
+                                FacesMessage.SEVERITY_INFO, 
+                                "Usuario creado con éxito",
+                                "Usuario creado con éxito"));
+        
     }
     
     public String cancelAction(){

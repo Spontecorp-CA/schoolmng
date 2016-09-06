@@ -44,7 +44,7 @@
                             <h1>Ingreso</h1>
                             <div>
                                 <p:inputText id="usuarioTxt" value="#{loginController.usuario}"
-                                             placeholder="Usuario"
+                                             placeholder="Correo Electrónico"
                                              required="true"
                                              requiredMessage="Debe colocar un usuario"
                                              styleClass="form-control"/>
@@ -73,7 +73,7 @@
                             <div class="clearfix"></div>
 
                             <div class="separator">
-                                <p:messages autoUpdate="true" showDetail="true"/>
+                                <p:messages for="usuarioTxt, pswTxt" autoUpdate="true" />
                                 <p class="change_link">Registrarse
                                     <a href="#signup" class="to_register"> Crear Cuenta </a>
                                 </p>
@@ -95,21 +95,57 @@
                         <h:form>
                             <h1>Crear Cuenta</h1>
                             <div>
-                                <input type="text" class="form-control" placeholder="Usuario" required="" />
+                                <p:inputText id="ci" 
+                                             value="#{registerController.ci}"
+                                             styleClass="form-control" 
+                                             placeholder="Cédula de Identidad" 
+                                             required="true"
+                                             requiredMessage="Debe colocar la Cédula de Identidad">
+                                </p:inputText>
                             </div>
                             <div>
-                                <input type="email" class="form-control" placeholder="Correo" required="" />
+                                <p:inputText id="correo"
+                                             value="#{registerController.email}"
+                                             class="form-control" 
+                                             placeholder="Correo" 
+                                             required="true"
+                                             requiredMessage="Debe colocar un correo electrónico"
+                                             validatorMessage="Debe ingresar un correo electrónico válido">
+                                    <f:validateRegex pattern="#{registerController.EMAIL_PATTERN}"
+                                                     for="correo"/>
+                                </p:inputText>
                             </div>
                             <div>
-                                <input type="password" class="form-control" placeholder="Clave" required="" />
+                                <p:password id="psw1"
+                                            value="#{registerController.password}"
+                                            placeholder="Ingrese una clave"
+                                            match="psw2"
+                                            feedback="true"
+                                            promptLabel="Ingrese una clave"
+                                            weakLabel="Débil"
+                                            goodLabel="Regular"
+                                            strongLabel="Fuerte"
+                                            required="true"
+                                            requiredMessage="Debe ingresar una clave"
+                                            styleClass="form-control"/>
                             </div>
                             <div>
-                                <a class="btn btn-default submit" href="page1.xhtml">Submit</a>
+                                <p:password id="psw2"
+                                            value="#{registerController.password}"
+                                            placeholder="Repita la clave"
+                                            required="true"
+                                            requiredMessage="Debe ingresar una clave"
+                                            styleClass="form-control"/>
+                            </div>
+                            <div>
+                                <a class="btn btn-default submit" 
+                                   jsf:actionListener="#{registerController.verifyCI()}">Aceptar</a>
                             </div>
 
                             <div class="clearfix"></div>
 
                             <div class="separator">
+                                <p:messages for="ci, correo, psw1, psw2" autoUpdate="true"/>
                                 <p class="change_link">¿Ya está registrado?
                                     <a href="#signin" class="to_register"> Ingresar </a>
                                 </p>
@@ -118,8 +154,8 @@
                                 <br />
 
                                 <div>
-                                    <h1><i class="fa fa-paw"></i> Gentelella Alela!</h1>
-                                    <p>©2016 All Rights Reserved. Gentelella Alela! is a Bootstrap 3 template. Privacy and Terms</p>
+                                    <h1><i class="fa fa-book"></i> Colegio Belagua</h1>
+                                    <p>©2016 Todos los Derechos Reservados. Spontecorp, C.A.</p>
                                 </div>
                             </div>
                         </h:form>
