@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.ejb;
 
 import edu.school.entities.User;
 import java.util.List;
 import javax.ejb.Local;
 
-/**
- *
- * @author jgcastillo
- */
 @Local
 public interface UserFacadeLocal {
 
@@ -25,6 +16,8 @@ public interface UserFacadeLocal {
     User find(Object id);
     
     User find(String name);
+    
+    User find(int ci);
 
     List<User> findAll();
 

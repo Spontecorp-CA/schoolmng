@@ -23,6 +23,8 @@ public interface DatosPersonaFacadeLocal {
     void remove(DatosPersona datosPersona);
 
     DatosPersona find(Object id);
+    
+    DatosPersona find(int ci);
 
     List<DatosPersona> findAll();
 

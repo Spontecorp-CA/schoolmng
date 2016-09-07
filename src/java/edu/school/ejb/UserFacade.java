@@ -38,4 +38,19 @@ public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal 
         }
         return user;
     }
+
+    @Override
+    public User find(int ci) {
+        User user = null;
+        try {
+            String query = "FROM User u WHERE u.ci = :ci";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("ci", ci);
+            user = (User) q.getSingleResult();
+        } catch (NoResultException e) {
+        }
+        return user;
+    }
+    
+    
 }

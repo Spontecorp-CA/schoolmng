@@ -102,7 +102,7 @@ public class Rol implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.Rol[ id=" + id + " ]";
+        return name;
     }
     
 }
