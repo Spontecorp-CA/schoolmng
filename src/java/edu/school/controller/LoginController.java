@@ -9,9 +9,8 @@ import edu.school.entities.UserHasRol;
 import edu.school.utilities.Constantes;
 import edu.school.utilities.Utilities;
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -71,14 +70,15 @@ public class LoginController implements Serializable {
         admin.setStatus(Constantes.USUARIO_ACTIVO);
         userFacade.create(admin);
         Rol adminRol = rolFacade.find(Constantes.ROL_CONFIGURADOR);
-
-        assignRolToUser(admin, adminRol);
+        
+        assignRolToUser(admin, adminRol, Constantes.ESCRITORIO_CONFIG);
     }
 
-    private void assignRolToUser(User user, Rol rol) {
+    private void assignRolToUser(User user, Rol rol, String escritorio) {
         UserHasRol uhr = new UserHasRol();
         uhr.setRolId(rol);
         uhr.setUserId(user);
+        uhr.setEscritorio(escritorio);
         uhRolFacade.create(uhr);
     }
 
@@ -121,22 +121,6 @@ public class LoginController implements Serializable {
         return answer;
     }
     
-    private String getSecurePassword(String passwordToHash) {
-        String generatedPassword = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] bytes = md.digest(passwordToHash.getBytes());
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            generatedPassword = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-        return generatedPassword;
-    }
-
     public String verifyUser() {
         String page = null;
         if (usuario != null && !usuario.isEmpty()) {
@@ -144,9 +128,19 @@ public class LoginController implements Serializable {
             User user = userFacade.find(usuario);
             if (user != null && user.getPsw()
                     .equals(Utilities.getSecurePassword(password))) {
-                FacesContext.getCurrentInstance().getExternalContext()
-                        .getSessionMap().put("user", user);
-                page = "page1?faces-redirect=true";
+                StringBuilder sb = new StringBuilder();
+                Collection<UserHasRol> roles = user.getUserHasRolCollection();
+                for(UserHasRol uhr : roles){
+                    if(uhr.getRolId().getName().equals(Constantes.ROL_CONFIGURADOR)){
+                        FacesContext.getCurrentInstance().getExternalContext()
+                                .getSessionMap().put("user", user);
+                        sb.append(Constantes.ESCRITORIO_CONFIG);
+                        sb.append("?faces-redirect=true");
+                        setUsuario(user.getUsr());
+                        break;
+                    }
+                }
+                page = sb.toString();
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, 
                         new FacesMessage(FacesMessage.SEVERITY_WARN,

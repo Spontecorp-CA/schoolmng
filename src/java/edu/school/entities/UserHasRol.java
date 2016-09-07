@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,6 +37,9 @@ public class UserHasRol implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Size(max = 100)
+    @Column(name = "escritorio")
+    private String escritorio;
     @JoinColumn(name = "rol_id", referencedColumnName = "id")
     @ManyToOne
     private Rol rolId;
@@ -56,6 +60,14 @@ public class UserHasRol implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getEscritorio() {
+        return escritorio;
+    }
+
+    public void setEscritorio(String escritorio) {
+        this.escritorio = escritorio;
     }
 
     public Rol getRolId() {
