@@ -4,6 +4,7 @@ import edu.school.ejb.DatosPersonaFacadeLocal;
 import edu.school.ejb.UserFacadeLocal;
 import edu.school.entities.DatosPersona;
 import edu.school.entities.User;
+import edu.school.utilities.Constantes;
 import edu.school.utilities.Utilities;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -27,7 +28,7 @@ public class RegisterController implements Serializable{
     @Inject
     private DatosPersona datosPersona;
     
-    private int ci;
+    private String ci;
     private String email;
     private String password;
     
@@ -35,11 +36,11 @@ public class RegisterController implements Serializable{
             = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-    public int getCi() {
+    public String getCi() {
         return ci;
     }
 
-    public void setCi(int ci) {
+    public void setCi(String ci) {
         this.ci = ci;
     }
 
@@ -64,21 +65,33 @@ public class RegisterController implements Serializable{
     }
     
     public void verifyCI(){
-        user = userFacade.find(ci);
-        if(user == null){
+        int ciNumber;
+        try {
+            ciNumber = Integer.parseInt(ci);
+        } catch (NumberFormatException e) {
             FacesContext.getCurrentInstance()
                     .addMessage(null, new FacesMessage(
-                            FacesMessage.SEVERITY_WARN, 
-                            "Usuario no registrado", 
+                            FacesMessage.SEVERITY_ERROR,
+                            "Ingresó un valor de C.I. no válido",
+                            ""));
+            return;
+        }
+        user = userFacade.find(ciNumber);
+        datosPersona = datosPersonaFacade.find(ciNumber);
+        
+        if(user == null || datosPersona == null){
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, new FacesMessage(
+                            "Usuario no registrado." + 
                             "Comuníquese con la administración del colegio"));
             return;
         }
         
         user.setUsr(email.trim());
+        user.setStatus(Constantes.USUARIO_ACTIVO);
         user.setPsw(Utilities.getSecurePassword(password));
         
-        datosPersona = datosPersonaFacade.find(ci);
-        datosPersona.setEmail(email);
+        datosPersona.setEmail(email.trim());
         
         userFacade.edit(user);
         datosPersonaFacade.edit(datosPersona);
@@ -88,5 +101,8 @@ public class RegisterController implements Serializable{
                         FacesMessage.SEVERITY_INFO,
                         "Usuario registrado con éxito",
                         "Usuario registrado con éxito"));
+        ci = "";
+        email = "";
+        password = "";
     }
 }
