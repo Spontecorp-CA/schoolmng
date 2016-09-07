@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <!-- Meta, title, CSS, favicons, etc. -->
+            <meta charset="utf-8"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <title>
+                Colegio Belagua
+            </title>
+        </f:facet>
+
+        <f:facet name="middle">
+            <!-- Bootstrap -->
+            <h:outputStylesheet library="bootstrap/css" name="bootstrap.css"/>
+            <!-- NProgress -->
+            <h:outputStylesheet library="css" name="nprogress.css"/>
+            <!-- Animate.css -->
+            <h:outputStylesheet library="css" name="animate.min.css"/>
+        </f:facet>
+
+        <f:facet name="middle">
+            <!-- Font Awesome -->
+            <h:outputStylesheet library="css" name="font-awesome.css"/>
+            <!-- Custom Theme Style -->
+            <h:outputStylesheet library="css" name="custom.css"/>                    
+        </f:facet>
+        <f:event type="preRenderView" listener="#{mainTemplateController.verifySession()}"/>
+    </h:head>
+    <h:body class="nav-md footer_fixed">
+        <div class="container body">
+            <div class="main_container">
+                <div class="col-md-3 left_col">
+                    <div class="left_col scroll-view">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- jQuery -->
+        <h:outputScript library="js" name="jquery.min.js"/>
+        <!-- Bootstrap -->
+        <h:outputScript library="bootstrap" name="js/bootstrap.min.js"/>
+        <!-- FastClick -->
+        <h:outputScript library="js" name="fastclick.js"/>
+        <!-- NProgress -->
+        <h:outputScript library="js" name="nprogress.js"/>
+        <!-- Custom Theme Scripts -->
+        <h:outputScript library="js" name="custom.min.js"/>
+    </h:body>
+</html>

@@ -34,7 +34,7 @@ public class DatosPersonaFacade extends AbstractFacade<DatosPersona> implements 
     public DatosPersona find(int ci) {
         DatosPersona datosPersona = null;
         try {
-            String query = "FROM dp DatosPersona WHERE dp.ci = :ci";
+            String query = "FROM DatosPersona dp WHERE dp.ci = :ci";
             Query q = getEntityManager().createQuery(query);
             q.setParameter("ci", ci);
             datosPersona = (DatosPersona)q.getSingleResult();

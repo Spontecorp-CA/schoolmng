@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <title>Colegio Belagua</title>
+
+        <!-- Bootstrap -->
+        <h:outputStylesheet library="bootstrap" name="css/bootstrap.css"/>
+        <!-- Font Awesome -->
+        <h:outputStylesheet library="css" name="font-awesome.css"/>
+        <!-- NProgress -->
+        <h:outputStylesheet library="css" name="nprogress.css"/>
+        <!-- Animate.css -->
+        <h:outputStylesheet library="css" name="animate.min.css"/>
+        <!-- Custom Theme Style -->
+        <h:outputStylesheet library="css" name="custom.css"/>    
+
+    </h:head>
+    <h:body class="login">
+        <div class="login_wrapper">
+            <div id="register" class="animate form login_form">
+                <section class="login_content">
+                    <h:form>
+                        <h1>Crear Cuenta</h1>
+                        <div>
+                            <p:inputText id="ci" 
+                                         value="#{registerController.ci}"
+                                         placeholder="Cédula de Identidad" 
+                                         required="true"
+                                         requiredMessage="Debe colocar la Cédula de Identidad"
+                                         styleClass="form-control" >
+                                <f:validateDoubleRange minimum="10000" maximum="99999999" />
+                            </p:inputText>
+                            <!--<input type="text" class="form-control" placeholder="Username" required="" />-->
+                        </div>
+                        <div>
+                            <p:inputText id="correo"
+                                         value="#{registerController.email}"
+                                         class="form-control" 
+                                         placeholder="Correo" 
+                                         required="true"
+                                         requiredMessage="Debe colocar un correo electrónico"
+                                         validatorMessage="Debe ingresar un correo electrónico válido">
+                                <f:validateRegex pattern="#{registerController.EMAIL_PATTERN}"
+                                                 for="correo"/>
+                            </p:inputText>
+                            <!--<input type="email" class="form-control" placeholder="Email" required="" />-->
+                        </div>
+                        <div>
+                            <p:password id="psw1"
+                                        value="#{registerController.password}"
+                                        placeholder="Ingrese una clave"
+                                        match="psw2"
+                                        feedback="true"
+                                        promptLabel="Ingrese una clave"
+                                        weakLabel="Débil"
+                                        goodLabel="Regular"
+                                        strongLabel="Fuerte"
+                                        required="true"
+                                        requiredMessage="Debe ingresar una clave"
+                                        styleClass="form-control"/>
+                        </div>
+                        <!--<input type="password" class="form-control" placeholder="Password" required="" />-->
+                        <div>
+                            <p:password id="psw2"
+                                        value="#{registerController.password}"
+                                        placeholder="Repita la clave"
+                                        required="true"
+                                        requiredMessage="Debe repetir la clave"
+                                        styleClass="form-control"/>
+                        </div>
+                        <div>
+                            <p:commandButton value="Aceptar"
+                                             actionListener="#{registerController.verifyCI()}"
+                                             update="messages, ci, correo, psw1, psw2"
+                                             styleClass="btn btn-default submit" />
+                            <!--<a class="btn btn-default submit" href="index.html">Submit</a>-->
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <div class="separator">
+                            <p:messages id="messages" closable="true" 
+                                        autoUpdate="true"/>
+                            <p class="change_link">¿Ya está registrado?
+                                <p:commandLink value="Ingresar"
+                                               action="index"
+                                               immediate="true"
+                                               styleClass="to_register"/>
+                                <!--<a href="index.xhtml" class="to_register"> Ingresar </a>-->
+                            </p>
+
+                            <div class="clearfix"></div>
+                            <br />
+
+                            <div>
+                                <h1><i class="fa fa-book"></i> Colegio Belagua</h1>
+                                <p>©2016 Todos los Derechos Reservados. Spontecorp, C.A.</p>
+                            </div>
+                        </div>
+                    </h:form>
+                </section>
+            </div>
+        </div>    
+    </h:body>
+</html>

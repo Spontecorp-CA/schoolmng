@@ -1,37 +1,29 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:jsf="http://xmlns.jcp.org/jsf"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <f:facet name="first">
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-            <!-- Meta, title, CSS, favicons, etc. -->
-            <meta charset="utf-8"/>
-            <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-            <meta name="viewport" content="width=device-width, initial-scale=1"/>
-            <title>Colegio Belagua</title>
-        </f:facet>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-        <f:facet name="middle">
-            <!-- Bootstrap -->
-            <h:outputStylesheet library="bootstrap" name="css/bootstrap.css"/>
-            <!-- NProgress -->
-            <h:outputStylesheet library="css" name="nprogress.css"/>
-            <!-- Animate.css -->
-            <h:outputStylesheet library="css" name="animate.min.css"/>
-        </f:facet>
+        <title>Colegio Belagua</title>
 
-        <f:facet name="middle">
-            <!-- Font Awesome -->
-            <h:outputStylesheet library="css" name="font-awesome.css"/>
-            <!-- Custom Theme Style -->
-            <h:outputStylesheet library="css" name="custom.css"/>                    
-        </f:facet>
+        <!-- Bootstrap -->
+        <h:outputStylesheet library="bootstrap" name="css/bootstrap.css"/>
+        <!-- Font Awesome -->
+        <h:outputStylesheet library="css" name="font-awesome.css"/>
+        <!-- NProgress -->
+        <h:outputStylesheet library="css" name="nprogress.css"/>
+        <!-- Animate.css -->
+        <h:outputStylesheet library="css" name="animate.min.css"/>
+        <!-- Custom Theme Style -->
+        <h:outputStylesheet library="css" name="custom.css"/>    
+
     </h:head>
-
     <h:body class="login">
         <div>
             <a class="hiddenanchor" id="signup"></a>
@@ -40,42 +32,43 @@
             <div class="login_wrapper">
                 <div class="animate form login_form">
                     <section class="login_content">
-                        <h:form>
+                        <h:form id="signin_form">
                             <h1>Ingreso</h1>
                             <div>
-                                <p:inputText id="usuarioTxt" value="#{loginController.usuario}"
-                                             placeholder="Correo Electrónico"
+                                <p:inputText id="user" value="#{loginController.usuario}"
+                                             styleClass="form-control"
+                                             placeholder="correo electrónico"
                                              required="true"
-                                             requiredMessage="Debe colocar un usuario"
-                                             styleClass="form-control"/>
-                                <p:message for="usuarioTxt" />
-<!--                                <input type="text" class="form-control" placeholder="Usuario" required="" 
-                                       jsf:value="#{loginController.usuario}"/>-->
+                                             requiredMessage="Debe colocar su usuario"/>
+                                <!--<input type="text" class="form-control" placeholder="Username" required="" />-->
                             </div>
                             <div>
-<!--                                <input type="password" class="form-control" placeholder="Clave" required="" 
-                                       jsf:value="#{loginController.password}"/>-->
-                                <p:password id="pswTxt" value="#{loginController.password}"
-                                                placeholder="Clave"
-                                                required="true"
-                                                requiredMessage="Debe colocar la clave"
-                                                styleClass="form-control"/>
-                                <p:message for="pswTxt" />
+                                <p:password id="psw" value="#{loginController.password}"
+                                            styleClass="form-control"
+                                            placeholder="clave de ingreso"
+                                            required="true"
+                                            requiredMessage="Debe colocar una clave"/>
+                                            
+                                <!-- <input type="password" class="form-control" placeholder="Password" required="" />-->
                             </div>
                             <div>
-                                <!--<a class="btn btn-default submit" href="page1.xhtml">Log in</a>-->
-                                <p:commandButton value="Ingresar" 
+                                <!--  <a class="btn btn-default submit" href="index.html">Log in</a>-->
+                                <p:commandButton value="Ingresar"
                                                  action="#{loginController.verifyUser()}"
-                                                 styleClass="btn btn-default" />
+                                                 styleClass="btn btn-default submit"/>
                                 <a class="reset_pass" href="#">Lost your password?</a>
                             </div>
 
                             <div class="clearfix"></div>
 
                             <div class="separator">
-                                <p:messages for="usuarioTxt, pswTxt" autoUpdate="true" />
+                                <p:messages id="messages" closable="true" autoUpdate="true"/>
                                 <p class="change_link">Registrarse
-                                    <a href="#signup" class="to_register"> Crear Cuenta </a>
+                                    <p:commandLink value="Crear cuenta"
+                                                   action="register"
+                                                   styleClass="to_register"
+                                                   immediate="true"/>
+                                    <!--<a href="#signup" class="to_register"> Create Account </a>-->
                                 </p>
 
                                 <div class="clearfix"></div>
@@ -92,62 +85,26 @@
 
                 <div id="register" class="animate form registration_form">
                     <section class="login_content">
-                        <h:form>
+                        <form>
                             <h1>Crear Cuenta</h1>
                             <div>
-                                <p:inputText id="ci" 
-                                             value="#{registerController.ci}"
-                                             styleClass="form-control" 
-                                             placeholder="Cédula de Identidad" 
-                                             required="true"
-                                             requiredMessage="Debe colocar la Cédula de Identidad">
-                                </p:inputText>
+                                <input type="text" class="form-control" placeholder="Username" required="" />
                             </div>
                             <div>
-                                <p:inputText id="correo"
-                                             value="#{registerController.email}"
-                                             class="form-control" 
-                                             placeholder="Correo" 
-                                             required="true"
-                                             requiredMessage="Debe colocar un correo electrónico"
-                                             validatorMessage="Debe ingresar un correo electrónico válido">
-                                    <f:validateRegex pattern="#{registerController.EMAIL_PATTERN}"
-                                                     for="correo"/>
-                                </p:inputText>
+                                <input type="email" class="form-control" placeholder="Email" required="" />
                             </div>
                             <div>
-                                <p:password id="psw1"
-                                            value="#{registerController.password}"
-                                            placeholder="Ingrese una clave"
-                                            match="psw2"
-                                            feedback="true"
-                                            promptLabel="Ingrese una clave"
-                                            weakLabel="Débil"
-                                            goodLabel="Regular"
-                                            strongLabel="Fuerte"
-                                            required="true"
-                                            requiredMessage="Debe ingresar una clave"
-                                            styleClass="form-control"/>
+                                <input type="password" class="form-control" placeholder="Password" required="" />
                             </div>
                             <div>
-                                <p:password id="psw2"
-                                            value="#{registerController.password}"
-                                            placeholder="Repita la clave"
-                                            required="true"
-                                            requiredMessage="Debe ingresar una clave"
-                                            styleClass="form-control"/>
-                            </div>
-                            <div>
-                                <a class="btn btn-default submit" 
-                                   jsf:actionListener="#{registerController.verifyCI()}">Aceptar</a>
+                                <a class="btn btn-default submit" href="index.html">Submit</a>
                             </div>
 
                             <div class="clearfix"></div>
 
                             <div class="separator">
-                                <p:messages for="ci, correo, psw1, psw2" autoUpdate="true"/>
-                                <p class="change_link">¿Ya está registrado?
-                                    <a href="#signin" class="to_register"> Ingresar </a>
+                                <p class="change_link">Already a member ?
+                                    <a href="#signin" class="to_register"> Log in </a>
                                 </p>
 
                                 <div class="clearfix"></div>
@@ -158,13 +115,10 @@
                                     <p>©2016 Todos los Derechos Reservados. Spontecorp, C.A.</p>
                                 </div>
                             </div>
-                        </h:form>
+                        </form>
                     </section>
                 </div>
             </div>
         </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" />
-        <h:outputScript library="bootstrap" name="js/bootstrap.js"/>
     </h:body>
 </html>
-
