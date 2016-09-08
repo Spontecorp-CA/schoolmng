@@ -1,4 +1,4 @@
-package edu.school.controller.config;
+package edu.school.controller.administrativos;
 
 import edu.school.controller.DashboardFacade;
 import java.io.Serializable;
@@ -7,11 +7,11 @@ import javax.inject.Named;
 
 @Named
 @ViewScoped
-public class ConfigDashboardController extends DashboardFacade implements Serializable{
+public class AdminDashboardController extends DashboardFacade implements Serializable{
 
     @Override
     public String goUserPage() {
-        return "adminUsers";
+        return null;
     }
-    
+
 }

@@ -13,6 +13,7 @@ public class Constantes {
     public static final String ROL_ALUMNO = "Alumno";
     
     public static final String ESCRITORIO_CONFIG = "/config/dashboard";
+    public static final String ESCRITORIO_USER = "/administrativos/dashboard";
 
     public static final int USUARIO_ACTIVO = 1;
     public static final int USUARIO_INACTIVO = 0;

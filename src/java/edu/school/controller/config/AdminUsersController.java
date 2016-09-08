@@ -91,6 +91,7 @@ public class AdminUsersController implements Serializable{
         user.setCi(datosPersona.getCi());
         userHasRol.setUserId(user);
         userHasRol.setRolId(rol);
+        userHasRol.setEscritorio(Constantes.ESCRITORIO_USER);
         
         userFacade.create(user);
         uhrFacade.create(userHasRol);
