@@ -130,16 +130,22 @@ public class LoginController implements Serializable {
                     .equals(Utilities.getSecurePassword(password))) {
                 StringBuilder sb = new StringBuilder();
                 Collection<UserHasRol> roles = user.getUserHasRolCollection();
+                FacesContext.getCurrentInstance().getExternalContext()
+                        .getSessionMap().put("user", user);
                 for(UserHasRol uhr : roles){
-                    if(uhr.getRolId().getName().equals(Constantes.ROL_CONFIGURADOR)){
-                        FacesContext.getCurrentInstance().getExternalContext()
-                                .getSessionMap().put("user", user);
-                        sb.append(Constantes.ESCRITORIO_CONFIG);
-                        sb.append("?faces-redirect=true");
-                        setUsuario(user.getUsr());
-                        break;
-                    }
+                    switch(uhr.getRolId().getName()){
+                        case Constantes.ROL_CONFIGURADOR:
+                            sb.append(Constantes.ESCRITORIO_CONFIG);
+                            break;
+                        case Constantes.ROL_ADMINISTRATIVO:
+                            sb.append(Constantes.ESCRITORIO_USER);
+                            break;    
+                    } 
+                    break;
                 }
+                sb.append("?faces-redirect=true");
+                setUsuario(user.getUsr());
+                
                 page = sb.toString();
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, 
