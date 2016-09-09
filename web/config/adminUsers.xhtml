@@ -99,20 +99,27 @@
                                     <div class="ln_solid"></div>
                                     <div class="form-group">
                                         <div class="col-md-6 col-md-offset-3">
-                                            <h:commandButton id="cancel"
-                                                             value="Cancelar"
-                                                             styleClass="btn btn-primary"
-                                                             action="#{adminUsersController.cancelAction()}"
-                                                             immediate="true"/>
-                                            <h:commandButton id="ok"
+                                            <p:commandButton id="ok"
                                                              value="Aceptar"
                                                              styleClass="btn btn-success"
                                                              actionListener="#{adminUsersController.createUser()}"/>
+                                            <p:commandButton id="newUser"
+                                                             value="Nuevo"
+                                                             styleClass="btn btn-primary"
+                                                             actionListener="#{adminUsersController.clearFields()}"/>
+                                            <p:commandButton id="cancel"
+                                                             value="Cancelar"
+                                                             styleClass="btn btn-danger"
+                                                             action="#{adminUsersController.cancelAction()}"
+                                                             immediate="true"/>
                                         </div>
                                     </div>
                                     
                                     <div class="clearfix"></div>
-                                    <p:messages autoUpdate="true" showDetail="true"/>
+                                    <p:messages autoUpdate="true" showDetail="true"
+                                                closable="true"
+                                                />
+                                    <!--<p:growl id="growl" autoUpdate="true" life="2000" showDetail="true"/>-->
                                 </form>
                             </div>
                         </div>

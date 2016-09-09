@@ -145,5 +145,5 @@ public class Alumno implements Serializable {
     public String toString() {
         return "edu.school.entities.Alumno[ id=" + id + " ]";
     }
-    
+
 }

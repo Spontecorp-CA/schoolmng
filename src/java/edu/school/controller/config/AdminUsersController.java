@@ -25,8 +25,8 @@ import javax.inject.Named;
 
 @Named
 @ViewScoped
-public class AdminUsersController implements Serializable{
-    
+public class AdminUsersController implements Serializable {
+
     @EJB
     private UserFacadeLocal userFacade;
     @EJB
@@ -35,7 +35,7 @@ public class AdminUsersController implements Serializable{
     private UserHasRolFacadeLocal uhrFacade;
     @EJB
     private DatosPersonaFacadeLocal datosPersonaFacade;
-    
+
     @Inject
     private User user;
     @Inject
@@ -60,51 +60,81 @@ public class AdminUsersController implements Serializable{
     public void setRol(Rol rol) {
         this.rol = rol;
     }
-    
-    public List<SelectItem> getRoles(){
+
+    public List<SelectItem> getRoles() {
         List<Rol> rolList = rolFacade.findAll();
         List<SelectItem> roles = new ArrayList<>();
         rolList.stream()
                 .filter((actor) -> !actor.getName().equals(Constantes.ROL_ALUMNO)
                         && !actor.getName().equals(Constantes.ROL_CONFIGURADOR))
                 .forEach((actor) -> {
-                        roles.add(new SelectItem(actor, actor.getName()));
-        });
+                    roles.add(new SelectItem(actor, actor.getName()));
+                });
         return roles;
     }
-    
-    public void createUser(){
-        switch(rol.getName()){
+
+    public void createUser() {
+
+        DatosPersona dpTemp = datosPersonaFacade.find(datosPersona.getCi().intValue());
+        if (dpTemp != null) {
+            FacesContext.getCurrentInstance()
+                    .addMessage(null,
+                            new FacesMessage(
+                                    FacesMessage.SEVERITY_ERROR,
+                                    "Error al crear usuario",
+                                    "La cédula de identidad ingresada ya existe en el sistema"));
+            return;
+        }
+
+        switch (rol.getName()) {
             case Constantes.ROL_ADMINISTRATIVO:
                 Adminitrativo administrativo = new Adminitrativo();
                 administrativo.setDatosPersonaId(datosPersona);
+                userHasRol.setEscritorio(Constantes.ESCRITORIO_ADMIN);
                 break;
             case Constantes.ROL_DOCENTE:
                 Docente docente = new Docente();
                 docente.setDatosPersonaId(datosPersona);
+                userHasRol.setEscritorio(Constantes.ESCRITORIO_DOCENTE);
+                break;
             case Constantes.ROL_REPRESENTANTE:
                 Representante representante = new Representante();
                 representante.setDatosPersonaId(datosPersona);
+                userHasRol.setEscritorio(Constantes.ESCRITORIO_REPRESENTANTE);
+                break;
         }
         
         datosPersonaFacade.create(datosPersona);
+        
         user.setCi(datosPersona.getCi());
         userHasRol.setUserId(user);
         userHasRol.setRolId(rol);
-        userHasRol.setEscritorio(Constantes.ESCRITORIO_USER);
-        
+
         userFacade.create(user);
         uhrFacade.create(userHasRol);
+
+        limpiaDatos();
+
         FacesContext.getCurrentInstance()
-                .addMessage(null, 
+                .addMessage(null,
                         new FacesMessage(
-                                FacesMessage.SEVERITY_INFO, 
+                                FacesMessage.SEVERITY_INFO,
                                 "Usuario creado con éxito",
                                 "Usuario creado con éxito"));
-        
+
+    }
+
+    public String cancelAction() {
+        return "dashboard";
+    }
+
+    public void clearFields() {
+        limpiaDatos();
     }
     
-    public String cancelAction(){
-        return "dashboard";
+    private void limpiaDatos(){
+        datosPersona.setNombre("");
+        datosPersona.setApellido("");
+        datosPersona.setCi(null);
     }
 }

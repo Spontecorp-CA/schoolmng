@@ -138,7 +138,13 @@ public class LoginController implements Serializable {
                             sb.append(Constantes.ESCRITORIO_CONFIG);
                             break;
                         case Constantes.ROL_ADMINISTRATIVO:
-                            sb.append(Constantes.ESCRITORIO_USER);
+                            sb.append(Constantes.ESCRITORIO_ADMIN);
+                            break;    
+                        case Constantes.ROL_DOCENTE:
+                            sb.append(Constantes.ESCRITORIO_DOCENTE);
+                            break;
+                        case Constantes.ROL_REPRESENTANTE:
+                            sb.append(Constantes.ESCRITORIO_REPRESENTANTE);
                             break;    
                     } 
                     break;
