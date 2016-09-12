@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.primefaces.model.chart.PieChartModel;
@@ -65,5 +66,13 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         pieModel.setShowDataLabels(true);
         pieModel.setDiameter(200);
         pieModel.setLegendPosition("w");
+    }
+    
+    public String goConfigPeriodos(){
+        return "adminPeriodo";
+    }
+    
+    public void closeSession() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
     }
 }
