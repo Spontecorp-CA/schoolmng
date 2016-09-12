@@ -56,7 +56,8 @@
                                             <p:commandButton id="ok"
                                                              value="Aceptar"
                                                              styleClass="btn btn-success"
-                                                             actionListener="#{adminPeriodoController.crearPeriodo()}"/>
+                                                             actionListener="#{adminPeriodoController.crearPeriodo()}"
+                                                             update="tableForm"/>
                                             <p:commandButton id="newUser"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary"
@@ -89,17 +90,35 @@
                                 <div class="clearfix"></div>
                                 <h:form id="tableForm">
                                     <div class="x_content">
-                                        <h:dataTable id="periodosTable"
+                                        <p:dataTable id="periodosTable"
                                                      value="#{adminPeriodoController.periodos}"
                                                      var="item"
-                                                     styleClass="table table-hover">
-                                            <h:column>
-                                                <f:facet name="header">
-                                                    Períodos
-                                                </f:facet>
-                                                <h:outputText value="#{item.nombre}"/>
-                                            </h:column>
-                                        </h:dataTable>
+                                                     styleClass="table table-hover"
+                                                     style="width: 50%"
+                                                     editable="true">
+                                            <f:facet name="header">
+                                                Períodos
+                                            </f:facet>
+                                            <p:ajax event="cellEdit" 
+                                                    listener="#{adminPeriodoController.onCellEdit(event)}" 
+                                                    update=":tableForm" />
+                                            <p:column>
+                                                <p:cellEditor>
+                                                    <f:facet name="output">
+                                                        <h:outputText value="#{item.nombre}"/>
+                                                    </f:facet>
+                                                    <f:facet name="input">
+                                                        <p:inputText value="#{item.nombre}" 
+                                                                     style="width:100%" 
+                                                                     label="Período"/>
+                                                    </f:facet>
+                                                </p:cellEditor>
+                                                
+                                            </p:column>
+<!--                                            <p:column style="width:32px">
+                                                <p:rowEditor />
+                                            </p:column>-->
+                                        </p:dataTable>
                                     </div>
                                 </h:form>
                             </div>
