@@ -23,6 +23,8 @@ public interface PeriodoFacadeLocal {
     void remove(Periodo periodo);
 
     Periodo find(Object id);
+    
+    Periodo find(String nombre);
 
     List<Periodo> findAll();
 

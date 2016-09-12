@@ -17,7 +17,7 @@ public class MainTemplateController implements Serializable{
             User user = (User) context.getSessionMap().get("user");
 
             if (user == null) {
-                context.redirect(context.getRequestContextPath() + "/notallowed.xhtml");
+                context.redirect(context.getRequestContextPath() + "/index.xhtml");
             }    
         } catch (Exception e) {
         }
