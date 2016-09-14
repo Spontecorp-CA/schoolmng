@@ -4,6 +4,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
     <h:head>
@@ -68,8 +69,17 @@
                         <!-- sidebar menu -->
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section">
-                                <h3>General</h3>
+                                <h3>Opciones</h3>
                                 <ul class="nav side-menu">
+                                    <li><a>
+                                            <i class="fa fa-money"></i>
+                                            Cobros
+                                            <span class="fa fa-chevron-down"></span>
+                                        </a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="">Cargar Cobros</a></li>
+                                        </ul>
+                                    </li>
                                     <li><a>
                                             <i class="fa fa-home"></i> 
                                             Home 
@@ -214,6 +224,7 @@
                         <!-- /sidebar menu -->
 
                         <!-- /menu footer buttons -->
+                        <h:form id="footer_form">
                         <div class="sidebar-footer hidden-small">
                             <a data-toggle="tooltip" data-placement="top" title="Settings">
                                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -224,10 +235,14 @@
                             <a data-toggle="tooltip" data-placement="top" title="Lock">
                                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
                             </a>
-                            <a href="login.xhtml" data-toggle="tooltip" data-placement="top" title="Logout">
+                            <h:commandLink pt:data-placement="top"
+                                           pt:data-toggle="tooltip"
+                                           pt:title="Salir"
+                                           action="#{loginController.closeSession()}">
                                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                            </a>
+                            </h:commandLink>
                         </div>
+                        </h:form>
                         <!-- /menu footer buttons -->
 
                     </div>

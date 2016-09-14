@@ -72,6 +72,14 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         return "adminPeriodo";
     }
     
+    public String goConfigNiveles(){
+        return "adminNiveles";
+    }
+    
+    public String goConfigCursos() {
+        return "adminCursos";
+    }
+    
     public void closeSession() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
     }

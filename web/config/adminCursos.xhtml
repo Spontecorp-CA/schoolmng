@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
+
+            <ui:define name="pageName">
+                Administración de Cursos
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!-- subtitulo de la página -->
+                                    Administración de Cursos
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+                                <!-- contenido de la página -->
+
+                                <form jsf:id="form" class="form-horizontal form-label-left">
+                                    <span class="section">Información del Curso</span>
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="periodo">
+                                            Período del Curso: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h:selectOneMenu id="periodo"
+                                                             value="#{adminCursosController.curso.periodoInt}"
+                                                             styleClass="form-control">
+                                                <f:selectItems var="periodo"
+                                                               value="#{adminCursosController.periodos}"/>
+                                                <f:converter converterId="edu.school.entities.converters.PeriodoConverter"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nivel">
+                                            Nivel del Curso: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h:selectOneMenu id="nivel"
+                                                             value="#{adminCursosController.curso.nivelId}"
+                                                             styleClass="form-control">
+                                                <f:selectItems var="nivel"
+                                                               value="#{adminCursosController.niveles}"/>
+                                                <f:converter converterId="edu.school.entities.converters.NivelConverter"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="codigo">
+                                            Código del Curso: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:inputText id="codigo" 
+                                                         value="#{adminCursosController.curso.codigo}"
+                                                         styleClass="form-control col-md-7 col-xs-12" 
+                                                         placeholder="Agregue el código" 
+                                                         required="true"
+                                                         requiredMessage="Debe colocar el nombre"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombre">
+                                            Nombre del Curso: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:inputText id="nombre" 
+                                                         value="#{adminCursosController.curso.nombre}"
+                                                         styleClass="form-control col-md-7 col-xs-12" 
+                                                         placeholder="Agregue el nombre" 
+                                                         required="true"
+                                                         requiredMessage="Debe colocar el nombre"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="seccion">
+                                            Sección: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <h:selectOneMenu id="seccion"
+                                                             value="#{adminCursosController.curso.seccion}"
+                                                             styleClass="form-control">
+                                                <f:selectItem itemValue="Única" itemLabel="Única"/>
+                                                <f:selectItem itemValue="A" itemLabel="A"/>
+                                                <f:selectItem itemValue="B" itemLabel="B"/>
+                                                <f:selectItem itemValue="C" itemLabel="C"/>
+                                                <f:selectItem itemValue="D" itemLabel="D"/>
+                                                <f:selectItem itemValue="E" itemLabel="E"/>
+                                                <f:selectItem itemValue="F" itemLabel="F"/>
+                                                <f:selectItem itemValue="G" itemLabel="G"/>
+                                                <f:selectItem itemValue="H" itemLabel="H"/>
+                                                <f:selectItem itemValue="I" itemLabel="I"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <p:commandButton id="ok"
+                                                             value="Aceptar"
+                                                             actionListener="#{adminCursosController.crearCurso()}"
+                                                             styleClass="btn btn-success"
+                                                             update=":form :tableForm"/>
+                                            <p:commandButton id="newUser"
+                                                             value="Nuevo"
+                                                             styleClass="btn btn-primary">
+                                                <p:ajax update="form"/>
+                                            </p:commandButton>
+                                            <p:commandButton id="cancel"
+                                                             value="Cancelar"
+                                                             action="#{adminCursosController.cancelAction()}"
+                                                             styleClass="btn btn-danger"
+                                                             immediate="true"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <p:messages autoUpdate="true" showDetail="true"
+                                                closable="true"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class = "col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!--subtitulo de la página--> 
+                                    Lista de Curso
+                                </h2>
+                                <div class="clearfix"></div>
+                                <h:form id="tableForm">
+                                    <div class="x_content">
+                                        <p:dataTable id="nivelesTable"
+                                                     value="#{adminCursosController.cursos}"
+                                                     var="item"
+                                                     styleClass="table table-hover"
+                                                     style="width: 50%">
+                                            <f:facet name="header">
+                                                Cursos
+                                            </f:facet>
+
+                                            <p:column headerText="Periodo">
+                                                <h:outputText value="#{item.periodoInt.nombre}"/>
+                                            </p:column>
+                                            
+                                            <p:column headerText="Nivel">
+                                                <h:outputText value="#{item.nivelId.nombre}"/>
+                                            </p:column>
+                                            
+                                            <p:column headerText="Curso">
+                                                <h:outputText value="#{item.nombre}"/>
+                                            </p:column>
+                                            
+                                            <p:column headerText="Sección">
+                                                <h:outputText value="#{item.seccion}"/>
+                                            </p:column>
+
+                                        </p:dataTable>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

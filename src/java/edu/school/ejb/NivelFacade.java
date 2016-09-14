@@ -8,7 +8,9 @@ package edu.school.ejb;
 import edu.school.entities.Nivel;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,6 +29,19 @@ public class NivelFacade extends AbstractFacade<Nivel> implements NivelFacadeLoc
 
     public NivelFacade() {
         super(Nivel.class);
+    }
+
+    @Override
+    public Nivel findByNombre(String nombre) {
+        Nivel nivel = null;
+        try {
+            String query = "FROM Nivel n WHERE n.nombre = :nombre";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("nombre", nombre);
+            nivel = (Nivel) q.getSingleResult();
+        } catch (NoResultException e) {
+        }
+        return nivel;
     }
     
 }

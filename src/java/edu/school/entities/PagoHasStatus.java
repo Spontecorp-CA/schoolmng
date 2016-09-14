@@ -6,6 +6,7 @@
 package edu.school.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -36,6 +39,9 @@ public class PagoHasStatus implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Column(name = "fecha")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
     @JoinColumn(name = "pago_alumno_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private PagoAlumno pagoAlumnoId;
@@ -56,6 +62,14 @@ public class PagoHasStatus implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
     public PagoAlumno getPagoAlumnoId() {

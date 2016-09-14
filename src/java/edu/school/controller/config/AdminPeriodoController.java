@@ -32,6 +32,14 @@ public class AdminPeriodoController implements Serializable {
         this.nombre = nombre;
     }
 
+    public Periodo getPeriodo() {
+        return periodo;
+    }
+
+    public void setPeriodo(Periodo periodo) {
+        this.periodo = periodo;
+    }
+
     public String cancelAction() {
         return "dashboard";
     }
@@ -63,33 +71,4 @@ public class AdminPeriodoController implements Serializable {
         return periodoFacade.findAll();
     }
     
-    public void onRowEdit(RowEditEvent event) {
-        periodo = (Periodo) event.getObject();
-        
-        System.out.println("nuevo período: " + periodo.getNombre());
-        
-        periodoFacade.edit(periodo);
-        FacesMessage msg = new FacesMessage("Período Editado", 
-                periodo.getNombre());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-
-    public void onRowCancel(RowEditEvent event) {
-        periodo = (Periodo) event.getObject();
-        FacesMessage msg = new FacesMessage("Edit Cancelled", 
-                periodo.getNombre());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-    
-    public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
-
-        if (newValue != null && !newValue.equals(oldValue)) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, 
-                    "Cell Changed", "Old: " + oldValue + ", "
-                            + "New:" + newValue);
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-        }
-    }
 }
