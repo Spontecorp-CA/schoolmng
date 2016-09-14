@@ -1,7 +1,12 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui">
 
     <head>
         <title></title>
@@ -15,7 +20,144 @@
             </ui:define>
 
             <ui:define name="content">
-                Carga de cobro
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!-- subtitulo de la página -->
+                                    Administración de Cobros
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+                                <!-- contenido de la página -->
+
+                                <form jsf:id="form" class="form-horizontal form-label-left">
+                                    <span class="section">Carga de Cobros</span>
+                                    
+
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="motivo">
+                                            Motivo: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:inputText id="motivo" 
+                                                         styleClass="form-control col-md-7 col-xs-12" 
+                                                         placeholder="Motivo del cobro" 
+                                                         required="true"
+                                                         requiredMessage="Debe colocar el motivo"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="monto">
+                                            Monto del cobro: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:inputText id="monto" 
+                                                         styleClass="form-control col-md-7 col-xs-12" 
+                                                         placeholder="Agregue el nombre" 
+                                                         required="true"
+                                                         requiredMessage="Debe colocar el monto"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fecha">
+                                            Fecha: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:calendar id="fecha"
+                                                        locale="es"
+                                                        navigator="true"
+                                                        pattern="dd/MM/yyyy"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fechaVenc">
+                                            Fecha de vencimiento: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:calendar id="fechaVenc"
+                                                        locale="es"
+                                                        navigator="true"
+                                                        pattern="dd/MM/yyyy"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <p:commandButton id="ok"
+                                                             value="Aceptar"
+                                                             styleClass="btn btn-success"
+                                                             update=":form :tableForm"/>
+                                            <p:commandButton id="newUser"
+                                                             value="Nuevo"
+                                                             styleClass="btn btn-primary">
+                                                <p:ajax update="form"/>
+                                            </p:commandButton>
+                                            <p:commandButton id="cancel"
+                                                             value="Cancelar"
+                                                             action="#{adminDashboardController.goUserPage()}"
+                                                             styleClass="btn btn-danger"
+                                                             immediate="true"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <p:messages autoUpdate="true" showDetail="true"
+                                                closable="true"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class = "col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!--subtitulo de la página--> 
+                                    Lista de Curso
+                                </h2>
+                                <div class="clearfix"></div>
+                                <h:form id="tableForm">
+                                    <div class="x_content">
+                                        <p:dataTable id="nivelesTable"
+                                                     value="#{adminCursosController.cursos}"
+                                                     var="item"
+                                                     styleClass="table table-hover"
+                                                     style="width: 50%">
+                                            <f:facet name="header">
+                                                Cursos
+                                            </f:facet>
+
+                                            <p:column headerText="Periodo">
+                                                <h:outputText value="#{item.periodoInt.nombre}"/>
+                                            </p:column>
+
+                                            <p:column headerText="Nivel">
+                                                <h:outputText value="#{item.nivelId.nombre}"/>
+                                            </p:column>
+
+                                            <p:column headerText="Curso">
+                                                <h:outputText value="#{item.nombre}"/>
+                                            </p:column>
+
+                                            <p:column headerText="Sección">
+                                                <h:outputText value="#{item.seccion}"/>
+                                            </p:column>
+
+                                        </p:dataTable>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </ui:define>
 
         </ui:composition>

@@ -20,5 +20,7 @@ public abstract class DashboardFacade {
         return user;
     }
     
-    public abstract String goUserPage();
+    public String goUserPage(){
+        return "dashboard?faces-redirect=true";
+    }
 }

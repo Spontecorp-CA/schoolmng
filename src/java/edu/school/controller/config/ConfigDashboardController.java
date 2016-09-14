@@ -27,11 +27,6 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         createPieModel();
     }
     
-    @Override
-    public String goUserPage() {
-        return "adminUsers";
-    }
-    
     public PieChartModel getPieModel(){
         return pieModel;
     }
@@ -66,6 +61,10 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         pieModel.setShowDataLabels(true);
         pieModel.setDiameter(200);
         pieModel.setLegendPosition("w");
+    }
+    
+    public String goConfigUsers(){
+        return "adminUsers";
     }
     
     public String goConfigPeriodos(){

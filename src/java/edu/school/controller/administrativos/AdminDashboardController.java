@@ -9,9 +9,7 @@ import javax.inject.Named;
 @ViewScoped
 public class AdminDashboardController extends DashboardFacade implements Serializable{
 
-    @Override
-    public String goUserPage() {
-        return null;
+    public String goCargaCobros(){
+        return "cargacobros";
     }
-
 }
