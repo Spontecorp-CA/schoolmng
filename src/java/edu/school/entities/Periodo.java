@@ -98,7 +98,7 @@ public class Periodo implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.Periodo[ id=" + id + " ]";
+        return String.valueOf(id);
     }
     
 }

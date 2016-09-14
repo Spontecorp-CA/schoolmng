@@ -23,6 +23,8 @@ public interface NivelFacadeLocal {
     void remove(Nivel nivel);
 
     Nivel find(Object id);
+    
+    Nivel findByNombre(String nombre);
 
     List<Nivel> findAll();
 

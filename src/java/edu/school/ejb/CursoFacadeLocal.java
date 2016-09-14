@@ -6,6 +6,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Curso;
+import edu.school.entities.Periodo;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -23,8 +24,12 @@ public interface CursoFacadeLocal {
     void remove(Curso curso);
 
     Curso find(Object id);
+    
+    Curso find(String codigo, String nombre, Periodo periodo);
 
     List<Curso> findAll();
+    
+    List<Curso> findAllOrdered();
 
     List<Curso> findRange(int[] range);
 
