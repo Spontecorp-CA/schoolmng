@@ -41,7 +41,7 @@ public class AdminCursosController implements Serializable{
     }
     
     public String cancelAction() {
-        return "dashboard";
+        return "dashboard?faces-redirect=true";
     }
     
     public void crearCurso() {
