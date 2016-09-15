@@ -44,6 +44,7 @@
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <p:inputText id="motivo" 
+                                                         value="#{cargaCobrosController.pago.motivo}"
                                                          styleClass="form-control col-md-7 col-xs-12" 
                                                          placeholder="Motivo del cobro" 
                                                          required="true"
@@ -57,6 +58,7 @@
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <p:inputText id="monto" 
+                                                         value="#{cargaCobrosController.monto}"
                                                          styleClass="form-control col-md-7 col-xs-12" 
                                                          placeholder="Agregue el nombre" 
                                                          required="true"
@@ -70,6 +72,7 @@
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <p:calendar id="fecha"
+                                                        value="#{cargaCobrosController.pago.fecha}"
                                                         locale="es"
                                                         navigator="true"
                                                         pattern="dd/MM/yyyy"/>
@@ -82,6 +85,7 @@
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                             <p:calendar id="fechaVenc"
+                                                        value="#{cargaCobrosController.pago.fechaVencimiento}"
                                                         locale="es"
                                                         navigator="true"
                                                         pattern="dd/MM/yyyy"/>
@@ -93,8 +97,9 @@
                                         <div class="col-md-6 col-md-offset-3">
                                             <p:commandButton id="ok"
                                                              value="Aceptar"
+                                                             actionListener="#{cargaCobrosController.createPago()}"
                                                              styleClass="btn btn-success"
-                                                             update=":form :tableForm"/>
+                                                             update=":form"/>
                                             <p:commandButton id="newUser"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary">
@@ -116,11 +121,11 @@
                         </div>
                     </div>
 
-                    <div class = "col-md-12 col-sm-12 col-xs-12">
+<!--                    <div class = "col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
                             <div class="x_title">
                                 <h2>
-                                    <!--subtitulo de la página--> 
+                                    subtitulo de la página 
                                     Lista de Curso
                                 </h2>
                                 <div class="clearfix"></div>
@@ -156,7 +161,7 @@
                                 </h:form>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </ui:define>
 
