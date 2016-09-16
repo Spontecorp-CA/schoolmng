@@ -5,6 +5,7 @@
  */
 package edu.school.ejb;
 
+import edu.school.entities.User;
 import edu.school.entities.UserHasRol;
 import java.util.List;
 import javax.ejb.Local;
@@ -25,6 +26,8 @@ public interface UserHasRolFacadeLocal {
     UserHasRol find(Object id);
 
     List<UserHasRol> findAll();
+    
+    List<UserHasRol> findAll(User user);
 
     List<UserHasRol> findRange(int[] range);
 

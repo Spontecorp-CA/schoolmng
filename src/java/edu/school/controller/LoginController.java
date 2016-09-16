@@ -129,7 +129,7 @@ public class LoginController implements Serializable {
             if (user != null && user.getPsw()
                     .equals(Utilities.getSecurePassword(password))) {
                 StringBuilder sb = new StringBuilder();
-                Collection<UserHasRol> roles = user.getUserHasRolCollection();
+                Collection<UserHasRol> roles = uhRolFacade.findAll(user);
                 FacesContext.getCurrentInstance().getExternalContext()
                         .getSessionMap().put("user", user);
                 for(UserHasRol uhr : roles){
@@ -153,6 +153,8 @@ public class LoginController implements Serializable {
                 setUsuario(user.getUsr());
                 
                 page = sb.toString();
+                
+                System.out.println("la página a direccionar es: " + page);
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, 
                         new FacesMessage(FacesMessage.SEVERITY_WARN,
