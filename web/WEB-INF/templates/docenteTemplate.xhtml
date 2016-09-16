@@ -4,6 +4,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:p="http://primefaces.org/ui">
 
     <h:head>
@@ -214,6 +215,7 @@
                         <!-- /sidebar menu -->
 
                         <!-- /menu footer buttons -->
+                        <h:form id="footer_form">
                         <div class="sidebar-footer hidden-small">
                             <a data-toggle="tooltip" data-placement="top" title="Settings">
                                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
@@ -224,10 +226,14 @@
                             <a data-toggle="tooltip" data-placement="top" title="Lock">
                                 <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
                             </a>
-                            <a href="login.xhtml" data-toggle="tooltip" data-placement="top" title="Logout">
+                            <h:commandLink pt:data-placement="top"
+                                           pt:data-toggle="tooltip"
+                                           pt:title="Salir"
+                                           action="#{loginController.closeSession()}">
                                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                            </a>
+                            </h:commandLink>
                         </div>
+                        </h:form>
                         <!-- /menu footer buttons -->
 
                     </div>

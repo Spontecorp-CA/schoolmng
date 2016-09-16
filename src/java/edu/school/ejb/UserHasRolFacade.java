@@ -1,19 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.ejb;
 
+import edu.school.entities.User;
 import edu.school.entities.UserHasRol;
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
-/**
- *
- * @author jgcastillo
- */
 @Stateless
 public class UserHasRolFacade extends AbstractFacade<UserHasRol> implements UserHasRolFacadeLocal {
 
@@ -27,6 +22,19 @@ public class UserHasRolFacade extends AbstractFacade<UserHasRol> implements User
 
     public UserHasRolFacade() {
         super(UserHasRol.class);
+    }
+
+    @Override
+    public List<UserHasRol> findAll(User user) {
+        List<UserHasRol> lista = null;
+        try {
+            String query= "FROM UserHasRol uhr WHERE uhr.userId = :user";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("user", user);
+            lista = q.getResultList();
+        } catch (Exception e) {
+        }
+        return lista;
     }
     
 }

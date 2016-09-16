@@ -41,7 +41,6 @@
                                          styleClass="form-control" >
                                 <f:validateDoubleRange minimum="10000" maximum="99999999" />
                             </p:inputText>
-                            <!--<input type="text" class="form-control" placeholder="Username" required="" />-->
                         </div>
                         <div>
                             <p:inputText id="correo"
@@ -54,7 +53,6 @@
                                 <f:validateRegex pattern="#{registerController.EMAIL_PATTERN}"
                                                  for="correo"/>
                             </p:inputText>
-                            <!--<input type="email" class="form-control" placeholder="Email" required="" />-->
                         </div>
                         <div>
                             <p:password id="psw1"
@@ -70,7 +68,6 @@
                                         requiredMessage="Debe ingresar una clave"
                                         styleClass="form-control"/>
                         </div>
-                        <!--<input type="password" class="form-control" placeholder="Password" required="" />-->
                         <div>
                             <p:password id="psw2"
                                         value="#{registerController.password}"
@@ -84,7 +81,6 @@
                                              actionListener="#{registerController.verifyCI()}"
                                              update="messages, ci, correo, psw1, psw2"
                                              styleClass="btn btn-default submit" />
-                            <!--<a class="btn btn-default submit" href="index.html">Submit</a>-->
                         </div>
 
                         <div class="clearfix"></div>
@@ -94,10 +90,9 @@
                                         autoUpdate="true"/>
                             <p class="change_link">¿Ya está registrado?
                                 <p:commandLink value="Ingresar"
-                                               action="index"
+                                               action="index?faces-redirect=true;"
                                                immediate="true"
                                                styleClass="to_register"/>
-                                <!--<a href="index.xhtml" class="to_register"> Ingresar </a>-->
                             </p>
 
                             <div class="clearfix"></div>
