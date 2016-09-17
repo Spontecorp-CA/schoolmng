@@ -36,7 +36,6 @@
 
                                 <form jsf:id="form" class="form-horizontal form-label-left">
                                     <span class="section">Carga de Cobros</span>
-                                    
 
                                     <div class="item form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="motivo">
@@ -91,6 +90,37 @@
                                                         pattern="dd/MM/yyyy"/>
                                         </div>
                                     </div>
+                                    
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="">
+                                            ¿Repetir?: 
+                                        </label>
+                                        <div class="col-md-1 col-sm-1 col-xs-6">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <h:selectBooleanCheckbox 
+                                                        styleClass="flat"
+                                                        value="#{cargaCobrosController.repeat}">
+<!--                                                        <f:ajax event="click" 
+                                                                render="meses" 
+                                                                immediate="true"/> -->
+                                                    </h:selectBooleanCheckbox>
+<!--                                                    <input type="checkbox" class="flat"/>-->
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 col-sm-3 col-xs-12">
+                                            <p:inputText id="meses" 
+                                                         value="#{cargaCobrosController.meses}"
+                                                         styleClass="form-control col-md-3 col-xs-12" 
+                                                         placeholder="meses"
+                                                         required="true"
+                                                         requiredMessage="Debe colocar el monto"
+                                                         validatorMessage="Debe ingresar un número">
+<!--                                                <f:ajax render="@form" immediate="true"/>-->
+                                            </p:inputText>
+                                        </div>                                        
+                                    </div>
 
                                     <div class="ln_solid"></div>
                                     <div class="form-group">
@@ -120,48 +150,6 @@
                             </div>
                         </div>
                     </div>
-
-<!--                    <div class = "col-md-12 col-sm-12 col-xs-12">
-                        <div class="x_panel">
-                            <div class="x_title">
-                                <h2>
-                                    subtitulo de la página 
-                                    Lista de Curso
-                                </h2>
-                                <div class="clearfix"></div>
-                                <h:form id="tableForm">
-                                    <div class="x_content">
-                                        <p:dataTable id="nivelesTable"
-                                                     value="#{adminCursosController.cursos}"
-                                                     var="item"
-                                                     styleClass="table table-hover"
-                                                     style="width: 50%">
-                                            <f:facet name="header">
-                                                Cursos
-                                            </f:facet>
-
-                                            <p:column headerText="Periodo">
-                                                <h:outputText value="#{item.periodoInt.nombre}"/>
-                                            </p:column>
-
-                                            <p:column headerText="Nivel">
-                                                <h:outputText value="#{item.nivelId.nombre}"/>
-                                            </p:column>
-
-                                            <p:column headerText="Curso">
-                                                <h:outputText value="#{item.nombre}"/>
-                                            </p:column>
-
-                                            <p:column headerText="Sección">
-                                                <h:outputText value="#{item.seccion}"/>
-                                            </p:column>
-
-                                        </p:dataTable>
-                                    </div>
-                                </h:form>
-                            </div>
-                        </div>
-                    </div>-->
                 </div>
             </ui:define>
 
