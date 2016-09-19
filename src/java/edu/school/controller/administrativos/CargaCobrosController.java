@@ -5,6 +5,12 @@ import edu.school.entities.Pago;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Date;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -22,8 +28,9 @@ public class CargaCobrosController implements Serializable{
     @Inject 
     private Pago pago;
     
-    private String monto;
-
+    private boolean repeat;
+    private Integer meses;
+    
     public Pago getPago() {
         return pago;
     }
@@ -32,49 +39,62 @@ public class CargaCobrosController implements Serializable{
         this.pago = pago;
     }
 
-    public String getMonto() {
-        return monto;
+    public boolean isRepeat() {
+        return repeat;
     }
 
-    public void setMonto(String monto) {
-        this.monto = monto;
+    public void setRepeat(boolean repeat) {
+        this.repeat = repeat;
     }
-    
+
+    public Integer getMeses() {
+        return meses;
+    }
+
+    public void setMeses(Integer meses) {
+        this.meses = meses;
+    }
+
     public void createPago(){
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        StringBuilder sb = new StringBuilder();
-        try {
-            double montoBs = Double.parseDouble(monto);
-            pago.setMonto(montoBs);
-        } catch (NumberFormatException e) {
-            FacesContext.getCurrentInstance().addMessage(
-                    null, 
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            e.getMessage(),
-                            "debe ingresar un número en al campo 'Monto'"));
-            return;
-        }
-        
-        pagoFacade.create(pago);
-         
-        sb.append("El cobro a crear es  ").append(pago.getMotivo());
-        sb.append(" por un monto de ").append(pago.getMonto());
-        sb.append(" en la fecha de ").append(df.format(pago.getFecha()));
-        sb.append(" con vencimiento ").append(df.format(pago.getFechaVencimiento()));
-        System.out.println(sb.toString());
-        
+        saveCobros();
         clearFields();
         FacesContext.getCurrentInstance().addMessage(
                 null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Operación exitosa",
-                        "Cobro cargado con éxito"));
+                        "Cobro(s) cargado(s) con éxito"));
     }
     
     public void clearFields(){
         pago.setMotivo("");
-        monto = "";
+        pago.setMonto(null);
         pago.setFecha(null);
         pago.setFechaVencimiento(null);
+        repeat = false;
+        meses = null;
+    }
+    
+    private void saveCobros(){
+        pagoFacade.create(pago);
+        if(repeat){
+            for(int i = 0; i < meses - 1; i++){
+                pago.setFecha(fechaOffset(pago.getFecha()));
+                pago.setFechaVencimiento(fechaOffset(pago.getFechaVencimiento()));
+                pagoFacade.create(pago);
+            }
+        }
+    }
+    
+    private Date fechaOffset(Date fecha){
+        LocalDate ld = LocalDateTime.ofInstant(fecha.toInstant(), 
+                        ZoneId.systemDefault()).toLocalDate();
+        ld = ld.plusDays(30);
+        if(ld.getDayOfWeek() == DayOfWeek.SATURDAY){
+            ld = ld.plusDays(2);
+        } else if (ld.getDayOfWeek() == DayOfWeek.SUNDAY){
+            ld = ld.plusDays(1);
+        }
+        return Date.from(ld.atStartOfDay()
+                            .atZone(ZoneId.systemDefault()).toInstant());
     }
 }
