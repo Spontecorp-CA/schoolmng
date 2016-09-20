@@ -38,7 +38,10 @@
                                     <div class="x_content">
                                         <p:dataTable var="pago"
                                                      value="#{listaCobrosController.pagos()}"
-                                                     styleClass="table table-hover">
+                                                     styleClass="table table-hover"
+                                                     paginator="true"
+                                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                     rowsPerPageTemplate="5,10,15">
                                             <p:column headerText="Fecha Registro">
                                                 <h:outputText value="#{pago.fecha}">
                                                     <f:convertDateTime pattern="dd/MM/yyyy"/>

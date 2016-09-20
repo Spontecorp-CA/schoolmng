@@ -153,8 +153,6 @@ public class LoginController implements Serializable {
                 setUsuario(user.getUsr());
                 
                 page = sb.toString();
-                
-                System.out.println("la página a direccionar es: " + page);
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, 
                         new FacesMessage(FacesMessage.SEVERITY_WARN,

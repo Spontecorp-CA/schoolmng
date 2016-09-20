@@ -6,6 +6,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Curso;
+import edu.school.entities.Nivel;
 import edu.school.entities.Periodo;
 import java.util.List;
 import javax.ejb.Local;
@@ -28,6 +29,8 @@ public interface CursoFacadeLocal {
     Curso find(String codigo, String nombre, Periodo periodo);
 
     List<Curso> findAll();
+    
+    List<Curso> findAll(Nivel nivel);
     
     List<Curso> findAllOrdered();
 
