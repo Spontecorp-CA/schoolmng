@@ -80,6 +80,23 @@
                                     </li>
                                     
                                     <li><a>
+                                            <i class="fa fa-child"></i>
+                                            Alumnos
+                                            <span class="fa fa-chevron-down"></span>
+                                        </a>
+                                        <ul class="nav child_menu">
+                                            <li>
+                                                <h:commandLink action="#{adminDashboardController.goCargaAlumnos()}"
+                                                               value="Carga de Alumnos"/>
+                                            </li>
+                                            <li>
+                                                <h:commandLink action="#{adminDashboardController.goListaAlumnos()}"
+                                                               value="Lista de Alumnos"/>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    
+                                    <li><a>
                                             <i class="fa fa-money"></i>
                                             Cobros
                                             <span class="fa fa-chevron-down"></span>
@@ -95,7 +112,7 @@
                                             </li>
                                         </ul>
                                     </li>
-
+                                    
                                 </ul>
                             </div>
 
