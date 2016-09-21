@@ -14,7 +14,7 @@
             <meta charset="utf-8"/>
             <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
             <meta name="viewport" content="width=device-width, initial-scale=1"/>
-            <title>Facelet Title</title>
+            <title>Colegio Belagua</title>
         </f:facet>
 
         <f:facet name="middle">
@@ -32,8 +32,9 @@
             <!-- Custom Theme Style -->
             <h:outputStylesheet library="css" name="custom.css"/>                    
         </f:facet>
-        <title>Facelets Template</title>
+        
         <f:event type="preRenderView" listener="#{mainTemplateController.verifySession()}"/>
+        <link rel="shorcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}" />
     </h:head>
 
     <h:body class="nav-md footer_fixed">
@@ -80,6 +81,23 @@
                                     </li>
                                     
                                     <li><a>
+                                            <i class="fa fa-child"></i>
+                                            Alumnos
+                                            <span class="fa fa-chevron-down"></span>
+                                        </a>
+                                        <ul class="nav child_menu">
+                                            <li>
+                                                <h:commandLink action="#{adminDashboardController.goCargaAlumnos()}"
+                                                               value="Carga de Alumnos"/>
+                                            </li>
+                                            <li>
+                                                <h:commandLink action="#{adminDashboardController.goListaAlumnos()}"
+                                                               value="Lista de Alumnos"/>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    
+                                    <li><a>
                                             <i class="fa fa-money"></i>
                                             Cobros
                                             <span class="fa fa-chevron-down"></span>
@@ -89,9 +107,13 @@
                                                 <h:commandLink action="#{adminDashboardController.goCargaCobros()}"
                                                                value="Carga de Cobros"/>
                                             </li>
+                                            <li>
+                                                <h:commandLink action="#{adminDashboardController.goListaCobros()}"
+                                                               value="Lista de Cobros"/>
+                                            </li>
                                         </ul>
                                     </li>
-
+                                    
                                 </ul>
                             </div>
 

@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Curso;
+import edu.school.entities.Nivel;
 import edu.school.entities.Periodo;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -50,6 +51,19 @@ public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLoc
         try {
             String query = "FROM Curso c ORDER BY c.periodoInt, c.nivelId";
             Query q = getEntityManager().createQuery(query);
+            cursos = q.getResultList();
+        } catch (Exception e) {
+        }
+        return cursos;
+    }
+
+    @Override
+    public List<Curso> findAll(Nivel nivel) {
+        List<Curso> cursos = null;
+        try {
+            String query = "FROM Curso c WHERE c.nivelId = :nivel";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("nivel", nivel);
             cursos = q.getResultList();
         } catch (Exception e) {
         }
