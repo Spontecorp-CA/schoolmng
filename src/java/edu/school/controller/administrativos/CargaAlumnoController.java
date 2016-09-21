@@ -9,6 +9,7 @@ import edu.school.entities.Curso;
 import edu.school.entities.CursoHasAlumno;
 import edu.school.entities.DatosPersona;
 import edu.school.entities.Nivel;
+import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,9 +88,9 @@ public class CargaAlumnoController implements Serializable {
     public String saveAlumno(){
         assignDatosPersonaToAlumno();
         alumnoFacade.create(alumno);
-        System.out.println("El curso seleccionado es: " + curso.getId());
         assingAlumnoToCurso();
         clearFields();
+        JsfUtils.messageSuccess("Alumno registrado con éxito");
         return null;
     }
     

@@ -17,6 +17,7 @@ public class CursoConverter implements Converter {
     @Override
     public Object getAsObject(FacesContext context, UIComponent component,
             String value) {
+        
         if (value == null || value.length() == 0) {
             return null;
         }

@@ -145,7 +145,7 @@ public class Alumno implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.Alumno[ id=" + id + " ]";
+        return String.valueOf(id);
     }
 
 }

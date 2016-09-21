@@ -166,7 +166,7 @@ public class Curso implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.Curso[ id=" + id + " ]";
+        return String.valueOf(id);
     }
     
 }
