@@ -28,74 +28,176 @@
                                 </h2>
                                 <div class="clearfix"></div>
                             </div>
-                            <div class="x_content">
 
-                                <!-- contenido de la página -->
+                            <!-- contenido de la página -->
+                            <div class="x_content">
+                                
 
                                 <form jsf:id="form" class="form-horizontal form-label-left">
                                     <!--span class="section">Carga de Cobros</span-->
 
+                                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                                            <li role="alumno" class="active">
+                                                <a href="#tab_content1" 
+                                                   id="alumno-tab" role="tab" 
+                                                   data-toggle="tab" 
+                                                   aria-expanded="true">
+                                                    Datos Alumno
+                                                </a>
+                                            </li>
+                                            <li role="representante" class="">
+                                                <a href="#tab_content2" 
+                                                   id="repre-tab" role="tab"  
+                                                   data-toggle="tab" 
+                                                   aria-expanded="false">
+                                                    Datos Representante
+                                                </a>
+                                            </li>
+                                            <li role="curso" class="">
+                                                <a href="#tab_content3" 
+                                                   id="curso-tab" role="tab"  
+                                                   data-toggle="tab" 
+                                                   aria-expanded="false">
+                                                    Datos del Curso
+                                                </a>
+                                            </li>
+                                        </ul>
 
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombre">
-                                            Nombre: <span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <p:inputText id="nombre" 
-                                                         value="#{cargaAlumnoController.datosPersona.nombre}"
-                                                         styleClass="form-control col-md-7 col-xs-12" 
-                                                         placeholder="Nombre(s)" 
-                                                         required="true"
-                                                         requiredMessage="Debe colocar el(los) nombre(s)"/>
+                                        <div id="myTabContent" class="tab-content">
+                                            <!-- Tab del alumno-->
+                                            <div role="tabpanel" 
+                                                 class="tab-pane fade active in" 
+                                                 id="tab_content1" 
+                                                 aria-labelledby="alumno-tab">
+                                                
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombreAl">
+                                                        Nombre: <span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputText id="nombreAl" 
+                                                                     value="#{cargaAlumnoController.datosAlumno.nombre}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Nombre(s)" 
+                                                                     required="true"
+                                                                     requiredMessage="Debe colocar el(los) nombre(s) del alumno"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoAl">
+                                                        Apellido: <span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputText id="apellidoAl" 
+                                                                     value="#{cargaAlumnoController.datosAlumno.apellido}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Apellido(s)" 
+                                                                     required="true"
+                                                                     requiredMessage="Debe colocar el(los) apellido(s) del alumno"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Fin Tab del alumno-->
+                                            
+                                            <!-- Tab del representante-->
+                                            <div role="tabpanel" 
+                                                 class="tab-pane fade" 
+                                                 id="tab_content2" 
+                                                 aria-labelledby="repre-tab">
+                                                
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ciRep">
+                                                        Cédula Identidad: <span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputText id="ciRep" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.ci}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Cédula de Identidad" 
+                                                                     required="true"
+                                                                     requiredMessage="Debe colocar la CI del representante">
+                                                            <p:ajax event="blur" 
+                                                                    update="nombreRep apellidoRep"
+                                                                    listener="#{cargaAlumnoController.lookForCI()}"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombreRep">
+                                                        Nombre: <span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputText id="nombreRep" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.nombre}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Nombre(s)" 
+                                                                     required="true"
+                                                                     requiredMessage="Debe colocar el(los) nombre(s) del Representante"/>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoRep">
+                                                        Apellido: <span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputText id="apellidoRep" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.apellido}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Apellidos(s)" 
+                                                                     required="true"
+                                                                     requiredMessage="Debe colocar el(los) appelido(s) del Representante"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Fin Tab del representante-->
+
+                                            <!-- Tab del curso-->
+                                            <div role="tabpanel" 
+                                                 class="tab-pane fade" 
+                                                 id="tab_content3" 
+                                                 aria-labelledby="curso-tab">
+                                                
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="niveles">
+                                                        Nivel: <span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <h:selectOneMenu id="niveles"
+                                                                         value="#{cargaAlumnoController.nivel}"
+                                                                         styleClass="form-control">
+                                                            <f:selectItems var="nivel"
+                                                                           value="#{adminCursosController.niveles}"/>
+                                                            <f:converter converterId="edu.school.entities.converters.NivelConverter"/>
+                                                            <p:ajax event="valueChange" 
+                                                                    update="cursos"/>
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cursos">
+                                                        Curso: <span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <h:selectOneMenu id="cursos"
+                                                                         value="#{cargaAlumnoController.curso}"
+                                                                         styleClass="form-control">
+                                                            <f:selectItems var="curso"
+                                                                           value="#{cargaAlumnoController.cursos}"/>
+                                                            <f:converter converterId="edu.school.entities.converters.CursoConverter"/>
+                                                        </h:selectOneMenu>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <!--Fin Tab del curso-->
                                         </div>
                                     </div>
 
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellido">
-                                            Apellido: <span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <p:inputText id="apellido" 
-                                                         value="#{cargaAlumnoController.datosPersona.apellido}"
-                                                         styleClass="form-control col-md-7 col-xs-12" 
-                                                         placeholder="Apellido(s)" 
-                                                         required="true"
-                                                         requiredMessage="Debe colocar el(los) apellido(s)"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="niveles">
-                                            Nivel: <span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <h:selectOneMenu id="niveles"
-                                                             value="#{cargaAlumnoController.nivel}"
-                                                             styleClass="form-control">
-                                                <f:selectItems var="nivel"
-                                                               value="#{adminCursosController.niveles}"/>
-                                                <f:converter converterId="edu.school.entities.converters.NivelConverter"/>
-                                                <p:ajax event="valueChange" 
-                                                        update="cursos"/>
-                                            </h:selectOneMenu>
-                                        </div>
-                                    </div>
-
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cursos">
-                                            Curso: <span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <h:selectOneMenu id="cursos"
-                                                             value="#{cargaAlumnoController.curso}"
-                                                             styleClass="form-control">
-                                                <f:selectItems var="curso"
-                                                               value="#{cargaAlumnoController.cursos}"/>
-                                                <f:converter converterId="edu.school.entities.converters.CursoConverter"/>
-                                            </h:selectOneMenu>
-                                        </div>
-                                    </div>
-                                    
                                     <div class="ln_solid"></div>
                                     <div class="form-group">
                                         <div class="col-md-6 col-md-offset-3">
@@ -125,8 +227,8 @@
                         </div>
                     </div>
                 </div>
-            </ui:define>
 
+            </ui:define>
         </ui:composition>
 
     </body>
