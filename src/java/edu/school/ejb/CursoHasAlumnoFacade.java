@@ -5,10 +5,14 @@
  */
 package edu.school.ejb;
 
+import edu.school.entities.Curso;
 import edu.school.entities.CursoHasAlumno;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,6 +31,19 @@ public class CursoHasAlumnoFacade extends AbstractFacade<CursoHasAlumno> impleme
 
     public CursoHasAlumnoFacade() {
         super(CursoHasAlumno.class);
+    }
+
+    @Override
+    public List<CursoHasAlumno> findAll(Curso curso) {
+        List<CursoHasAlumno> lista = null;
+        try {
+            String query = "FROM CursoHasAlumno cha WHERE cha.cursoId = :curso";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("curso", curso);
+            lista = q.getResultList();
+        } catch (NoResultException e) {
+        }
+        return lista;
     }
     
 }
