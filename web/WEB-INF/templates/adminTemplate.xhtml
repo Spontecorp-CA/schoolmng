@@ -88,11 +88,28 @@
                                         <ul class="nav child_menu">
                                             <li>
                                                 <h:commandLink action="#{adminDashboardController.goCargaAlumnos()}"
-                                                               value="Carga de Alumnos"/>
+                                                               value="Ingreso de Alumnos"/>
                                             </li>
                                             <li>
                                                 <h:commandLink action="#{adminDashboardController.goListaAlumnos()}"
                                                                value="Lista de Alumnos"/>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    
+                                    <li><a>
+                                            <i class="fa fa-child"></i>
+                                            Representantes
+                                            <span class="fa fa-chevron-down"></span>
+                                        </a>
+                                        <ul class="nav child_menu">
+                                            <li>
+                                                <h:commandLink action="#{adminDashboardController.goCargaRepresentantes()}"
+                                                               value="Ingreso de Representante"/>
+                                            </li>
+                                            <li>
+                                                <h:commandLink action="#{adminDashboardController.goListaRepresentantes()}"
+                                                               value="Lista de Representantes"/>
                                             </li>
                                         </ul>
                                     </li>
