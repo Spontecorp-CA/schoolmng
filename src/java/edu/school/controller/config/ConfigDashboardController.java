@@ -57,7 +57,7 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         pieModel.set("Representantes", represents);
         
         pieModel.setTitle("Usuarios por tipo");
-        pieModel.setFill(false);
+        pieModel.setFill(true);
         pieModel.setShowDataLabels(true);
         pieModel.setDiameter(200);
         pieModel.setLegendPosition("w");
