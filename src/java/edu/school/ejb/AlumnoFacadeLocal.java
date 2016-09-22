@@ -6,6 +6,8 @@
 package edu.school.ejb;
 
 import edu.school.entities.Alumno;
+import edu.school.entities.Curso;
+import edu.school.entities.Nivel;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -25,7 +27,7 @@ public interface AlumnoFacadeLocal {
     Alumno find(Object id);
 
     List<Alumno> findAll();
-
+    
     List<Alumno> findRange(int[] range);
 
     int count();

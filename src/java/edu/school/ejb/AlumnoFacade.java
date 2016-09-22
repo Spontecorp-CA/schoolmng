@@ -6,6 +6,9 @@
 package edu.school.ejb;
 
 import edu.school.entities.Alumno;
+import edu.school.entities.Curso;
+import edu.school.entities.Nivel;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

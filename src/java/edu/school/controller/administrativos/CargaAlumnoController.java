@@ -6,7 +6,9 @@ import edu.school.ejb.CursoFacadeLocal;
 import edu.school.ejb.CursoHasAlumnoFacadeLocal;
 import edu.school.ejb.DatosPersonaFacadeLocal;
 import edu.school.ejb.RepresentanteFacadeLocal;
+import edu.school.ejb.RolFacadeLocal;
 import edu.school.ejb.UserFacadeLocal;
+import edu.school.ejb.UserHasRolFacadeLocal;
 import edu.school.entities.Alumno;
 import edu.school.entities.AlumnoHasRepresentante;
 import edu.school.entities.Curso;
@@ -14,7 +16,10 @@ import edu.school.entities.CursoHasAlumno;
 import edu.school.entities.DatosPersona;
 import edu.school.entities.Nivel;
 import edu.school.entities.Representante;
+import edu.school.entities.Rol;
 import edu.school.entities.User;
+import edu.school.entities.UserHasRol;
+import edu.school.utilities.Constantes;
 import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,7 +33,7 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class CargaAlumnoController implements Serializable {
-    
+
     @EJB
     private AlumnoFacadeLocal alumnoFacade;
     @EJB
@@ -42,8 +47,12 @@ public class CargaAlumnoController implements Serializable {
     @EJB
     private UserFacadeLocal userFacade;
     @EJB
+    private UserHasRolFacadeLocal userHasRolFacade;
+    @EJB
     private AlumnoHasRepresentanteFacadeLocal alumnoHasRepresentanteFacade;
-    
+    @EJB
+    private RolFacadeLocal rolFacade;
+
     @Inject
     private Alumno alumno;
     @Inject
@@ -56,13 +65,15 @@ public class CargaAlumnoController implements Serializable {
     private Nivel nivel;
     @Inject
     private Curso curso;
-    @Inject 
+    @Inject
     private CursoHasAlumno cursoHasAlumno;
     @Inject
     private User user;
     @Inject
+    private UserHasRol userHasRol;
+    @Inject
     private AlumnoHasRepresentante alumnoHasRepresentante;
-    
+
     private boolean repExiste;
 
     public Alumno getAlumno() {
@@ -122,59 +133,68 @@ public class CargaAlumnoController implements Serializable {
         });
         return itemsList;
     }
-    
-    public String saveAlumno(){
+
+    public String saveAlumno() {
         assignDatosPersonaToAlumno();
         alumnoFacade.create(alumno);
-        if(!repExiste){
+        if (!repExiste) {
             assignDatosPersonaToRepresentante();
-        } 
+        }
         assignAlumnoToRepresentante();
         assingAlumnoToCurso();
         clearFields();
-        JsfUtils.messageSuccess("Alumno y Representante registrado con éxito");
+        JsfUtils.messageSuccess("Alumno y Representante registrados con éxito");
         return null;
     }
-    
-    private void assignDatosPersonaToAlumno(){
+
+    private void assignDatosPersonaToAlumno() {
         datosPersonaFacade.create(datosAlumno);
         alumno.setDatosPersonaId(datosAlumno);
     }
-    
-    private void assignDatosPersonaToRepresentante(){
+
+    private void assignDatosPersonaToRepresentante() {
         datosPersonaFacade.create(datosRepresentante);
-        if(!userExiste()){
-            user.setCi(datosRepresentante.getCi());
-            userFacade.create(user);
+        if (!userExiste()) {
+            createUser();
         }
         representante.setDatosPersonaId(datosRepresentante);
         representante.setUserId(user);
         representanteFacade.create(representante);
     }
-    
-    private boolean userExiste(){
+
+    private boolean userExiste() {
         int ciTemp = datosRepresentante.getCi();
-        if (userFacade.find(ciTemp) != null){
+        if (userFacade.find(ciTemp) != null) {
             user = userFacade.find(ciTemp);
             return true;
         } else {
             return false;
         }
     }
-    
-    private void assignAlumnoToRepresentante(){
+
+    private void assignAlumnoToRepresentante() {
         alumnoHasRepresentante.setAlumnoId(alumno);
         alumnoHasRepresentante.setRepresentanteId(representante);
         alumnoHasRepresentanteFacade.create(alumnoHasRepresentante);
     }
-    
-    private void assingAlumnoToCurso(){
+
+    private void assingAlumnoToCurso() {
         cursoHasAlumno.setAlumnoId(alumno);
         cursoHasAlumno.setCursoId(curso);
         cursoHasAlumnoFacade.create(cursoHasAlumno);
     }
-    
-    public void clearFields(){
+
+    private void createUser() {
+        user.setCi(datosRepresentante.getCi());
+        userFacade.create(user);
+        Rol rol = rolFacade.find(Constantes.ROL_REPRESENTANTE);
+        userHasRol.setUserId(user);
+        userHasRol.setRolId(rol);
+        userHasRol.setEscritorio(Constantes.ESCRITORIO_REPRESENTANTE);
+        userHasRolFacade.create(userHasRol);
+    }
+
+    public void clearFields() {
         datosAlumno.setNombre("");
         datosAlumno.setApellido("");
         datosRepresentante.setNombre("");
@@ -182,12 +202,12 @@ public class CargaAlumnoController implements Serializable {
         nivel = null;
         curso = null;
     }
-    
-    public void lookForCI(){
+
+    public void lookForCI() {
         int ciTemp = datosRepresentante.getCi();
-        if(datosPersonaFacade.find(ciTemp) != null){
+        if (datosPersonaFacade.find(ciTemp) != null) {
             datosRepresentante = datosPersonaFacade.find(ciTemp);
             repExiste = true;
-        } 
+        }
     }
 }

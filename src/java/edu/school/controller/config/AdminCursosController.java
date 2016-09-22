@@ -95,7 +95,7 @@ public class AdminCursosController implements Serializable{
     public List<SelectItem> getNiveles(){
         List<Nivel> niveles = nivelFacade.findAll();
         List<SelectItem> itemsList = new ArrayList<>();
-        itemsList.add(new SelectItem(null, "Seleccione Niveles..."));
+        itemsList.add(new SelectItem(null, "Seleccione Nivel..."));
         niveles.stream().forEach(n -> {
             itemsList.add(new SelectItem(n, n.getNombre()));
         });
