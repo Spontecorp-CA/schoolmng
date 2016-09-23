@@ -74,7 +74,7 @@ public class CargaAlumnoController implements Serializable {
     @Inject
     private AlumnoHasRepresentante alumnoHasRepresentante;
 
-    private boolean repExiste;
+    private boolean repExist;
 
     public Alumno getAlumno() {
         return alumno;
@@ -137,7 +137,7 @@ public class CargaAlumnoController implements Serializable {
     public String saveAlumno() {
         assignDatosPersonaToAlumno();
         alumnoFacade.create(alumno);
-        if (!repExiste) {
+        if (!repExist) {
             assignDatosPersonaToRepresentante();
         }
         assignAlumnoToRepresentante();
@@ -154,7 +154,7 @@ public class CargaAlumnoController implements Serializable {
 
     private void assignDatosPersonaToRepresentante() {
         datosPersonaFacade.create(datosRepresentante);
-        if (!userExiste()) {
+        if (!userExist()) {
             createUser();
         }
         representante.setDatosPersonaId(datosRepresentante);
@@ -162,7 +162,7 @@ public class CargaAlumnoController implements Serializable {
         representanteFacade.create(representante);
     }
 
-    private boolean userExiste() {
+    private boolean userExist() {
         int ciTemp = datosRepresentante.getCi();
         if (userFacade.find(ciTemp) != null) {
             user = userFacade.find(ciTemp);
@@ -207,7 +207,7 @@ public class CargaAlumnoController implements Serializable {
         int ciTemp = datosRepresentante.getCi();
         if (datosPersonaFacade.find(ciTemp) != null) {
             datosRepresentante = datosPersonaFacade.find(ciTemp);
-            repExiste = true;
+            repExist = true;
         }
     }
 }

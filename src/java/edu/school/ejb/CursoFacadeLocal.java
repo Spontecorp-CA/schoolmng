@@ -32,6 +32,8 @@ public interface CursoFacadeLocal {
     
     List<Curso> findAll(Nivel nivel);
     
+    List<Curso> findAll(Periodo periodo, Nivel nivel);
+    
     List<Curso> findAllOrdered();
 
     List<Curso> findRange(int[] range);
