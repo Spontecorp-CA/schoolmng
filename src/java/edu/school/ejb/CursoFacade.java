@@ -69,5 +69,20 @@ public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLoc
         }
         return cursos;
     }
+
+    @Override
+    public List<Curso> findAll(Periodo periodo, Nivel nivel) {
+        List<Curso> cursos = null;
+        try {
+            String query = "FROM Curso c WHERE c.periodoInt = :periodo "
+                    + "AND c.nivelId = :nivel";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("periodo", periodo);
+            q.setParameter("nivel", nivel);
+            cursos = q.getResultList();
+        } catch (Exception e) {
+        }
+        return cursos;
+    }
     
 }

@@ -36,27 +36,89 @@
                                 <form jsf:id="form" class="form-horizontal form-label-left">
                                     <span class="section">Lista de Representantes</span>
                                     <div class="x_content">
-                                        <p:dataTable var="repre"
-                                                     value="#{listaRepresentantesController.representantes}"
+                                        
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="periodos">
+                                                Período: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <h:selectOneMenu id="periodos"
+                                                                 value="#{listaRepresentantesController.periodo}"
+                                                                 styleClass="form-control">
+                                                    <f:selectItems var="prdo"
+                                                                   value="#{listaRepresentantesController.periodos}"/>
+                                                    <f:converter converterId="edu.school.entities.converters.PeriodoConverter"/>
+                                                    <p:ajax event="valueChange"
+                                                            update="form:niveles"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="niveles">
+                                                Nivel: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <h:selectOneMenu id="niveles"
+                                                                 value="#{listaRepresentantesController.nivel}"
+                                                                 styleClass="form-control">
+                                                    <f:selectItems var="prdo"
+                                                                   value="#{listaRepresentantesController.periodos}"/>
+                                                    <f:converter converterId="edu.school.entities.converters.PeriodoConverter"/>
+                                                    <p:ajax event="valueChange"
+                                                            update="form:cursos"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cursos">
+                                                Curso: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <h:selectOneMenu id="cursos"
+                                                                 value="#{listaRepresentantesController.curso}"
+                                                                 styleClass="form-control">
+                                                    <f:selectItems var="prdo"
+                                                                   value="#{listaRepresentantesController.periodos}"/>
+                                                    <f:converter converterId="edu.school.entities.converters.PeriodoConverter"/>
+                                                    <p:ajax event="valueChange"
+                                                            listener="#{listaRepresentantesController.handlePeriodoChange()}"
+                                                            update="form:repTable"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="ln_solid"></div>
+                                        <p:dataTable id="repTable"
+                                                     var="data"
+                                                     value="#{listaRepresentantesController.data}"
                                                      styleClass="table table-hover"
                                                      paginator="true"
                                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                                      rowsPerPageTemplate="5,10,15">
-                                            <p:column headerText="Apellido">
-                                                <h:outputText value="#{repre.datosPersonaId.apellido}" />
-                                            </p:column>
-
-                                            <p:column headerText="Nombre">
-                                                <h:outputText value="#{repre.datosPersonaId.nombre}"/>
+                                            <p:column headerText="Representante">
+                                                <h:outputText value="#{data.representante.datosPersonaId.apellido},  
+                                                              #{data.representante.datosPersonaId.nombre}" />
                                             </p:column>
 
                                             <p:column headerText="C.I.">
-                                                <h:outputText value="#{repre.datosPersonaId.ci}"/>
+                                                <h:outputText value="#{data.representante.datosPersonaId.ci}"/>
                                             </p:column>
 
                                             <p:column headerText="email">
-                                                <h:outputText value="#{repre.datosPersonaId.email}"/>
+                                                <h:outputText value="#{data.representante.datosPersonaId.email}"/>
                                             </p:column>
+                                            
+                                            <p:column headerText="Alumno">
+                                                <h:outputText value="#{data.alumno.datosPersonaId.apellido},  
+                                                              #{data.alumno.datosPersonaId.nombre}" />
+                                            </p:column>
+                                            
+                                            <p:column headerText="Curso">
+                                                <h:outputText value="#{data.curso.nombre}" />
+                                            </p:column>
+
                                         </p:dataTable>
                                     </div>
                                 </form>
