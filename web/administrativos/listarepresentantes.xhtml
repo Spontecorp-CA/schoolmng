@@ -38,29 +38,29 @@
                                     <div class="x_content">
                                         
                                         <div class="item form-group">
-                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="periodos">
-                                                Período: <span class="required">*</span>
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <h:selectOneMenu id="periodos"
-                                                                 value="#{listaRepresentantesController.periodo}"
-                                                                 styleClass="form-control">
-                                                    <f:selectItems var="prdo"
-                                                                   value="#{listaRepresentantesController.periodos}"/>
-                                                    <f:converter converterId="edu.school.entities.converters.PeriodoConverter"/>
-                                                    <p:ajax event="valueChange"
-                                                            update="form:niveles"/>
-                                                </h:selectOneMenu>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="item form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="niveles">
                                                 Nivel: <span class="required">*</span>
                                             </label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <h:selectOneMenu id="niveles"
                                                                  value="#{listaRepresentantesController.nivel}"
+                                                                 styleClass="form-control">
+                                                    <f:selectItems var="niv"
+                                                                   value="#{listaRepresentantesController.niveles}"/>
+                                                    <f:converter converterId="edu.school.entities.converters.NivelConverter"/>
+                                                    <p:ajax event="valueChange"
+                                                            update="form:periodos form:cursos"/>
+                                                </h:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="item form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="periodos">
+                                                Período: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <h:selectOneMenu id="periodos"
+                                                                 value="#{listaRepresentantesController.periodo}"
                                                                  styleClass="form-control">
                                                     <f:selectItems var="prdo"
                                                                    value="#{listaRepresentantesController.periodos}"/>
@@ -79,11 +79,11 @@
                                                 <h:selectOneMenu id="cursos"
                                                                  value="#{listaRepresentantesController.curso}"
                                                                  styleClass="form-control">
-                                                    <f:selectItems var="prdo"
-                                                                   value="#{listaRepresentantesController.periodos}"/>
-                                                    <f:converter converterId="edu.school.entities.converters.PeriodoConverter"/>
+                                                    <f:selectItems var="cur"
+                                                                   value="#{listaRepresentantesController.cursos}"/>
+                                                    <f:converter converterId="edu.school.entities.converters.CursoConverter"/>
                                                     <p:ajax event="valueChange"
-                                                            listener="#{listaRepresentantesController.handlePeriodoChange()}"
+                                                            listener="#{listaRepresentantesController.handleCursoChange()}"
                                                             update="form:repTable"/>
                                                 </h:selectOneMenu>
                                             </div>
@@ -116,7 +116,7 @@
                                             </p:column>
                                             
                                             <p:column headerText="Curso">
-                                                <h:outputText value="#{data.curso.nombre}" />
+                                                <h:outputText value="#{data.curso.nombre} - #{data.curso.seccion}" />
                                             </p:column>
 
                                         </p:dataTable>

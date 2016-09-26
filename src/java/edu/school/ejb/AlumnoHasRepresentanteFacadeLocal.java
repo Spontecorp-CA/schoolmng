@@ -5,6 +5,7 @@
  */
 package edu.school.ejb;
 
+import edu.school.entities.Alumno;
 import edu.school.entities.AlumnoHasRepresentante;
 import java.util.List;
 import javax.ejb.Local;
@@ -25,6 +26,8 @@ public interface AlumnoHasRepresentanteFacadeLocal {
     AlumnoHasRepresentante find(Object id);
 
     List<AlumnoHasRepresentante> findAll();
+    
+    List<AlumnoHasRepresentante> findAll(Alumno alumno);
 
     List<AlumnoHasRepresentante> findRange(int[] range);
 
