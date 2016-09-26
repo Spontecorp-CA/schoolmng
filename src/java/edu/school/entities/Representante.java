@@ -44,7 +44,7 @@ public class Representante implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "representanteId")
     private Collection<AlumnoHasRepresentante> alumnoHasRepresentanteCollection;
     @JoinColumn(name = "datos_persona_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     private DatosPersona datosPersonaId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne

@@ -77,7 +77,7 @@ public class ListaRepresentantesController implements Serializable {
         });
         return items;
     }
-    
+
     public List<SelectItem> getNiveles() {
         List<Nivel> nivelesList = nivelFacade.findAll();
         List<SelectItem> items = new ArrayList<>();
@@ -87,13 +87,13 @@ public class ListaRepresentantesController implements Serializable {
         });
         return items;
     }
-    
+
     public List<SelectItem> getCursos() {
         List<Curso> cursosList = cursoFacade.findAll(periodo, nivel);
         List<SelectItem> items = new ArrayList<>();
         items.add(new SelectItem(null, "Seleccione curso..."));
         cursosList.stream().forEach(prd -> {
-            items.add(new SelectItem(prd, prd.getNombre()));
+            items.add(new SelectItem(prd, prd.getNombre() + "-" + prd.getSeccion()));
         });
         return items;
     }
@@ -105,26 +105,28 @@ public class ListaRepresentantesController implements Serializable {
         return data;
     }
 
-    public void handlePeriodoChange() {
-        data = fillDataList();
+    public void handleCursoChange() {
+        data = null;
     }
 
     private List<RepresentanteAlumnoData> fillDataList() {
-        List<AlumnoHasRepresentante> alumRepList = alumnoHasRepresentanteFacade.findAll();
         List<RepresentanteAlumnoData> datos = new ArrayList<>();
-
         
-        if (periodo.getNombre() != null) {
-            for (AlumnoHasRepresentante item : alumRepList) {
-                RepresentanteAlumnoData rad = new RepresentanteAlumnoData();
-                rad.setRepresentante(item.getRepresentanteId());
-                rad.setAlumno(item.getAlumnoId());
-
-                CursoHasAlumno cha = cursoHasAlumnoFacade.find(item.getAlumnoId(), periodo);
-                if(cha != null){
-                    rad.setCurso(cha.getCursoId());
+        if(curso != null){
+            List<CursoHasAlumno> chaList = cursoHasAlumnoFacade.findAll(curso);
+            
+            for(CursoHasAlumno cha : chaList){
+                List<AlumnoHasRepresentante> ahrList = alumnoHasRepresentanteFacade
+                                                    .findAll(cha.getAlumnoId());
+                if(ahrList != null && !ahrList.isEmpty()){
+                    for(AlumnoHasRepresentante ahr : ahrList){
+                        RepresentanteAlumnoData rad = new RepresentanteAlumnoData();
+                        rad.setAlumno(ahr.getAlumnoId());
+                        rad.setRepresentante(ahr.getRepresentanteId());
+                        rad.setCurso(curso);
+                        datos.add(rad);
+                    }
                 }
-                datos.add(rad);
             }
         }
         return datos;

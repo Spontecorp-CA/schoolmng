@@ -5,6 +5,7 @@
  */
 package edu.school.ejb;
 
+import edu.school.entities.DatosPersona;
 import edu.school.entities.Representante;
 import java.util.List;
 import javax.ejb.Local;
@@ -23,6 +24,8 @@ public interface RepresentanteFacadeLocal {
     void remove(Representante representante);
 
     Representante find(Object id);
+    
+    Representante find(DatosPersona datosPersona);
 
     List<Representante> findAll();
 
