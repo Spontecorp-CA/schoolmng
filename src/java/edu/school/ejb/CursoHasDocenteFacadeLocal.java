@@ -5,6 +5,7 @@
  */
 package edu.school.ejb;
 
+import edu.school.entities.Curso;
 import edu.school.entities.CursoHasDocente;
 import java.util.List;
 import javax.ejb.Local;
@@ -25,9 +26,11 @@ public interface CursoHasDocenteFacadeLocal {
     CursoHasDocente find(Object id);
 
     List<CursoHasDocente> findAll();
+    
+    public List<CursoHasDocente> findAll(Curso curso);
 
     List<CursoHasDocente> findRange(int[] range);
 
     int count();
-    
+
 }
