@@ -23,6 +23,8 @@ public interface MateriaFacadeLocal {
     void remove(Materia materia);
 
     Materia find(Object id);
+    
+    Materia find(String nombre);
 
     List<Materia> findAll();
 

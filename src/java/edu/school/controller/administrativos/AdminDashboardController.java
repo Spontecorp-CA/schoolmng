@@ -32,4 +32,12 @@ public class AdminDashboardController extends DashboardFacade implements Seriali
     public String goListaRepresentantes() {
         return "listarepresentantes";
     }
+    
+    public String goCargaMaterias() {
+        return "cargamateria";
+    }
+    
+    public String goCargaDocentes() {
+        return "cargadocente";
+    }
 }
