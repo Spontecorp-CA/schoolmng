@@ -207,6 +207,7 @@ public class CargaAlumnoController implements Serializable {
         int ciTemp = datosRepresentante.getCi();
         if (datosPersonaFacade.find(ciTemp) != null) {
             datosRepresentante = datosPersonaFacade.find(ciTemp);
+            representante = representanteFacade.find(datosRepresentante);
             repExist = true;
         }
     }

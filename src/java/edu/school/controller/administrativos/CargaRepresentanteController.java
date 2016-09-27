@@ -65,14 +65,6 @@ public class CargaRepresentanteController implements Serializable {
 
     private boolean repExist = false;
 
-//    public Representante getRepresentante() {
-//        return representante;
-//    }
-//
-//    public void setRepresentante(Representante representante) {
-//        this.representante = representante;
-//    }
-//
     public DatosPersona getDatosRepresentante() {
         return datosRepresentante;
     }
@@ -161,10 +153,10 @@ public class CargaRepresentanteController implements Serializable {
             
             assignRepresentanteToAlumno();
             JsfUtils.messageSuccess("Representante creado/asignado con éxito");
+            clearFields();
         } catch (Exception e) {
             JsfUtils.messageError("Ha ocurrido un error creando/asignando el representante");
         }
-        
     }
     
     private void assignDatosPersonalesToRepresentante(){
@@ -188,11 +180,16 @@ public class CargaRepresentanteController implements Serializable {
     private void assignRepresentanteToAlumno(){
         AlumnoHasRepresentante ahr = new AlumnoHasRepresentante();
         
-        System.out.println("EL alumno es:  " + alumno.getId());
-        System.out.println("El representantes es " + representante.getId());
-        
         ahr.setAlumnoId(alumno);
         ahr.setRepresentanteId(representante);
         alumnoHasRepresentanteFacade.create(ahr);
+    }
+    
+    private void clearFields(){
+        datosRepresentante.setApellido(null);
+        datosRepresentante.setNombre(null);
+        datosRepresentante.setCi(null);
+        nivel.setNombre(null);
+        curso.setNombre(null);
     }
 }
