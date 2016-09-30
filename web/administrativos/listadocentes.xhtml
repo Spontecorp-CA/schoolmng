@@ -34,10 +34,10 @@
                                 <!-- contenido de la página -->
 
                                 <form jsf:id="form" class="form-horizontal form-label-left">
-                                    <span class="section">Lista de Alumnos</span>
+                                    <span class="section">Lista de Docentes</span>
                                     <div class="x_content">
 
-                                        <div class="item form-group">
+<!--                                        <div class="item form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="niveles">
                                                 Nivel: <span class="required">*</span>
                                             </label>
@@ -70,21 +70,21 @@
                                                             listener="#{listaAlumnosController.handleCursoChange()}"/>
                                                 </h:selectOneMenu>
                                             </div>
-                                        </div>
+                                        </div>-->
 
-                                        <p:dataTable id="alumnoTable"
-                                                     var="alumno"
-                                                     value="#{listaAlumnosController.alumnos}"
+                                        <p:dataTable id="docentesTable"
+                                                     var="docente"
+                                                     value="#{listaDocentesController.docentes}"
                                                      styleClass="table table-striped"
                                                      paginator="true"
                                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                                      rowsPerPageTemplate="5,10,15">
                                             <p:column headerText="Apellido">
-                                                <h:outputText value="#{alumno.datosPersonaId.apellido}"/>
+                                                <h:outputText value="#{docente.datosPersonaId.apellido}"/>
                                             </p:column>
 
                                             <p:column headerText="Nombre">
-                                                <h:outputText value="#{alumno.datosPersonaId.nombre}"/>
+                                                <h:outputText value="#{docente.datosPersonaId.nombre}"/>
                                             </p:column>
 
                                         </p:dataTable>
