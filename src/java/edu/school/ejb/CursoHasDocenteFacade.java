@@ -7,6 +7,8 @@ package edu.school.ejb;
 
 import edu.school.entities.Curso;
 import edu.school.entities.CursoHasDocente;
+import edu.school.entities.Docente;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -46,4 +48,20 @@ public class CursoHasDocenteFacade extends AbstractFacade<CursoHasDocente> imple
         return lista;
     }
     
+    @Override
+    public List<Curso> findAll(Docente docente) {
+        List<Curso> lista = null;
+        try {
+            String query = "FROM CursoHasDocente chd WHERE chd.docenteId = :docente";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("docente", docente);
+            List<CursoHasDocente> chdList = q.getResultList();
+            lista = new ArrayList<>();
+            for(CursoHasDocente chd : chdList){
+                lista.add(chd.getCursoId());
+            }
+        } catch (NoResultException e) {
+        }
+        return lista;
+    }
 }
