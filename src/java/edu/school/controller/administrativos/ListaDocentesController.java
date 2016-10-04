@@ -71,16 +71,18 @@ public class ListaDocentesController implements Serializable {
 
     private List<DocenteCursoData> fillDocentesList() {
         List<DocenteCursoData> docentesTemp = makeDocentesCursoData();
-        Collections.sort(docentesTemp, (d1, d2) -> d1.getDatosPersonaId().getApellido()
-                .compareTo(d2.getDatosPersonaId().getApellido()));
+        Collections.sort(docentesTemp, (d1, d2) -> d1.getDocente()
+                                                     .getDatosPersonaId()
+                                                     .getApellido()
+                .compareTo(d2.getDocente().getDatosPersonaId().getApellido()));
 
         return docentesTemp;
     }
 
     private List<DocenteCursoData> makeDocentesCursoData() {
         List<DocenteCursoData> data = new ArrayList<>();
-        List<Docente> docentes = docenteFacade.findAll();
-        docentes.stream()
+        List<Docente> docenteList = docenteFacade.findAll();
+        docenteList.stream()
                 .forEach(doc ->{
                     DocenteCursoData dcd = new DocenteCursoData();
                     dcd.setDocente(doc);
