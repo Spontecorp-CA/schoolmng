@@ -31,7 +31,7 @@ public class LoginController implements Serializable {
     @EJB
     private UserHasRolFacadeLocal uhRolFacade;
 
-    private String usuario;
+    private String usuario = "jadmin@test.com";
     private String password;
 
     public LoginController() {
