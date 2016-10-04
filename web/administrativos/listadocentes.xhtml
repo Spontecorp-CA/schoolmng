@@ -5,7 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <head>
         <title></title>
@@ -73,20 +74,37 @@
                                         </div>-->
 
                                         <p:dataTable id="docentesTable"
-                                                     var="docente"
+                                                     var="item"
                                                      value="#{listaDocentesController.docentes}"
                                                      styleClass="table table-striped"
                                                      paginator="true"
                                                      paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                                      rowsPerPageTemplate="5,10,15">
                                             <p:column headerText="Apellido">
-                                                <h:outputText value="#{docente.datosPersonaId.apellido}"/>
+                                                <h:outputText value="#{item.docente.datosPersonaId.apellido}"/>
                                             </p:column>
 
                                             <p:column headerText="Nombre">
-                                                <h:outputText value="#{docente.datosPersonaId.nombre}"/>
+                                                <h:outputText value="#{item.docente.datosPersonaId.nombre}"/>
                                             </p:column>
-
+                                            
+                                            <p:column headerText="C.I.">
+                                                <h:outputText value="#{item.docente.datosPersonaId.ci}"/>
+                                            </p:column>
+                                            
+                                            <p:column headerText="Materias">
+                                                <ui:repeat var="mat" value="#{item.materias}" varStatus="status">
+                                                    #{mat.nombre}<h:outputText value=", " 
+                                                                  rendered="#{!status.last}"/>
+                                                </ui:repeat>
+                                            </p:column>
+                                            
+                                            <p:column headerText="Cursos">
+                                                <ui:repeat var="cur" value="#{item.cursos}" varStatus="status">
+                                                    #{cur.nombre}<h:outputText value=", " 
+                                                                  rendered="#{!status.last}"/>
+                                                </ui:repeat>
+                                            </p:column>
                                         </p:dataTable>
                                     </div>
                                 </form>
