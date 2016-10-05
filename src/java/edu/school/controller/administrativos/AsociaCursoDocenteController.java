@@ -62,19 +62,15 @@ public class AsociaCursoDocenteController implements Serializable {
     public void saveSelection() {
         List<Curso> cursosSelected = (List<Curso>) cursos.getTarget();
         List<CursoHasDocente> chdList = new ArrayList<>();
-        Curso cur;
         
         if (!cursosSelected.isEmpty()) {
-            for (int i = 0; i < cursosSelected.size(); i++) {
-                if (!(cursosSelected.get(i) instanceof Curso)) {
-                    cur = cursoFacade.findByStringId(String.valueOf(cursosSelected.get(i)));
-                } else {
-                    cur = cursosSelected.get(i);
-                }
-                CursoHasDocente chd = new CursoHasDocente();
-                chd.setDocenteId(docenteSelected);
-                chd.setCursoId(cur);
-                chdList.add(chd);
+            if (!cursosSelected.isEmpty()) {
+                cursosSelected.stream().forEach(cur -> {
+                    CursoHasDocente chd = new CursoHasDocente();
+                    chd.setDocenteId(docenteSelected);
+                    chd.setCursoId(cur);
+                    chdList.add(chd);
+                });
             }
         } else {
             JsfUtils.messageError("No ha seleccionado cursos para este profesor");

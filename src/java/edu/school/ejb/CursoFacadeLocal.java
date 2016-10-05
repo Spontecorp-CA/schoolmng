@@ -28,8 +28,6 @@ public interface CursoFacadeLocal {
     
     Curso find(String codigo, String nombre, Periodo periodo);
     
-    Curso findByStringId(String idString);
-    
     List<Curso> findAll();
     
     List<Curso> findAll(Nivel nivel);

@@ -26,8 +26,6 @@ public interface MateriaFacadeLocal {
     
     Materia find(String nombre);
     
-    Materia findByStringId(String idString);
-
     List<Materia> findAll();
 
     List<Materia> findRange(int[] range);
