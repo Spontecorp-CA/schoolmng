@@ -71,7 +71,8 @@
                                                     value="#{asociaCursoDocenteController.cursos}"
                                                     var="cur"
                                                     itemLabel="#{cur.nombre}-#{cur.seccion}"
-                                                    itemValue="#{cur}"/>
+                                                    itemValue="#{cur}"
+                                                    converter="edu.school.entities.converters.CursoConverter"/>
                                     </div>
 
                                     <div class="ln_solid"></div>

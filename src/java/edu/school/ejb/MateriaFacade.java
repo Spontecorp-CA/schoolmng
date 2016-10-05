@@ -41,13 +41,7 @@ public class MateriaFacade extends AbstractFacade<Materia> implements MateriaFac
             materia = (Materia) q.getSingleResult();
         } catch (NoResultException e) {
         }
-        return null;
+        return materia;
     }
 
-    @Override
-    public Materia findByStringId(String idString) {
-        Integer id = Integer.valueOf(idString);
-        return this.find(id);
-    }
-    
 }

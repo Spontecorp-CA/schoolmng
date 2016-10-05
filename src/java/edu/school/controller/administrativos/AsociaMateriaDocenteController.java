@@ -62,20 +62,14 @@ public class AsociaMateriaDocenteController implements Serializable {
     public void saveSelection() {
         List<Materia> materiasSelected = (List<Materia>) materias.getTarget();
         List<MateriaHasDocente> mhdList = new ArrayList<>();
-        Materia mat;
         
         if (!materiasSelected.isEmpty()) {
-            for (int i = 0; i < materiasSelected.size(); i++) {
-                if (!(materiasSelected.get(i) instanceof Materia)) {
-                    mat = materiaFacade.findByStringId(String.valueOf(materiasSelected.get(i)));
-                } else {
-                    mat = materiasSelected.get(i);
-                }
+            materiasSelected.stream().forEach(mat -> {
                 MateriaHasDocente mhd = new MateriaHasDocente();
                 mhd.setDocenteId(docenteSelected);
                 mhd.setMateriaId(mat);
-                mhdList.add(mhd);
-            }
+                mhdList.add(mhd);                
+            });
         } else {
             JsfUtils.messageError("No ha seleccionado materias para este profesor");
             return;
