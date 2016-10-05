@@ -7,6 +7,7 @@ package edu.school.ejb;
 
 import edu.school.entities.StatusPago;
 import java.util.List;
+import java.util.Optional;
 import javax.ejb.Local;
 
 /**
@@ -23,6 +24,8 @@ public interface StatusPagoFacadeLocal {
     void remove(StatusPago statusPago);
 
     StatusPago find(Object id);
+    
+    Optional<StatusPago> findXNombre(String nombre);
 
     List<StatusPago> findAll();
 
