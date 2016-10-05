@@ -25,7 +25,7 @@
                             <div class="x_title">
                                 <h2>
                                     <!-- subtitulo de la página -->
-                                    Asignación de Materias a Docente
+                                    Asignación de Cursos a Docente
                                 </h2>
                                 <div class="clearfix"></div>
                             </div>
@@ -33,18 +33,16 @@
                             <!-- contenido de la página -->
                             <div class="x_content">
                                 <form jsf:id="form" class="form-horizontal form-label-left">
-                                    <!--                                    <span class="section">Ingreso de Materia</span>-->
-
                                     <div class="row">
                                         <div class="col-md-6 col-sm-12">
                                             <p:dataTable id="docentesTable"
                                                          class="table table-hover table-bordered"
-                                                         value="#{asociaMateriaDocenteController.docentes}"
+                                                         value="#{asociaCursoDocenteController.docentes}"
                                                          var="doc"
                                                          scrollable="true"
                                                          scrollHeight="150"
                                                          selectionMode="single"
-                                                         selection="#{asociaMateriaDocenteController.docenteSelected}"
+                                                         selection="#{asociaCursoDocenteController.docenteSelected}"
                                                          rowKey="#{doc.id}">
                                                 <p:column>
                                                     <f:facet name="header">
@@ -70,10 +68,10 @@
 
                                     <div class="row">
                                         <p:pickList id="pickList"
-                                                    value="#{asociaMateriaDocenteController.materias}"
-                                                    var="mat"
-                                                    itemLabel="#{mat.nombre}"
-                                                    itemValue="#{mat}"/>
+                                                    value="#{asociaCursoDocenteController.cursos}"
+                                                    var="cur"
+                                                    itemLabel="#{cur.nombre}-#{cur.seccion}"
+                                                    itemValue="#{cur}"/>
                                     </div>
 
                                     <div class="ln_solid"></div>
@@ -81,11 +79,11 @@
                                         <div class="col-md-6 col-md-offset-3">
                                             <p:commandButton id="ok"
                                                              value="Aceptar"
-                                                             actionListener="#{asociaMateriaDocenteController.saveSelection()}"
+                                                             actionListener="#{asociaCursoDocenteController.saveSelection()}"
                                                              styleClass="btn btn-success">
                                             </p:commandButton>
                                             <p:commandButton id="newUser"
-                                                             actionListener="#{asociaMateriaDocenteController.clearFields()}"
+                                                             actionListener="#{asociaCursoDocenteController.clearFields()}"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary">
                                                 <p:ajax update="form"/>

@@ -84,5 +84,11 @@ public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLoc
         }
         return cursos;
     }
+
+    @Override
+    public Curso findByStringId(String idString) {
+        Integer id = Integer.valueOf(idString);
+        return this.find(id);
+    }
     
 }
