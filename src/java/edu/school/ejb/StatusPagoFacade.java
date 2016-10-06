@@ -6,9 +6,12 @@
 package edu.school.ejb;
 
 import edu.school.entities.StatusPago;
+import java.util.Optional;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,5 +31,19 @@ public class StatusPagoFacade extends AbstractFacade<StatusPago> implements Stat
     public StatusPagoFacade() {
         super(StatusPago.class);
     }
-    
+
+    @Override
+    public Optional<StatusPago> findXNombre(String nombre) {
+        Optional<StatusPago> statusOptional = Optional.empty();
+        try {
+            Query q = getEntityManager()
+                    .createQuery("FROM StatusPago st WHERE st.nombre = :nombre");
+            q.setParameter("nombre", nombre);
+            
+            StatusPago statusPago = (StatusPago) q.getSingleResult();
+            statusOptional = Optional.ofNullable(statusPago);
+        } catch (NoResultException e) {
+        }
+        return statusOptional;
+    }
 }
