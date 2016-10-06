@@ -45,8 +45,6 @@ public class AdminStatusPagoController implements Serializable {
             statusPagoFacade.create(statusPago);
             JsfUtils.messageSuccess("Status de Pago creado con éxito");
         }
-        
-        
     }
     
     public List<StatusPago> getStatusPagos(){
