@@ -157,6 +157,22 @@
                                                 <h:commandLink action="#{adminDashboardController.goListaCobros()}"
                                                                value="Lista de Cobros"/>
                                             </li>
+                                            <li><a>Asignación de Cobros<span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosNivel()}"
+                                                                       value="A un Nivel"/>
+                                                    </li>
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosCurso()}"
+                                                                       value="A un Curso"/>
+                                                    </li>
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosAlumno()}"
+                                                                       value="A un Alumno"/>
+                                                    </li>
+                                                </ul>
+                                            </li>
                                         </ul>
                                     </li>
                                     

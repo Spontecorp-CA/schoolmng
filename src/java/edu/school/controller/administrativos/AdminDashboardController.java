@@ -52,4 +52,16 @@ public class AdminDashboardController extends DashboardFacade implements Seriali
     public String goAsociarCursoDocente() {
         return "asociacursodocente";
     }
+    
+    public String goAsignaPagosNivel() {
+        return "asignapagosnivel";
+    }
+    
+    public String goAsignaPagosCurso() {
+        return "asignapagoscurso";
+    }
+    
+    public String goAsignaPagosAlumno() {
+        return "asignapagosalumno";
+    }
 }
