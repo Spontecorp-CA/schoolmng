@@ -20,4 +20,10 @@ public class Constantes {
     public static final int USUARIO_ACTIVO = 1;
     public static final int USUARIO_INACTIVO = 0;
     public static final int USUARIO_ELIMINADO = 2;
+    
+    public static final String STATUS_PAGO_PENDIENTE = "Pendiente";
+    public static final String STATUS_PAGO_PAGADOTIEMPO = "Pagado en tiempo";
+    public static final String STATUS_PAGO_PAGADOATRASO = "Pagado en atraso";
+    public static final String STATUS_PAGO_EXONERADO = "Exonerado";
+    public static final String STATUS_PAGO_DESCUENTO = "Descuento";
 }

@@ -34,57 +34,68 @@
                             <div class="x_content">
                                 <form jsf:id="form" class="form-horizontal form-label-left">
                                     <div class="row">
-                                        <div class="col-md-6 col-sm-12">
-                                            <p:dataTable id="docentesTable"
+                                        <div class="col-md-8 col-sm-12">
+                                            <p>Cobros: </p>
+                                            <p:dataTable id="cobrosTable"
                                                          class="table table-hover table-bordered"
-                                                         value="#{asociaCursoDocenteController.docentes}"
-                                                         var="doc"
+                                                         value="#{asignaPagosController.pagos}"
+                                                         var="pag"
                                                          scrollable="true"
                                                          scrollHeight="150"
                                                          selectionMode="single"
-                                                         selection="#{asociaCursoDocenteController.docenteSelected}"
-                                                         rowKey="#{doc.id}">
+                                                         selection="#{asignaPagosController.pagoSelected}"
+                                                         rowKey="#{pag.id}">
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        Apellido
+                                                        Motivo
                                                     </f:facet>
-                                                    <h:outputText value="#{doc.datosPersonaId.apellido}"/>
+                                                    <h:outputText value="#{pag.motivo}"/>
                                                 </p:column>
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        Nombre
+                                                        Monto
                                                     </f:facet>
-                                                    <h:outputText value="#{doc.datosPersonaId.nombre}"/>
+                                                    <h:outputText value="#{pag.monto}"/>
                                                 </p:column>
                                                 <p:column>
                                                     <f:facet name="header">
-                                                        C.I.
+                                                        Fecha
                                                     </f:facet>
-                                                    <h:outputText value="#{doc.datosPersonaId.ci}"/>
+                                                    <h:outputText value="#{pag.fecha}">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                    </h:outputText>
+                                                </p:column>
+                                                <p:column>
+                                                    <f:facet name="header">
+                                                        Fecha Vencimiento
+                                                    </f:facet>
+                                                    <h:outputText value="#{pag.fechaVencimiento}">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                                    </h:outputText>
                                                 </p:column>
                                             </p:dataTable>
                                         </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <p>Niveles:</p>
+                                            <p:selectOneMenu id="niveles"
+                                                             value="#{asignaPagosController.nivelSelected}"
+                                                             converter="edu.school.entities.converters.NivelConverter"
+                                                             style="width: 80%">
+                                                <f:selectItems value="#{asignaPagosController.niveles}"/>
+                                            </p:selectOneMenu>
+                                        </div>
                                     </div>
-
-                                    <div class="row">
-                                        <p:pickList id="pickList"
-                                                    value="#{asociaCursoDocenteController.cursos}"
-                                                    var="cur"
-                                                    itemLabel="#{cur.nombre}-#{cur.seccion}"
-                                                    itemValue="#{cur}"
-                                                    converter="edu.school.entities.converters.CursoConverter"/>
-                                    </div>
-
                                     <div class="ln_solid"></div>
                                     <div class="form-group">
+                                        
                                         <div class="col-md-6 col-md-offset-3">
                                             <p:commandButton id="ok"
                                                              value="Aceptar"
-                                                             actionListener="#{asociaCursoDocenteController.saveSelection()}"
+                                                             actionListener="#{asignaPagosController.saveSelection()}"
                                                              styleClass="btn btn-success">
                                             </p:commandButton>
                                             <p:commandButton id="newUser"
-                                                             actionListener="#{asociaCursoDocenteController.clearFields()}"
+                                                             actionListener="#{asignaPagosController.clearFields()}"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary">
                                                 <p:ajax update="form"/>
