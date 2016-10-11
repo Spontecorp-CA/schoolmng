@@ -17,6 +17,7 @@ import edu.school.entities.PagoAlumno;
 import edu.school.entities.PagoHasStatus;
 import edu.school.entities.StatusPago;
 import edu.school.utilities.Constantes;
+import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -118,18 +119,9 @@ public class AsignaPagosController implements Serializable {
             });
         });
         
-        paList.stream().forEach(pa -> {
-            System.out.println("El pago " + pa.getPagoId().getFecha() 
-                    + " ha sido asignado a " 
-                    + pa.getAlumnoId().getDatosPersonaId().getApellido()
-                    + ", " + pa.getAlumnoId().getDatosPersonaId().getNombre()
-                    + "(" + pa.getAlumnoId().getId() + ")");
-        });
-        
-        phsList.stream().forEach(phs -> {
-            System.out.println(phs.getPagoAlumnoId().getAlumnoId() + " " 
-                        + phs.getStatusPagoId().getNombre());
-        });
+        pagoAlumnoFacade.batchCreate(paList);
+        pagoHasStatusFacade.batchCreate(phsList);
+        JsfUtils.messageSuccess("Cobros cargados con éxito");
     }
 
     private List<Pago> makePagoList() {

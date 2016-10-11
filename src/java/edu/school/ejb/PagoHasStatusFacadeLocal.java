@@ -6,6 +6,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.PagoHasStatus;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -17,8 +18,12 @@ import javax.ejb.Local;
 public interface PagoHasStatusFacadeLocal {
 
     void create(PagoHasStatus pagoHasStatus);
+    
+    void batchCreate(Collection<PagoHasStatus> lista);
 
     void edit(PagoHasStatus pagoHasStatus);
+    
+    void batchEdit(Collection<PagoHasStatus> lista);
 
     void remove(PagoHasStatus pagoHasStatus);
 
