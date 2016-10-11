@@ -66,6 +66,8 @@ public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLoc
             q.setParameter("nivel", nivel);
             cursos = q.getResultList();
         } catch (Exception e) {
+            System.err.println("Error en CursoFacade metodo findAll(Nivel nivel): " 
+                    + e.getMessage());
         }
         return cursos;
     }

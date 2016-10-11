@@ -5,10 +5,13 @@
  */
 package edu.school.ejb;
 
+import edu.school.entities.Alumno;
 import edu.school.entities.PagoAlumno;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,5 +31,18 @@ public class PagoAlumnoFacade extends AbstractFacade<PagoAlumno> implements Pago
     public PagoAlumnoFacade() {
         super(PagoAlumno.class);
     }
-    
+
+    @Override
+    public List<PagoAlumno> findAllxAlumno(Alumno alumno){
+        List<PagoAlumno> lista = null;
+        try {
+            Query q = getEntityManager()
+                            .createQuery("FROM PagoAlumno pa "
+                                    + "WHERE pa.alumnoId = :alumno");
+            q.setParameter("alumno", alumno);
+            lista = q.getResultList();
+        } catch (Exception e) {
+        }
+        return lista;
+    }
 }

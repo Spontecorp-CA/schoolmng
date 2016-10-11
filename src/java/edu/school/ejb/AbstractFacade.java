@@ -5,9 +5,11 @@
  */
 package edu.school.ejb;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -17,10 +19,11 @@ import javax.validation.ValidatorFactory;
 /**
  *
  * @author jgcastillo
+ * @param <T>
  */
 public abstract class AbstractFacade<T> {
 
-    private Class<T> entityClass;
+    private final Class<T> entityClass;
 
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -33,9 +36,45 @@ public abstract class AbstractFacade<T> {
             getEntityManager().persist(entity);
         }
     }
+    
+    public void batchCreate(Collection<T> col) {
+        EntityManager em = null;
+        try {
+            int count = 0;
+            em = getEntityManager();
+            for (T element : col) {
+                em.persist(element);
+                if (count % 50 == 0) {
+                    em.flush();
+                    em.clear();
+                }
+                count++;
+            }
+        } catch (Exception e) {
+            System.err.println("Error guardando la lista enviada " + e.getMessage());
+        } 
+    }
 
     public void edit(T entity) {
         getEntityManager().merge(entity);
+    }
+    
+    public void batchEdit(Collection<T> col) {
+        EntityManager em = null;
+        try {
+            int count = 0;
+            em = getEntityManager();
+            for (T element : col) {
+                em.merge(element);
+                if (count % 50 == 0) {
+                    em.flush();
+                    em.clear();
+                }
+                count++;
+            }
+        } catch (Exception e) {
+            System.err.println("Error editando en Abstract Facade : " + e.getMessage());
+        } 
     }
 
     public void remove(T entity) {
