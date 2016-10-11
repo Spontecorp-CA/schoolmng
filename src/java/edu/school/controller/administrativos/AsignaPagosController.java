@@ -26,6 +26,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.model.SelectItem;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 @Named
@@ -49,10 +50,16 @@ public class AsignaPagosController implements Serializable {
     @EJB
     private StatusPagoFacadeLocal statusPagoFacade;
 
+    @Inject
     private Pago pagoSelected;
+    @Inject
     private Nivel nivelSelected;
+    @Inject
+    private Curso cursoSelected;
+    
     private List<Pago> pagos;
     private List<SelectItem> niveles;
+    private List<SelectItem> cursos;
 
     @PostConstruct
     public void init() {
@@ -67,13 +74,6 @@ public class AsignaPagosController implements Serializable {
         this.pagoSelected = pagoSelected;
     }
 
-    public List<Pago> getPagos() {
-        if (pagos == null) {
-            pagos = makePagoList();
-        }
-        return pagos;
-    }
-
     public Nivel getNivelSelected() {
         return nivelSelected;
     }
@@ -82,11 +82,30 @@ public class AsignaPagosController implements Serializable {
         this.nivelSelected = nivelSelected;
     }
 
+    public Curso getCursoSelected() {
+        return cursoSelected;
+    }
+
+    public void setCursoSelected(Curso cursoSelected) {
+        this.cursoSelected = cursoSelected;
+    }
+    
+    public List<Pago> getPagos() {
+        if (pagos == null) {
+            pagos = makePagoList();
+        }
+        return pagos;
+    }
+    
     public List<SelectItem> getNiveles() {
         if (niveles == null) {
             niveles = makeNivelList();
         }
         return niveles;
+    }
+    
+    public List<Curso> getCursos(){
+        if
     }
 
     public void clearFields() {
@@ -136,6 +155,15 @@ public class AsignaPagosController implements Serializable {
         });
         return items;
     }
+    
+    private List<SelectItem> makeCursoList() {
+        List<Curso> cursoList = makeCursoXNivelList(nivelSelected);
+        List<SelectItem> items = new ArrayList<>();
+        cursoList.stream().forEach(cr -> {
+            items.add(new SelectItem(cr, cr.getNombre()));
+        });
+        return items;
+    }
 
     private List<Curso> makeCursoXNivelList(Nivel nivel) {
         return cursoFacade.findAll(nivel);
@@ -149,4 +177,5 @@ public class AsignaPagosController implements Serializable {
         });
         return alumnos;
     }
+    
 }
