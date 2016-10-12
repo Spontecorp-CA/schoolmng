@@ -56,10 +56,10 @@ public class AsignaPagosController implements Serializable {
     private Nivel nivelSelected;
     @Inject
     private Curso cursoSelected;
-    
+
     private List<Pago> pagos;
     private List<SelectItem> niveles;
-    private List<SelectItem> cursos;
+    private List<SelectItem> selectItemsCurso;
 
     @PostConstruct
     public void init() {
@@ -89,23 +89,23 @@ public class AsignaPagosController implements Serializable {
     public void setCursoSelected(Curso cursoSelected) {
         this.cursoSelected = cursoSelected;
     }
-    
+
     public List<Pago> getPagos() {
         if (pagos == null) {
             pagos = makePagoList();
         }
         return pagos;
     }
-    
+
     public List<SelectItem> getNiveles() {
         if (niveles == null) {
             niveles = makeNivelList();
         }
         return niveles;
     }
-    
-    public List<Curso> getCursos(){
-        if
+
+    public List<SelectItem> getCursos() {
+        return makeCursoList();
     }
 
     public void clearFields() {
@@ -117,11 +117,11 @@ public class AsignaPagosController implements Serializable {
         List<Curso> cursos = makeCursoXNivelList(nivelSelected);
         List<PagoAlumno> paList = new ArrayList<>();
         List<PagoHasStatus> phsList = new ArrayList<>();
-        
+
         Optional<StatusPago> optionalStatusPago = statusPagoFacade
-                                    .findXNombre(Constantes.STATUS_PAGO_PENDIENTE);
+                .findXNombre(Constantes.STATUS_PAGO_PENDIENTE);
         StatusPago statusPago = optionalStatusPago.get();
-        
+
         cursos.stream().forEach(cur -> {
             List<Alumno> alumnos = makeAlumnoList(cur);
             alumnos.stream().forEach(al -> {
@@ -129,7 +129,7 @@ public class AsignaPagosController implements Serializable {
                 pa.setAlumnoId(al);
                 pa.setPagoId(pagoSelected);
                 paList.add(pa);
-                
+
                 PagoHasStatus phs = new PagoHasStatus();
                 phs.setFecha(pagoSelected.getFecha());
                 phs.setPagoAlumnoId(pa);
@@ -137,10 +137,42 @@ public class AsignaPagosController implements Serializable {
                 phsList.add(phs);
             });
         });
-        
+
         pagoAlumnoFacade.batchCreate(paList);
         pagoHasStatusFacade.batchCreate(phsList);
         JsfUtils.messageSuccess("Cobros cargados con éxito");
+    }
+
+    public void saveCursoSelection() {
+        List<PagoAlumno> paList = new ArrayList<>();
+        List<PagoHasStatus> phsList = new ArrayList<>();
+
+        Optional<StatusPago> optionalStatusPago = statusPagoFacade
+                .findXNombre(Constantes.STATUS_PAGO_PENDIENTE);
+        StatusPago statusPago = optionalStatusPago.get();
+
+        List<Alumno> alumnos = makeAlumnoList(cursoSelected);
+        if (alumnos != null && !alumnos.isEmpty()) {
+            alumnos.stream().forEach(al -> {
+                PagoAlumno pa = new PagoAlumno();
+                pa.setAlumnoId(al);
+                pa.setPagoId(pagoSelected);
+                paList.add(pa);
+
+                PagoHasStatus phs = new PagoHasStatus();
+                phs.setFecha(pagoSelected.getFecha());
+                phs.setPagoAlumnoId(pa);
+                phs.setStatusPagoId(statusPago);
+                phsList.add(phs);
+            });
+            
+            pagoAlumnoFacade.batchCreate(paList);
+            pagoHasStatusFacade.batchCreate(phsList);
+            JsfUtils.messageSuccess("Cobros cargados con éxito");
+            
+        } else {
+            JsfUtils.messageWarning("No puede agregar cobros a un curso sin alumnos");
+        }
     }
 
     private List<Pago> makePagoList() {
@@ -155,12 +187,15 @@ public class AsignaPagosController implements Serializable {
         });
         return items;
     }
-    
+
     private List<SelectItem> makeCursoList() {
         List<Curso> cursoList = makeCursoXNivelList(nivelSelected);
         List<SelectItem> items = new ArrayList<>();
+        items.add(new SelectItem(null, "Seleccione curso"));
         cursoList.stream().forEach(cr -> {
-            items.add(new SelectItem(cr, cr.getNombre()));
+            StringBuilder sb = new StringBuilder();
+            sb.append(cr.getNombre()).append("-").append(cr.getSeccion());
+            items.add(new SelectItem(cr, sb.toString()));
         });
         return items;
     }
@@ -177,5 +212,5 @@ public class AsignaPagosController implements Serializable {
         });
         return alumnos;
     }
-    
+
 }

@@ -2,6 +2,7 @@ package edu.school.controller.administrativos;
 
 import edu.school.ejb.PagoFacadeLocal;
 import edu.school.entities.Pago;
+import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,15 +59,11 @@ public class CargaCobrosController implements Serializable{
     public void createPago(){
         saveCobros();
         clearFields();
-        FacesContext.getCurrentInstance().addMessage(
-                null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Operación exitosa",
-                        "Cobro(s) cargado(s) con éxito"));
+        JsfUtils.messageSuccess("Cobro(s) cargado(s) con éxito");
     }
     
     public void clearFields(){
-        pago.setMotivo("");
+        pago.setMotivo(null);
         pago.setMonto(null);
         pago.setFecha(null);
         pago.setFechaVencimiento(null);

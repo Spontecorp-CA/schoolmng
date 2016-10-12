@@ -56,13 +56,16 @@
                                             Monto del cobro: <span class="required">*</span>
                                         </label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <p:inputText id="monto" 
-                                                         value="#{cargaCobrosController.pago.monto}"
-                                                         styleClass="form-control col-md-7 col-xs-12" 
-                                                         placeholder="Agregue el monto" 
-                                                         required="true"
-                                                         requiredMessage="Debe colocar el monto"
-                                                         converterMessage="Debe colocar una cantidad"/>
+                                            <p:inputNumber id="monto" 
+                                                           value="#{cargaCobrosController.pago.monto}"
+                                                           placeholder="Agregue el monto" 
+                                                           required="true"
+                                                           requiredMessage="Debe colocar el monto"
+                                                           decimalSeparator=","
+                                                           thousandSeparator="."
+                                                           emptyValue="empty"
+                                                           symbol="Bs. "
+                                                           symbolPosition="p"/>
                                         </div>
                                     </div>
 
@@ -118,12 +121,10 @@
                                         </label>
                                         <div class="col-md-1 col-sm-1 col-xs-6">
                                             <div class="checkbox">
-                                                <label>
-                                                    <h:selectBooleanCheckbox 
-                                                        styleClass="flat"
+                                                    <p:selectBooleanCheckbox
                                                         value="#{cargaCobrosController.repeat}">
-                                                    </h:selectBooleanCheckbox>
-                                                </label>
+                                                        <p:ajax update="form:meses"/>
+                                                    </p:selectBooleanCheckbox>
                                             </div>
                                         </div>
                                         <div class="col-md-3 col-sm-3 col-xs-12">
@@ -131,9 +132,7 @@
                                                          value="#{cargaCobrosController.meses}"
                                                          styleClass="form-control col-md-3 col-xs-12" 
                                                          placeholder="cantidad de meses"
-                                                         required="true"
-                                                         requiredMessage="Debe colocar el monto"
-                                                         validatorMessage="Debe ingresar un número">
+                                                         disabled="#{!cargaCobrosController.repeat}">
                                             </p:inputText>
                                         </div>                                        
                                     </div>
@@ -147,9 +146,10 @@
                                                              styleClass="btn btn-success"
                                                              update=":form"/>
                                             <p:commandButton id="newUser"
+                                                             actionListener="#{cargaCobrosController.clearFields()}"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary">
-                                                <p:ajax update="form"/>
+                                                <p:ajax update=":form"/>
                                             </p:commandButton>
                                             <p:commandButton id="cancel"
                                                              value="Cancelar"

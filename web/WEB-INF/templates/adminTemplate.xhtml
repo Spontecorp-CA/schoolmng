@@ -79,6 +79,57 @@
                                             Escritorio
                                         </p:commandLink>
                                     </li>
+                                    
+                                    <!-- Sección Cobros -->
+                                    <li><a>
+                                            <i class="fa fa-money"></i>
+                                            Cobros
+                                            <span class="fa fa-chevron-down"></span>
+                                        </a>
+                                        <ul class="nav child_menu">
+                                            <li>
+                                                <h:commandLink action="#{adminDashboardController.goCargaCobros()}"
+                                                               value="Carga de Cobros"/>
+                                            </li>
+                                            <li><a>Asignación de Cobros<span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosNivel()}"
+                                                                       value="A un Nivel"/>
+                                                    </li>
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosCurso()}"
+                                                                       value="A un Curso"/>
+                                                    </li>
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosAlumno()}"
+                                                                       value="A un Alumno"/>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li><a>Lista de Cobros<span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goListaCobros()}"
+                                                                       value="Lista de Cobros Registrados"/>
+                                                    </li>
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goListaCobrosNivel()}"
+                                                                       value="Lista de Cobros x Nivel"/>
+                                                    </li>
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goListaCobrosCurso()}"
+                                                                       value="Lista de Cobros x Curso"/>
+                                                    </li>
+                                                    <li class="sub_menu">
+                                                        <h:commandLink action="#{adminDashboardController.goListaCobrosAlumno()}"
+                                                                       value="Lista de Cobros x Alumno"/>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    
                                     <!-- Sección Alumnos -->
                                     <li><a>
                                             <i class="fa fa-child"></i>
@@ -142,55 +193,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <!-- Sección Cobros -->
-                                    <li><a>
-                                            <i class="fa fa-money"></i>
-                                            Cobros
-                                            <span class="fa fa-chevron-down"></span>
-                                        </a>
-                                        <ul class="nav child_menu">
-                                            <li>
-                                                <h:commandLink action="#{adminDashboardController.goCargaCobros()}"
-                                                               value="Carga de Cobros"/>
-                                            </li>
-                                            <li><a>Lista de Cobros<span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li class="sub_menu">
-                                                        <h:commandLink action="#{adminDashboardController.goListaCobros()}"
-                                                               value="Lista de Cobros Registrados"/>
-                                                    </li>
-                                                    <li class="sub_menu">
-                                                        <h:commandLink action="#{adminDashboardController.goListaCobrosNivel()}"
-                                                                       value="Lista de Cobros x Nivel"/>
-                                                    </li>
-                                                    <li class="sub_menu">
-                                                        <h:commandLink action="#{adminDashboardController.goListaCobrosCurso()}"
-                                                                       value="Lista de Cobros x Curso"/>
-                                                    </li>
-                                                    <li class="sub_menu">
-                                                        <h:commandLink action="#{adminDashboardController.goListaCobrosAlumno()}"
-                                                                       value="Lista de Cobros x Alumno"/>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li><a>Asignación de Cobros<span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li class="sub_menu">
-                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosNivel()}"
-                                                                       value="A un Nivel"/>
-                                                    </li>
-                                                    <li class="sub_menu">
-                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosCurso()}"
-                                                                       value="A un Curso"/>
-                                                    </li>
-                                                    <li class="sub_menu">
-                                                        <h:commandLink action="#{adminDashboardController.goAsignaPagosAlumno()}"
-                                                                       value="A un Alumno"/>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    
                                     
                                 </ul>
                             </div>
