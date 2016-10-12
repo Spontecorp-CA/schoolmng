@@ -83,16 +83,18 @@
                                                                  converter="edu.school.entities.converters.NivelConverter"
                                                                  style="width: 80%">
                                                     <f:selectItems value="#{asignaPagosController.niveles}"/>
+                                                    <p:ajax event="valueChange"
+                                                            update="cursos"/>
                                                 </p:selectOneMenu>
                                             </div>
 
                                             <div class="col-md-4 col-sm-12">
                                                 <p>Cursos:</p>
                                                 <p:selectOneMenu id="cursos"
-                                                                 value="#{asignaPagosController.nivelSelected}"
-                                                                 converter="edu.school.entities.converters.NivelConverter"
+                                                                 value="#{asignaPagosController.cursoSelected}"
+                                                                 converter="edu.school.entities.converters.CursoConverter"
                                                                  style="width: 80%">
-                                                    <f:selectItems value="#{asignaPagosController.niveles}"/>
+                                                    <f:selectItems value="#{asignaPagosController.cursos}"/>
                                                 </p:selectOneMenu>
                                             </div>
                                         </div>
@@ -103,7 +105,7 @@
                                         <div class="col-md-6 col-md-offset-3">
                                             <p:commandButton id="ok"
                                                              value="Aceptar"
-                                                             actionListener="#{asignaPagosController.saveSelection()}"
+                                                             actionListener="#{asignaPagosController.saveCursoSelection()}"
                                                              styleClass="btn btn-success">
                                             </p:commandButton>
                                             <p:commandButton id="newUser"
