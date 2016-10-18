@@ -37,8 +37,13 @@
 
                                     <p:fileUpload fileUploadListener="#{cargaArchivoAlumnos.handleFileUpload}"
                                                   mode="advanced"
-                                                  dragDropSupport="false"/>
-
+                                                  dragDropSupport="true"
+                                                  label="Seleccionar"
+                                                  uploadLabel="Cargar"
+                                                  cancelLabel="Cancelar"
+                                                  allowTypes="/(\.|\/)(xlsx|xlx)$/"
+                                                  invalidFileMessage="Tipo de archivo inválido debe ser excel"/>
+                                    
                                     <div class="ln_solid"></div>
                                     <div class="form-group">
                                         <div class="col-md-6 col-md-offset-3">
