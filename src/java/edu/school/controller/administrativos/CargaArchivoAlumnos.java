@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +20,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -26,20 +29,23 @@ import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
-public class CargaArchivoAlumnos implements Serializable{
-    
+public class CargaArchivoAlumnos implements Serializable {
+
     private static final int FIRST_SHEET = 0;
-    private static final int FIRST_ROW = 1;
-    private static final int FIRST_CELL = 0;
+    private static final int CELL_NOMBRE = 0;
+    private static final int CELL_APELLIDO = 1;
+    private static final int CELL_CI = 2;
+    private static final int CELL_FECHA_NACIMIENTO = 3;
+
     private UploadedFile file;
-    
+
     private List<Alumno> alumnos;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         alumnos = new ArrayList<>();
     }
-    
+
     public UploadedFile getFile() {
         return file;
     }
@@ -47,13 +53,13 @@ public class CargaArchivoAlumnos implements Serializable{
     public void setFile(UploadedFile file) {
         this.file = file;
     }
-    
-    public void handleFileUpload(FileUploadEvent event){
+
+    public void handleFileUpload(FileUploadEvent event) {
         file = event.getFile();
-        if(file != null){
-            if(file.getFileName().endsWith(".xls")){
+        if (file != null) {
+            if (file.getFileName().endsWith(".xls")) {
                 readDataXls();
-            } else if(file.getFileName().endsWith(".xlsx")){
+            } else if (file.getFileName().endsWith(".xlsx")) {
                 readDataXlsx();
             } else {
                 JsfUtils.messageError("Archivo inválido, debe ser un archivo excel");
@@ -62,105 +68,71 @@ public class CargaArchivoAlumnos implements Serializable{
             JsfUtils.messageError("No ha cargado un archivo");
         }
     }
-    
-    private void readDataXls(){
+
+    private void readDataXls() {
         try {
-            
-            /*
-            Ojo: este método debe adaptarse para que haga lo mismo que los 
-                archivos xlsx
-            */
-            
             HSSFWorkbook workbook = new HSSFWorkbook(file.getInputstream());
             HSSFSheet sheet = workbook.getSheetAt(FIRST_SHEET);
 
-            sheet.forEach(row -> {
-                StringBuffer sb = new StringBuffer();
-                row.forEach((Cell cell) -> {
-                    sb.append(cellContentParser(cell));
-                });
-                System.out.println(sb.toString());
-            });
+            Iterator<Row> rowIterator = sheet.iterator();
+            readRowIterator(rowIterator);
+            
         } catch (IOException ex) {
             Logger.getLogger(CargaArchivoAlumnos.class.getName()).log(Level.SEVERE, null, ex);
             JsfUtils.messageError("No se ha podido leer los datos del archivo, posible datos mal formateados");
         }
     }
-    
-    
-    private void readDataXlsx(){
+
+    private void readDataXlsx() {
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(file.getInputstream());
             XSSFSheet sheet = workbook.getSheetAt(FIRST_SHEET);
+
+            Iterator<Row> rowIterator = sheet.iterator();
+            readRowIterator(rowIterator);
             
-            sheet.forEach(row ->{
-                final Alumno alumno = new Alumno();
-                System.out.println("row number: " + row.getRowNum());
-                row.forEach((Cell cell) ->{
-                    if(row.getRowNum() != 0){
-                        alumno.setDatosPersonaId(cellContentParser(cell));
-                    }
-                });
-                alumnos.add(alumno);
-            });
-            printAlumnos();
         } catch (IOException ex) {
             Logger.getLogger(CargaArchivoAlumnos.class.getName()).log(Level.SEVERE, null, ex);
             JsfUtils.messageError("No se ha podido leer los datos del archivo, posible datos mal formateados");
         }
     }
     
-    private DatosPersona cellContentParser(Cell cell){
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        StringBuffer sb = new StringBuffer();
-        CellAddress ca = cell.getAddress();
-        int columna = ca.getColumn();
-        DatosPersona dp = new DatosPersona();
-        System.out.println("Cell: " + ca.formatAsString() + "  - columna: " + columna);
-        switch(columna){
-            case 0:
-                if(cell.getCellTypeEnum() == CellType.STRING){
-                    dp.setApellido(cell.getStringCellValue());
+    private void readRowIterator(Iterator<Row> rowIterator){
+        Alumno alumno;
+        Cell cell;
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            if (row.getRowNum() != 0) {
+                cell = row.getCell(CELL_NOMBRE);
+                if (cell != null) {
+                    if (cell.getCellTypeEnum() != CellType.STRING) {
+                        continue;
+                    }
+                    alumno = new Alumno();
+                    alumno.setDatosPersonaId(rowContentParser(row));
+                    alumnos.add(alumno);
                 }
-                break;
-            case 1:
-                if(cell.getCellTypeEnum() == CellType.STRING){
-                dp.setNombre(cell.getStringCellValue());
-                }
-                break;
-            case 3:
-                if(cell.getCellTypeEnum() == CellType.NUMERIC){
-                dp.setCi(Integer.valueOf((int)cell.getNumericCellValue()));
-                }
-                break;
-            case 4:
-                if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-                    dp.setFechaNacimiento(cell.getDateCellValue());
-                }
-                break;
+            }
         }
         
-//        switch (cell.getCellTypeEnum()) {
-//            case STRING:
-//                sb.append(cell.getStringCellValue()).append("\t");
-//                break;
-//            case NUMERIC:
-//                if (DateUtil.isCellDateFormatted(cell)) {
-//                    sb.append(df.format(cell.getDateCellValue())).append("\t");
-//                } else {
-//                    sb.append(cell.getNumericCellValue()).append("\t");
-//                }
-//                break;
-//        }
+        printAlumnos();
+    }
+
+    private DatosPersona rowContentParser(Row row) {
+        DatosPersona dp = new DatosPersona();
+        dp.setNombre(row.getCell(CELL_NOMBRE).getStringCellValue());
+        dp.setApellido(row.getCell(CELL_APELLIDO).getStringCellValue());
+        dp.setCi((int) row.getCell(CELL_CI).getNumericCellValue());
+        Date fechaNac = row.getCell(CELL_FECHA_NACIMIENTO).getDateCellValue();
+        dp.setFechaNacimiento(fechaNac);
         return dp;
     }
-    
-    private void printAlumnos(){
+
+    private void printAlumnos() {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        
+
         System.out.println("Alumnos tiene " + alumnos.size() + " registros.");
-        
-        alumnos.stream().forEach(al ->{
+        alumnos.stream().forEach(al -> {
             StringBuffer sb = new StringBuffer();
             DatosPersona dp = al.getDatosPersonaId();
             sb.append("Apellido: ").append(dp.getApellido() != null ? dp.getApellido() : "");
@@ -168,7 +140,7 @@ public class CargaArchivoAlumnos implements Serializable{
             sb.append(", CI: ").append(dp.getCi() != null ? dp.getCi() : 0);
             sb.append("F. Nac: ").append(
                     dp.getFechaNacimiento() != null ? df.format(dp.getFechaNacimiento()) : "");
-            
+
             System.out.println(sb.toString());
         });
     }
