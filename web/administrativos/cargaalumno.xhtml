@@ -34,190 +34,258 @@
                                 
 
                                 <form jsf:id="form" class="form-horizontal form-label-left">
-                                    <!--span class="section">Carga de Cobros</span-->
-
-                                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
-                                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                                            <li role="alumno" class="active">
-                                                <a href="#tab_content1" 
-                                                   id="alumno-tab" role="tab" 
-                                                   data-toggle="tab" 
-                                                   aria-expanded="true">
-                                                    Datos Alumno
+                                    
+                                    <!-- Smart Wizard -->
+                                    <p>This is a basic form wizard example that inherits the colors from the selected scheme.</p>
+                                    <div id="wizard" class="form_wizard wizard_horizontal">
+                                        <ul class="wizard_steps">
+                                            <li>
+                                                <a href="#step-1">
+                                                    <span class="step_no">1</span>
+                                                    <span class="step_descr">
+                                                        Paso 1<br />
+                                                        <small>Datos Alumno</small>
+                                                    </span>
                                                 </a>
                                             </li>
-                                            <li role="representante" class="">
-                                                <a href="#tab_content2" 
-                                                   id="repre-tab" role="tab"  
-                                                   data-toggle="tab" 
-                                                   aria-expanded="false">
-                                                    Datos Representante
+                                            <li>
+                                                <a href="#step-2">
+                                                    <span class="step_no">2</span>
+                                                    <span class="step_descr">
+                                                        Paso 2<br />
+                                                        <small>Datos Representantes</small>
+                                                    </span>
                                                 </a>
                                             </li>
-                                            <li role="curso" class="">
-                                                <a href="#tab_content3" 
-                                                   id="curso-tab" role="tab"  
-                                                   data-toggle="tab" 
-                                                   aria-expanded="false">
-                                                    Datos del Curso
+                                            <li>
+                                                <a href="#step-3">
+                                                    <span class="step_no">3</span>
+                                                    <span class="step_descr">
+                                                        Paso 3<br />
+                                                        <small>Datos Curso</small>
+                                                    </span>
                                                 </a>
                                             </li>
                                         </ul>
-
-                                        <div id="myTabContent" class="tab-content">
-                                            <!-- Tab del alumno-->
-                                            <div role="tabpanel" 
-                                                 class="tab-pane fade active in" 
-                                                 id="tab_content1" 
-                                                 aria-labelledby="alumno-tab">
-                                                
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombreAl">
-                                                        Nombre: <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <p:inputText id="nombreAl" 
-                                                                     value="#{cargaAlumnoController.datosAlumno.nombre}"
-                                                                     styleClass="form-control col-md-7 col-xs-12" 
-                                                                     placeholder="Nombre(s)" 
-                                                                     required="true"
-                                                                     requiredMessage="Debe colocar el(los) nombre(s) del alumno"/>
-                                                    </div>
-                                                </div>
-
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoAl">
-                                                        Apellido: <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <p:inputText id="apellidoAl" 
-                                                                     value="#{cargaAlumnoController.datosAlumno.apellido}"
-                                                                     styleClass="form-control col-md-7 col-xs-12" 
-                                                                     placeholder="Apellido(s)" 
-                                                                     required="true"
-                                                                     requiredMessage="Debe colocar el(los) apellido(s) del alumno"/>
-                                                    </div>
+                                        
+                                        <div id="step-1">
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoAl">
+                                                    Apellido: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:inputText id="apellidoAl" 
+                                                                 value="#{cargaAlumnoController.datosAlumno.apellido}"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 placeholder="Apellido(s)" 
+                                                                 required="true"
+                                                                 requiredMessage="Debe colocar el(los) apellido(s) del alumno"/>
                                                 </div>
                                             </div>
-                                            <!-- Fin Tab del alumno-->
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombreAl">
+                                                    Nombre: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:inputText id="nombreAl" 
+                                                                 value="#{cargaAlumnoController.datosAlumno.nombre}"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 placeholder="Nombre(s)" 
+                                                                 required="true"
+                                                                 requiredMessage="Debe colocar el(los) nombre(s) del alumno"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nacimientoAl">
+                                                    Fecha de Nacimiento: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:calendar id="nacimientoAl"
+                                                                value="#{cargaAlumnoController.datosAlumno.fechaNacimiento}"
+                                                                pattern="dd/MM/yyyy"
+                                                                required="true"
+                                                                requiredMessage="Debe colocar la fecha de nacimiento del alumno"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nacionalidadAl">
+                                                    Nacionalidad: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:selectOneMenu id="nacionalidadAl" 
+                                                                     value="#{cargaAlumnoController.datosAlumno.nacionalidad}">
+                                                        <f:selectItem itemLabel="Seleccione..." itemValue="null"/>
+                                                        <f:selectItem itemLabel="Venezolano" itemValue="V"/>
+                                                        <f:selectItem itemLabel="Extranjero" itemValue="E"/>
+                                                    </p:selectOneMenu>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccionAl">
+                                                    Nombre: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:inputText id="direccionAl" 
+                                                                 value="#{cargaAlumnoController.datosAlumno.direccion}"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 placeholder="Dirección" 
+                                                                 required="true"
+                                                                 requiredMessage="Debe colocar la dirección del alumno"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telefonoAl">
+                                                    Nombre: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:inputMask id="telefonoAl" 
+                                                                 value="#{cargaAlumnoController.datosAlumno.telefono}"
+                                                                 mask="(0999) 999.9999"
+                                                                 placeholder="Teléfono"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 required="true"
+                                                                 requiredMessage="Debe colocar el teléfono del alumno"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ingresoAl">
+                                                    Fecha de Ingreso: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:calendar id="ingresoAl"
+                                                                value="#{cargaAlumnoController.alumno.fechaIngreso}"
+                                                                pattern="dd/MM/yyyy"
+                                                                required="true"
+                                                                requiredMessage="Debe colocar la fecha de nacimiento del alumno"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="egresoAl">
+                                                    Fecha de Egreso: 
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:calendar id="egresoAl"
+                                                                value="#{cargaAlumnoController.alumno.fechaIngreso}"
+                                                                pattern="dd/MM/yyyy"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="step-2">
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ciRep">
+                                                    Cédula Identidad: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:inputText id="ciRep" 
+                                                                 value="#{cargaAlumnoController.datosRepresentante.ci}"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 placeholder="Cédula de Identidad" 
+                                                                 required="true"
+                                                                 requiredMessage="Debe colocar la CI del representante">
+                                                        <p:ajax event="blur" 
+                                                                update="nombreRep apellidoRep"
+                                                                listener="#{cargaAlumnoController.lookForCI()}"/>
+                                                    </p:inputText>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombreRep">
+                                                    Nombre: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:inputText id="nombreRep" 
+                                                                 value="#{cargaAlumnoController.datosRepresentante.nombre}"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 placeholder="Nombre(s)" 
+                                                                 required="true"
+                                                                 requiredMessage="Debe colocar el(los) nombre(s) del Representante"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoRep">
+                                                    Apellido: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:inputText id="apellidoRep" 
+                                                                 value="#{cargaAlumnoController.datosRepresentante.apellido}"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 placeholder="Apellidos(s)" 
+                                                                 required="true"
+                                                                 requiredMessage="Debe colocar el(los) appelido(s) del Representante"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div id="step-3">
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="niveles">
+                                                    Nivel: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <h:selectOneMenu id="niveles"
+                                                                     value="#{cargaAlumnoController.nivel}"
+                                                                     styleClass="form-control">
+                                                        <f:selectItems var="nivel"
+                                                                       value="#{adminCursosController.niveles}"/>
+                                                        <f:converter converterId="edu.school.entities.converters.NivelConverter"/>
+                                                        <p:ajax event="valueChange" 
+                                                                update="cursos"/>
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cursos">
+                                                    Curso: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <h:selectOneMenu id="cursos"
+                                                                     value="#{cargaAlumnoController.curso}"
+                                                                     styleClass="form-control">
+                                                        <f:selectItems var="curso"
+                                                                       value="#{cargaAlumnoController.cursos}"/>
+                                                        <f:converter converterId="edu.school.entities.converters.CursoConverter"/>
+                                                    </h:selectOneMenu>
+                                                </div>
+                                            </div>
                                             
-                                            <!-- Tab del representante-->
-                                            <div role="tabpanel" 
-                                                 class="tab-pane fade" 
-                                                 id="tab_content2" 
-                                                 aria-labelledby="repre-tab">
-                                                
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ciRep">
-                                                        Cédula Identidad: <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <p:inputText id="ciRep" 
-                                                                     value="#{cargaAlumnoController.datosRepresentante.ci}"
-                                                                     styleClass="form-control col-md-7 col-xs-12" 
-                                                                     placeholder="Cédula de Identidad" 
-                                                                     required="true"
-                                                                     requiredMessage="Debe colocar la CI del representante">
-                                                            <p:ajax event="blur" 
-                                                                    update="nombreRep apellidoRep"
-                                                                    listener="#{cargaAlumnoController.lookForCI()}"/>
-                                                        </p:inputText>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombreRep">
-                                                        Nombre: <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <p:inputText id="nombreRep" 
-                                                                     value="#{cargaAlumnoController.datosRepresentante.nombre}"
-                                                                     styleClass="form-control col-md-7 col-xs-12" 
-                                                                     placeholder="Nombre(s)" 
-                                                                     required="true"
-                                                                     requiredMessage="Debe colocar el(los) nombre(s) del Representante"/>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoRep">
-                                                        Apellido: <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <p:inputText id="apellidoRep" 
-                                                                     value="#{cargaAlumnoController.datosRepresentante.apellido}"
-                                                                     styleClass="form-control col-md-7 col-xs-12" 
-                                                                     placeholder="Apellidos(s)" 
-                                                                     required="true"
-                                                                     requiredMessage="Debe colocar el(los) appelido(s) del Representante"/>
-                                                    </div>
+                                            
+                                            <div class="form-group">
+                                                <div class="col-md-6 col-md-offset-3">
+                                                    <p:commandButton id="ok"
+                                                                     value="Aceptar"
+                                                                     action="#{cargaAlumnoController.saveAlumno()}"
+                                                                     styleClass="btn btn-success"
+                                                                     update=":form"/>
+                                                    <p:commandButton id="newUser"
+                                                                     value="Nuevo"
+                                                                     styleClass="btn btn-primary">
+                                                        <p:ajax update="form"/>
+                                                    </p:commandButton>
+                                                    <p:commandButton id="cancel"
+                                                                     value="Cancelar"
+                                                                     action="#{adminDashboardController.goUserPage()}"
+                                                                     styleClass="btn btn-danger"
+                                                                     immediate="true"/>
                                                 </div>
                                             </div>
-                                            <!-- Fin Tab del representante-->
-
-                                            <!-- Tab del curso-->
-                                            <div role="tabpanel" 
-                                                 class="tab-pane fade" 
-                                                 id="tab_content3" 
-                                                 aria-labelledby="curso-tab">
-                                                
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="niveles">
-                                                        Nivel: <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <h:selectOneMenu id="niveles"
-                                                                         value="#{cargaAlumnoController.nivel}"
-                                                                         styleClass="form-control">
-                                                            <f:selectItems var="nivel"
-                                                                           value="#{adminCursosController.niveles}"/>
-                                                            <f:converter converterId="edu.school.entities.converters.NivelConverter"/>
-                                                            <p:ajax event="valueChange" 
-                                                                    update="cursos"/>
-                                                        </h:selectOneMenu>
-                                                    </div>
-                                                </div>
-
-                                                <div class="item form-group">
-                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="cursos">
-                                                        Curso: <span class="required">*</span>
-                                                    </label>
-                                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                                        <h:selectOneMenu id="cursos"
-                                                                         value="#{cargaAlumnoController.curso}"
-                                                                         styleClass="form-control">
-                                                            <f:selectItems var="curso"
-                                                                           value="#{cargaAlumnoController.cursos}"/>
-                                                            <f:converter converterId="edu.school.entities.converters.CursoConverter"/>
-                                                        </h:selectOneMenu>
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-                                            <!--Fin Tab del curso-->
                                         </div>
-                                    </div>
 
+                                    </div>
+                                    <!-- End SmartWizard Content -->
+                                    
                                     <div class="ln_solid"></div>
-                                    <div class="form-group">
-                                        <div class="col-md-6 col-md-offset-3">
-                                            <p:commandButton id="ok"
-                                                             value="Aceptar"
-                                                             action="#{cargaAlumnoController.saveAlumno()}"
-                                                             styleClass="btn btn-success"
-                                                             update=":form"/>
-                                            <p:commandButton id="newUser"
-                                                             value="Nuevo"
-                                                             styleClass="btn btn-primary">
-                                                <p:ajax update="form"/>
-                                            </p:commandButton>
-                                            <p:commandButton id="cancel"
-                                                             value="Cancelar"
-                                                             action="#{adminDashboardController.goUserPage()}"
-                                                             styleClass="btn btn-danger"
-                                                             immediate="true"/>
-                                        </div>
-                                    </div>
 
                                     <div class="clearfix"></div>
                                     <p:messages autoUpdate="true" showDetail="true"
@@ -227,9 +295,28 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- jQuery Smart Wizard -->
+                <h:outputScript library="js" name="jquery.smartWizard.js"></h:outputScript>
+
+                <!-- jQuery Smart Wizard -->
+                <script>
+                  $(document).ready(function() {
+                    $('#wizard').smartWizard();
+
+                    $('#wizard_verticle').smartWizard({
+                      transitionEffect: 'slide'
+                    });
+
+                    $('.buttonNext').addClass('btn btn-success');
+                    $('.buttonPrevious').addClass('btn btn-primary');
+                    $('.buttonFinish').addClass('btn btn-default');
+                  });
+                </script>
 
             </ui:define>
+            
         </ui:composition>
-
+        
     </body>
 </html>
