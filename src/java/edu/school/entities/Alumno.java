@@ -7,6 +7,7 @@ package edu.school.entities;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,7 +21,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -44,6 +46,12 @@ public class Alumno implements Serializable {
     private Integer id;
     @Column(name = "ci")
     private Integer ci;
+    @Column(name = "fecha_ingreso")
+    @Temporal(TemporalType.DATE)
+    private Date fechaIngreso;
+    @Column(name = "fecha_egreso")
+    @Temporal(TemporalType.DATE)
+    private Date fechaEgreso;
     @Size(max = 45)
     @Column(name = "id_colegio")
     private String idColegio;
@@ -78,6 +86,22 @@ public class Alumno implements Serializable {
 
     public void setCi(Integer ci) {
         this.ci = ci;
+    }
+
+    public Date getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Date fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+
+    public Date getFechaEgreso() {
+        return fechaEgreso;
+    }
+
+    public void setFechaEgreso(Date fechaEgreso) {
+        this.fechaEgreso = fechaEgreso;
     }
 
     public String getIdColegio() {

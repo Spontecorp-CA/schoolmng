@@ -26,4 +26,8 @@ public class Constantes {
     public static final String STATUS_PAGO_PAGADOATRASO = "Pagado en atraso";
     public static final String STATUS_PAGO_EXONERADO = "Exonerado";
     public static final String STATUS_PAGO_DESCUENTO = "Descuento";
+    
+    public static final String PARENTESCO_PADRE = "Padre";
+    public static final String PARENTESCO_MADRE = "Madre";
+    public static final String PARENTESCO_OTRO = "Otro";
 }
