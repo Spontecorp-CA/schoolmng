@@ -41,6 +41,8 @@ public class Representante implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Column(name = "parentesco")
+    private String parentesco;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "representanteId")
     private Collection<AlumnoHasRepresentante> alumnoHasRepresentanteCollection;
     @JoinColumn(name = "datos_persona_id", referencedColumnName = "id")
@@ -63,6 +65,14 @@ public class Representante implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getParentesco() {
+        return parentesco;
+    }
+
+    public void setParentesco(String parentesco) {
+        this.parentesco = parentesco;
     }
 
     @XmlTransient
