@@ -63,6 +63,9 @@ public class DatosPersona implements Serializable {
     @Size(max = 20)
     @Column(name = "telefono")
     private String telefono;
+    @Size(max = 20)
+    @Column(name = "celular")
+    private String celular;
     @Lob
     @Size(max = 65535)
     @Column(name = "direccion")
@@ -147,6 +150,14 @@ public class DatosPersona implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public String getDireccion() {
