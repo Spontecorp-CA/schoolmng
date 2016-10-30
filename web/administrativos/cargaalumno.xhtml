@@ -31,12 +31,11 @@
 
                             <!-- contenido de la página -->
                             <div class="x_content">
-                                
+
 
                                 <form jsf:id="form" class="form-horizontal form-label-left">
-                                    
+
                                     <!-- Smart Wizard -->
-                                    <p>This is a basic form wizard example that inherits the colors from the selected scheme.</p>
                                     <div id="wizard" class="form_wizard wizard_horizontal">
                                         <ul class="wizard_steps">
                                             <li>
@@ -67,16 +66,20 @@
                                                 </a>
                                             </li>
                                         </ul>
-                                        
+
+                                        <!-- Datos alumno -->
                                         <div id="step-1">
+
                                             <div class="item form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoAl">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                                       for="apellidoAl" 
+                                                       style="text-align: right">
                                                     Apellido: <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                                     <p:inputText id="apellidoAl" 
                                                                  value="#{cargaAlumnoController.datosAlumno.apellido}"
-                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 styleClass="form-control col-md-9 col-xs-12" 
                                                                  placeholder="Apellido(s)" 
                                                                  required="true"
                                                                  requiredMessage="Debe colocar el(los) apellido(s) del alumno"/>
@@ -84,7 +87,9 @@
                                             </div>
 
                                             <div class="item form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombreAl">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                                       style="text-align: right"
+                                                       for="nombreAl">
                                                     Nombre: <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -127,7 +132,7 @@
 
                                             <div class="item form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccionAl">
-                                                    Nombre: <span class="required">*</span>
+                                                    Dirección: <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                                     <p:inputText id="direccionAl" 
@@ -141,7 +146,7 @@
 
                                             <div class="item form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telefonoAl">
-                                                    Nombre: <span class="required">*</span>
+                                                    Teléfono: <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                                     <p:inputMask id="telefonoAl" 
@@ -178,19 +183,42 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
+                                        <!-- datos representante -->
                                         <div id="step-2">
-                                            <div class="item form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ciRep">
+                                            <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label class="control-label col-md-6 col-sm-6 col-xs-12" for="apellidoRep">
+                                                    Apellido(s): <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <p:inputText id="apellidoRep" 
+                                                                 value="#{cargaAlumnoController.datosRepresentante.apellido}"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 placeholder="Apellido(s)"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="nombreRep">
+                                                    Nombre(s): <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                                    <p:inputText id="nombreRep" 
+                                                                 value="#{cargaAlumnoController.datosRepresentante.nombre}"
+                                                                 styleClass="form-control col-md-7 col-xs-12" 
+                                                                 placeholder="Nombre(s)"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label class="control-label col-md-6 col-sm-6 col-xs-12" for="ciRep">
                                                     Cédula Identidad: <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                                     <p:inputText id="ciRep" 
                                                                  value="#{cargaAlumnoController.datosRepresentante.ci}"
                                                                  styleClass="form-control col-md-7 col-xs-12" 
-                                                                 placeholder="Cédula de Identidad" 
-                                                                 required="true"
-                                                                 requiredMessage="Debe colocar la CI del representante">
+                                                                 placeholder="Cédula de Identidad" >
                                                         <p:ajax event="blur" 
                                                                 update="nombreRep apellidoRep"
                                                                 listener="#{cargaAlumnoController.lookForCI()}"/>
@@ -198,35 +226,63 @@
                                                 </div>
                                             </div>
 
-                                            <div class="item form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombreRep">
-                                                    Nombre: <span class="required">*</span>
+                                            <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="parentescoRep">
+                                                    Parentesco: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                                    <p:selectOneMenu id="parentescoRep"
+                                                                     value="#{cargaAlumnoController.representante.parentesco}"
+                                                                     style="width: 120px">
+                                                        <f:selectItems value="#{cargaAlumnoController.parentescos}"
+                                                                       var="parentesco"
+                                                                       itemLabel="#{parentesco}"
+                                                                       itemValue="#{parentesco}"/>
+                                                    </p:selectOneMenu>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label class="control-label col-md-6 col-sm-6 col-xs-12" for="telefonoRep">
+                                                    Teléfono casa: <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <p:inputText id="nombreRep" 
-                                                                 value="#{cargaAlumnoController.datosRepresentante.nombre}"
-                                                                 styleClass="form-control col-md-7 col-xs-12" 
-                                                                 placeholder="Nombre(s)" 
-                                                                 required="true"
-                                                                 requiredMessage="Debe colocar el(los) nombre(s) del Representante"/>
+                                                    <p:inputMask id="telefonoRep" 
+                                                                 value="#{cargaAlumnoController.datosRepresentante.telefono}"
+                                                                 mask="(0999) 999.9999"
+                                                                 placeholder="Teléfono"
+                                                                 styleClass="form-control col-md-7 col-xs-12"/>
+                                                </div>
+                                            </div>
+
+                                            <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="celularRep">
+                                                    Celular: <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                                    <p:inputMask id="celularRep" 
+                                                                 value="#{cargaAlumnoController.datosRepresentante.celular}"
+                                                                 mask="(0999) 999.9999"
+                                                                 placeholder="Celular"
+                                                                 styleClass="form-control col-md-7 col-xs-12"/>
                                                 </div>
                                             </div>
 
                                             <div class="item form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoRep">
-                                                    Apellido: <span class="required">*</span>
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccionRep">
+                                                    Dirección: <span class="required">*</span>
                                                 </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <p:inputText id="apellidoRep" 
-                                                                 value="#{cargaAlumnoController.datosRepresentante.apellido}"
+                                                <div class="col-md-7 col-sm-7 col-xs-12">
+                                                    <p:inputText id="direccionRep" 
+                                                                 value="#{cargaAlumnoController.datosRepresentante.direccion}"
                                                                  styleClass="form-control col-md-7 col-xs-12" 
-                                                                 placeholder="Apellidos(s)" 
-                                                                 required="true"
-                                                                 requiredMessage="Debe colocar el(los) appelido(s) del Representante"/>
+                                                                 placeholder="Dirección"/>
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div id="step-3">
                                             <div class="item form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="niveles">
@@ -259,8 +315,8 @@
                                                     </h:selectOneMenu>
                                                 </div>
                                             </div>
-                                            
-                                            
+
+
                                             <div class="form-group">
                                                 <div class="col-md-6 col-md-offset-3">
                                                     <p:commandButton id="ok"
@@ -284,7 +340,7 @@
 
                                     </div>
                                     <!-- End SmartWizard Content -->
-                                    
+
                                     <div class="ln_solid"></div>
 
                                     <div class="clearfix"></div>
@@ -295,28 +351,28 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- jQuery Smart Wizard -->
                 <h:outputScript library="js" name="jquery.smartWizard.js"></h:outputScript>
 
                 <!-- jQuery Smart Wizard -->
                 <script>
-                  $(document).ready(function() {
-                    $('#wizard').smartWizard();
+                    $(document).ready(function () {
+                        $('#wizard').smartWizard();
 
-                    $('#wizard_verticle').smartWizard({
-                      transitionEffect: 'slide'
+                        $('#wizard_verticle').smartWizard({
+                            transitionEffect: 'slide'
+                        });
+
+                        $('.buttonNext').addClass('btn btn-success');
+                        $('.buttonPrevious').addClass('btn btn-primary');
+                        $('.buttonFinish').addClass('btn btn-default');
                     });
-
-                    $('.buttonNext').addClass('btn btn-success');
-                    $('.buttonPrevious').addClass('btn btn-primary');
-                    $('.buttonFinish').addClass('btn btn-default');
-                  });
                 </script>
 
             </ui:define>
-            
+
         </ui:composition>
-        
+
     </body>
 </html>

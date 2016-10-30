@@ -73,8 +73,9 @@ public class CargaAlumnoController implements Serializable {
     private UserHasRol userHasRol;
     @Inject
     private AlumnoHasRepresentante alumnoHasRepresentante;
-
+    
     private boolean repExist;
+    private List<String> parentescos;
 
     public Alumno getAlumno() {
         return alumno;
@@ -124,6 +125,14 @@ public class CargaAlumnoController implements Serializable {
         this.curso = curso;
     }
 
+    public List<String> getParentescos() {
+        List<String> parentescos = new ArrayList<>();
+        parentescos.add(Constantes.PARENTESCO_MADRE);
+        parentescos.add(Constantes.PARENTESCO_PADRE);
+        parentescos.add(Constantes.PARENTESCO_OTRO);
+        return parentescos;
+    }
+    
     public List<SelectItem> getCursos() {
         List<Curso> cursos = cursoFacade.findAll(nivel);
         List<SelectItem> itemsList = new ArrayList<>();
