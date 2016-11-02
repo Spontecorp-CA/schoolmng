@@ -56,9 +56,17 @@ public class CargaAlumnoController implements Serializable {
     @Inject
     private Alumno alumno;
     @Inject
+    private Representante madre;
+    @Inject
+    private Representante padre;
+    @Inject
     private Representante representante;
     @Inject
     private DatosPersona datosAlumno;
+    @Inject
+    private DatosPersona datosMadre;
+    @Inject
+    private DatosPersona datosPadre;
     @Inject
     private DatosPersona datosRepresentante;
     @Inject
@@ -68,12 +76,18 @@ public class CargaAlumnoController implements Serializable {
     @Inject
     private CursoHasAlumno cursoHasAlumno;
     @Inject
-    private User user;
+    private User userMadre;
+    @Inject
+    private User userPadre;
+    @Inject
+    private User userRep;
     @Inject
     private UserHasRol userHasRol;
     @Inject
     private AlumnoHasRepresentante alumnoHasRepresentante;
     
+    private boolean madreExist;
+    private boolean padreExist;
     private boolean repExist;
     private List<String> parentescos;
 
@@ -99,6 +113,22 @@ public class CargaAlumnoController implements Serializable {
 
     public void setDatosAlumno(DatosPersona datosAlumno) {
         this.datosAlumno = datosAlumno;
+    }
+
+    public DatosPersona getDatosMadre() {
+        return datosMadre;
+    }
+
+    public void setDatosMadre(DatosPersona datosMadre) {
+        this.datosMadre = datosMadre;
+    }
+
+    public DatosPersona getDatosPadre() {
+        return datosPadre;
+    }
+
+    public void setDatosPadre(DatosPersona datosPadre) {
+        this.datosPadre = datosPadre;
     }
 
     public DatosPersona getDatosRepresentante() {
@@ -160,21 +190,51 @@ public class CargaAlumnoController implements Serializable {
         datosPersonaFacade.create(datosAlumno);
         alumno.setDatosPersonaId(datosAlumno);
     }
+    
+    private void assignDatosPersonaToMadre() {
+        datosPersonaFacade.create(datosMadre);
+        if (!userMadreExist()) {
+            createUser();
+        }
+        madre.setDatosPersonaId(datosMadre);
+        madre.setUserId(userRep);
+        representanteFacade.create(madre);
+    }
 
     private void assignDatosPersonaToRepresentante() {
         datosPersonaFacade.create(datosRepresentante);
-        if (!userExist()) {
+        if (!userRepExist()) {
             createUser();
         }
         representante.setDatosPersonaId(datosRepresentante);
-        representante.setUserId(user);
+        representante.setUserId(userRep);
         representanteFacade.create(representante);
     }
+    
+    private boolean userMadreExist() {
+        int ciTemp = datosMadre.getCi();
+        if (userFacade.find(ciTemp) != null) {
+            userMadre = userFacade.find(ciTemp);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean userPadreExist() {
+        int ciTemp = datosPadre.getCi();
+        if (userFacade.find(ciTemp) != null) {
+            userPadre = userFacade.find(ciTemp);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    private boolean userExist() {
+    private boolean userRepExist() {
         int ciTemp = datosRepresentante.getCi();
         if (userFacade.find(ciTemp) != null) {
-            user = userFacade.find(ciTemp);
+            userRep = userFacade.find(ciTemp);
             return true;
         } else {
             return false;
@@ -194,10 +254,10 @@ public class CargaAlumnoController implements Serializable {
     }
 
     private void createUser() {
-        user.setCi(datosRepresentante.getCi());
-        userFacade.create(user);
+        userRep.setCi(datosRepresentante.getCi());
+        userFacade.create(userRep);
         Rol rol = rolFacade.find(Constantes.ROL_REPRESENTANTE);
-        userHasRol.setUserId(user);
+        userHasRol.setUserId(userRep);
         userHasRol.setRolId(rol);
         userHasRol.setEscritorio(Constantes.ESCRITORIO_REPRESENTANTE);
         userHasRolFacade.create(userHasRol);
@@ -216,8 +276,22 @@ public class CargaAlumnoController implements Serializable {
         int ciTemp = datosRepresentante.getCi();
         if (datosPersonaFacade.find(ciTemp) != null) {
             datosRepresentante = datosPersonaFacade.find(ciTemp);
-            representante = representanteFacade.find(datosRepresentante);
-            repExist = true;
+            Representante repTemp = representanteFacade.find(datosRepresentante);
+            switch(repTemp.getParentesco()){
+                case Constantes.PARENTESCO_MADRE:
+                    madre = repTemp;
+                    madreExist = true;
+                    break;
+                case Constantes.PARENTESCO_PADRE:
+                    padre = repTemp;
+                    padreExist = true;
+                    break;
+                case Constantes.PARENTESCO_OTRO:
+                    representante = repTemp;
+                    repExist = true;
+                    break;
+            }
+            
         }
     }
 }
