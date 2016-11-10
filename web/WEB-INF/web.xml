@@ -46,6 +46,12 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
     
+    <!-- expiration session -->
+    <error-page>
+        <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+        <location>/time_out.xhtml</location>
+    </error-page>
+    
     <!-- web fonts -->
     <mime-mapping>
         <extension>eot</extension>

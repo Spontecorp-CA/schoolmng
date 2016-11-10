@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <title>Colegio Belagua | </title>
+
+        <!-- Bootstrap -->
+        <h:outputStylesheet library="bootstrap" name="css/bootstrap.css"/>
+        <!-- Font Awesome -->
+        <h:outputStylesheet library="css" name="font-awesome.css"/>
+        <!-- NProgress -->
+        <h:outputStylesheet library="css" name="nprogress.css"/>
+
+        <!-- Custom Theme Style -->
+        <h:outputStylesheet library="css" name="custom.css"/>   
+    </h:head>
+
+    <h:body class="nav-md">
+        <div class="container body">
+            <div class="main_container">
+                <!-- page content -->
+                <div class="col-md-12">
+                    <div class="col-middle">
+                        <div class="text-center text-center">
+                            <h1 class="error-number">Sesión Expirada</h1>
+                            <h2>Acceso Negado</h2>
+                            <p>Para ingresar debe autenticarse nuevamente.</p>
+                            <p>
+                                <h:outputLink value="../index.xhtml">Ir al Inicio</h:outputLink>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /page content -->
+            </div>
+        </div>
+
+        <!-- jQuery -->
+        <h:outputScript library="js" name="jquery.min.js"/>
+        <!-- Bootstrap -->
+        <h:outputScript library="bootstrap" name="js/bootstrap.min.js"/>
+        <!-- FastClick -->
+        <h:outputScript library="js" name="fastclick.js"/>
+        <!-- NProgress -->
+        <h:outputScript library="js" name="nprogress.js"/>
+
+        <!-- Custom Theme Scripts -->
+        <h:outputScript library="js" name="custom.min.js"/>
+    </h:body>
+</html>
