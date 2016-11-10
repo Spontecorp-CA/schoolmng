@@ -46,6 +46,11 @@ public class AlumnoHasRepresentante implements Serializable {
 
     public AlumnoHasRepresentante() {
     }
+    
+    public AlumnoHasRepresentante(Alumno alumno, Representante representante) {
+        this.alumnoId = alumno;
+        this.representanteId = representante;
+    }
 
     public AlumnoHasRepresentante(Integer id) {
         this.id = id;

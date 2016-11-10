@@ -186,101 +186,269 @@
 
                                         <!-- datos representante -->
                                         <div id="step-2">
-                                            <div class="item form-group col-md-6 col-sm-6 col-xs-12">
-                                                <label class="control-label col-md-6 col-sm-6 col-xs-12" for="apellidoRep">
-                                                    Apellido(s): <span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <p:inputText id="apellidoRep" 
-                                                                 value="#{cargaAlumnoController.datosRepresentante.apellido}"
-                                                                 styleClass="form-control col-md-7 col-xs-12" 
-                                                                 placeholder="Apellido(s)"/>
+
+                                            <fieldset>
+                                                <legend>Datos de la Madre</legend>
+                                                
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ciMadre">
+                                                        Cédula Identidad: 
+                                                    </label>
+                                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                                        <p:inputText id="ciMadre" 
+                                                                     value="#{cargaAlumnoController.datosMadre.ci}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Cédula de Identidad" >
+                                                            <p:ajax event="blur" 
+                                                                    update="nombreMadre apellidoMadre"
+                                                                    listener="#{cargaAlumnoController.lookForCI()}"/>
+                                                        </p:inputText>
+                                                    </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="item form-group col-md-4 col-sm-4 col-xs-12">
-                                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="nombreRep">
-                                                    Nombre(s): <span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-8 col-sm-8 col-xs-12">
-                                                    <p:inputText id="nombreRep" 
-                                                                 value="#{cargaAlumnoController.datosRepresentante.nombre}"
-                                                                 styleClass="form-control col-md-7 col-xs-12" 
-                                                                 placeholder="Nombre(s)"/>
+                                                
+                                                <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label col-md-6 col-sm-6 col-xs-12" for="apellidoMadre">
+                                                        Apellido(s):
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputText id="apellidoMadre" 
+                                                                     value="#{cargaAlumnoController.datosMadre.apellido}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Apellido(s)"/>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="item form-group col-md-6 col-sm-6 col-xs-12">
-                                                <label class="control-label col-md-6 col-sm-6 col-xs-12" for="ciRep">
-                                                    Cédula Identidad: <span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <p:inputText id="ciRep" 
-                                                                 value="#{cargaAlumnoController.datosRepresentante.ci}"
-                                                                 styleClass="form-control col-md-7 col-xs-12" 
-                                                                 placeholder="Cédula de Identidad" >
-                                                        <p:ajax event="blur" 
-                                                                update="nombreRep apellidoRep"
-                                                                listener="#{cargaAlumnoController.lookForCI()}"/>
-                                                    </p:inputText>
+                                                <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="nombreMadre">
+                                                        Nombre(s): 
+                                                    </label>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <p:inputText id="nombreMadre" 
+                                                                     value="#{cargaAlumnoController.datosMadre.nombre}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Nombre(s)"/>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="item form-group col-md-4 col-sm-4 col-xs-12">
-                                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="parentescoRep">
-                                                    Parentesco: <span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-8 col-sm-8 col-xs-12">
-                                                    <p:selectOneMenu id="parentescoRep"
-                                                                     value="#{cargaAlumnoController.representante.parentesco}"
-                                                                     style="width: 120px">
-                                                        <f:selectItems value="#{cargaAlumnoController.parentescos}"
-                                                                       var="parentesco"
-                                                                       itemLabel="#{parentesco}"
-                                                                       itemValue="#{parentesco}"/>
-                                                    </p:selectOneMenu>
+<!--                                                <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="parentescoRep">
+                                                        Parentesco: <span class="required">*</span>
+                                                    </label>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <p:selectOneMenu id="parentescoRep"
+                                                                         value="#{cargaAlumnoController.representante.parentesco}"
+                                                                         style="width: 120px">
+                                                            <f:selectItems value="#{cargaAlumnoController.parentescos}"
+                                                                           var="parentesco"
+                                                                           itemLabel="#{parentesco}"
+                                                                           itemValue="#{parentesco}"/>
+                                                        </p:selectOneMenu>
+                                                    </div>
+                                                </div>-->
+
+                                                <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label col-md-6 col-sm-6 col-xs-12" for="telefonoMadre">
+                                                        Teléfono casa: 
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputMask id="telefonoMadre" 
+                                                                     value="#{cargaAlumnoController.datosMadre.telefono}"
+                                                                     mask="(0999) 999.9999"
+                                                                     placeholder="Teléfono"
+                                                                     styleClass="form-control col-md-7 col-xs-12"/>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-
-
-                                            <div class="item form-group col-md-6 col-sm-6 col-xs-12">
-                                                <label class="control-label col-md-6 col-sm-6 col-xs-12" for="telefonoRep">
-                                                    Teléfono casa: <span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <p:inputMask id="telefonoRep" 
-                                                                 value="#{cargaAlumnoController.datosRepresentante.telefono}"
-                                                                 mask="(0999) 999.9999"
-                                                                 placeholder="Teléfono"
-                                                                 styleClass="form-control col-md-7 col-xs-12"/>
+                                                <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="celularMadre">
+                                                        Celular: 
+                                                    </label>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <p:inputMask id="celularMadre" 
+                                                                     value="#{cargaAlumnoController.datosMadre.celular}"
+                                                                     mask="(0999) 999.9999"
+                                                                     placeholder="Celular"
+                                                                     styleClass="form-control col-md-7 col-xs-12"/>
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            <div class="item form-group col-md-4 col-sm-4 col-xs-12">
-                                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="celularRep">
-                                                    Celular: <span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-8 col-sm-8 col-xs-12">
-                                                    <p:inputMask id="celularRep" 
-                                                                 value="#{cargaAlumnoController.datosRepresentante.celular}"
-                                                                 mask="(0999) 999.9999"
-                                                                 placeholder="Celular"
-                                                                 styleClass="form-control col-md-7 col-xs-12"/>
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccionMadre">
+                                                        Dirección: 
+                                                    </label>
+                                                    <div class="col-md-7 col-sm-7 col-xs-12">
+                                                        <p:inputText id="direccionMadre" 
+                                                                     value="#{cargaAlumnoController.datosMadre.direccion}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Dirección"/>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </fieldset>
+                                            
+                                            <fieldset>
+                                                <legend>Datos del Padre</legend>
+                                                
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ciPadre">
+                                                        Cédula Identidad: 
+                                                    </label>
+                                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                                        <p:inputText id="ciPadre" 
+                                                                     value="#{cargaAlumnoController.datosPadre.ci}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Cédula de Identidad" >
+                                                            <p:ajax event="blur" 
+                                                                    update="nombrePadre apellidoPadre"
+                                                                    listener="#{cargaAlumnoController.lookForCI()}"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label col-md-6 col-sm-6 col-xs-12" for="apellidoPadre">
+                                                        Apellido(s): 
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputText id="apellidoPadre" 
+                                                                     value="#{cargaAlumnoController.datosPadre.apellido}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Apellido(s)"/>
+                                                    </div>
+                                                </div>
 
-                                            <div class="item form-group">
-                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccionRep">
-                                                    Dirección: <span class="required">*</span>
-                                                </label>
-                                                <div class="col-md-7 col-sm-7 col-xs-12">
-                                                    <p:inputText id="direccionRep" 
-                                                                 value="#{cargaAlumnoController.datosRepresentante.direccion}"
-                                                                 styleClass="form-control col-md-7 col-xs-12" 
-                                                                 placeholder="Dirección"/>
+                                                <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="nombrePadre">
+                                                        Nombre(s): 
+                                                    </label>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <p:inputText id="nombrePadre" 
+                                                                     value="#{cargaAlumnoController.datosPadre.nombre}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Nombre(s)"/>
+                                                    </div>
                                                 </div>
-                                            </div>
+
+                                                <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label col-md-6 col-sm-6 col-xs-12" for="telefonoPadre">
+                                                        Teléfono casa: 
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputMask id="telefonoPadre" 
+                                                                     value="#{cargaAlumnoController.datosPadre.telefono}"
+                                                                     mask="(0999) 999.9999"
+                                                                     placeholder="Teléfono"
+                                                                     styleClass="form-control col-md-7 col-xs-12"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="celularPadre">
+                                                        Celular: 
+                                                    </label>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <p:inputMask id="celularPadre" 
+                                                                     value="#{cargaAlumnoController.datosPadre.celular}"
+                                                                     mask="(0999) 999.9999"
+                                                                     placeholder="Celular"
+                                                                     styleClass="form-control col-md-7 col-xs-12"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccionPadre">
+                                                        Dirección: 
+                                                    </label>
+                                                    <div class="col-md-7 col-sm-7 col-xs-12">
+                                                        <p:inputText id="direccionPadre" 
+                                                                     value="#{cargaAlumnoController.datosPadre.direccion}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Dirección"/>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            
+                                            <fieldset>
+                                                <legend>Datos Otro Representante</legend>
+                                                
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ciOtro">
+                                                        Cédula Identidad: 
+                                                    </label>
+                                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                                        <p:inputText id="ciOtro" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.ci}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Cédula de Identidad" >
+                                                            <p:ajax event="blur" 
+                                                                    update="nombreOtro apellidoOtro"
+                                                                    listener="#{cargaAlumnoController.lookForCI()}"/>
+                                                        </p:inputText>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label col-md-6 col-sm-6 col-xs-12" for="apellidoOtro">
+                                                        Apellido(s): 
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputText id="apellidoOtro" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.apellido}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Apellido(s)"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="nombreOtro">
+                                                        Nombre(s): 
+                                                    </label>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <p:inputText id="nombreOtro" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.nombre}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Nombre(s)"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group col-md-6 col-sm-6 col-xs-12">
+                                                    <label class="control-label col-md-6 col-sm-6 col-xs-12" for="telefonoOtro">
+                                                        Teléfono casa: 
+                                                    </label>
+                                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                                        <p:inputMask id="telefonoOtro" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.telefono}"
+                                                                     mask="(0999) 999.9999"
+                                                                     placeholder="Teléfono"
+                                                                     styleClass="form-control col-md-7 col-xs-12"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="celularOtro">
+                                                        Celular: 
+                                                    </label>
+                                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                                        <p:inputMask id="celularOtro" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.celular}"
+                                                                     mask="(0999) 999.9999"
+                                                                     placeholder="Celular"
+                                                                     styleClass="form-control col-md-7 col-xs-12"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="item form-group">
+                                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccionOtro">
+                                                        Dirección: 
+                                                    </label>
+                                                    <div class="col-md-7 col-sm-7 col-xs-12">
+                                                        <p:inputText id="direccionOtro" 
+                                                                     value="#{cargaAlumnoController.datosRepresentante.direccion}"
+                                                                     styleClass="form-control col-md-7 col-xs-12" 
+                                                                     placeholder="Dirección"/>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+
                                         </div>
 
                                         <div id="step-3">
