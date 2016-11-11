@@ -3,6 +3,7 @@ package edu.school.controller.administrativos;
 import edu.school.controller.DashboardFacade;
 import edu.school.ejb.EmailAccountFacadeLocal;
 import edu.school.entities.EmailAccount;
+import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -27,10 +28,25 @@ public class EmailsCountsController extends DashboardFacade implements Serializa
         this.emailAccount = emailAccount;
     }
 
-    
     public void saveCount(){
-        
+        if(emailAccount != null){
+            System.out.println("La cuenta es: " + emailAccount.getNombre()
+                    + "\nusuario: " + emailAccount.getUser()
+                    + "\npassword: " + emailAccount.getPassword()
+                    + "\nsmtp: " + emailAccount.getSmtp()
+                    + "\npuerto: " + emailAccount.getPuerto());
+            emailAccountFacade.create(emailAccount);
+            JsfUtils.messageSuccess("Cuenta creada con éxito");
+        } else {
+            JsfUtils.messageWarning("Hay datos que no se han completado");
+        }
     }
     
-    public void clearFields(){}
+    public void clearFields(){
+        emailAccount.setNombre(null);
+        emailAccount.setSmtp(null);
+        emailAccount.setPassword(null);
+        emailAccount.setPuerto(null);
+        emailAccount.setUser(null);
+    }
 }

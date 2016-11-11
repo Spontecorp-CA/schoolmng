@@ -24,18 +24,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author jgcastillo
  */
 @Entity
-@Table(name = "mails")
+@Table(name = "mail")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Mails.findAll", query = "SELECT m FROM Mails m")
-    , @NamedQuery(name = "Mails.findById", query = "SELECT m FROM Mails m WHERE m.id = :id")
-    , @NamedQuery(name = "Mails.findByUser", query = "SELECT m FROM Mails m WHERE m.user = :user")
-    , @NamedQuery(name = "Mails.findByPassword", query = "SELECT m FROM Mails m WHERE m.password = :password")
-    , @NamedQuery(name = "Mails.findByFilePath", query = "SELECT m FROM Mails m WHERE m.filePath = :filePath")
-    , @NamedQuery(name = "Mails.findByFileName", query = "SELECT m FROM Mails m WHERE m.fileName = :fileName")
-    , @NamedQuery(name = "Mails.findByRecipient", query = "SELECT m FROM Mails m WHERE m.recipient = :recipient")
-    , @NamedQuery(name = "Mails.findBySubject", query = "SELECT m FROM Mails m WHERE m.subject = :subject")})
-public class Mails implements Serializable {
+    @NamedQuery(name = "Mail.findAll", query = "SELECT m FROM Mail m")
+    , @NamedQuery(name = "Mail.findById", query = "SELECT m FROM Mail m WHERE m.id = :id")
+    , @NamedQuery(name = "Mail.findByUser", query = "SELECT m FROM Mail m WHERE m.user = :user")
+    , @NamedQuery(name = "Mail.findByPassword", query = "SELECT m FROM Mail m WHERE m.password = :password")
+    , @NamedQuery(name = "Mail.findByFilePath", query = "SELECT m FROM Mail m WHERE m.filePath = :filePath")
+    , @NamedQuery(name = "Mail.findByFileName", query = "SELECT m FROM Mail m WHERE m.fileName = :fileName")
+    , @NamedQuery(name = "Mail.findByRecipient", query = "SELECT m FROM Mail m WHERE m.recipient = :recipient")
+    , @NamedQuery(name = "Mail.findBySubject", query = "SELECT m FROM Mail m WHERE m.subject = :subject")})
+public class Mail implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -66,10 +66,10 @@ public class Mails implements Serializable {
     @Column(name = "message")
     private String message;
 
-    public Mails() {
+    public Mail() {
     }
 
-    public Mails(Integer id) {
+    public Mail(Integer id) {
         this.id = id;
     }
 
@@ -147,10 +147,10 @@ public class Mails implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Mails)) {
+        if (!(object instanceof Mail)) {
             return false;
         }
-        Mails other = (Mails) object;
+        Mail other = (Mail) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
