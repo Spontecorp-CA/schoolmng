@@ -49,9 +49,19 @@
                                     </div>
 
                                     <div class="x_content">
-                                        <p:editor id="editor" value="#{writeMailController.message}"  
+                                        <p:editor id="editor" value="#{writeMailController.message}" 
+                                                  controls="bold italic underline strikethrough 
+                                                  subscript superscript font size style color 
+                                                  highlight bullets numbering alignleft center 
+                                                  alignright justify rule image link unlink 
+                                                  cut copy paste"
                                                   widgetVar="editorWidget" 
                                                   style="width: 60%; margin-left: 20%"/>
+                                        <p:fileUpload value="#{writeMailController.file}"
+                                                      fileUploadListener="#{writeMailController.uploadedFile}"
+                                                      mode="simple" skinSimple="true"
+                                                      label="Adjuntar" 
+                                                      style="width: 60%; margin-left: 20%"/>
                                     </div>
                                     
                                     <div class="ln_solid"></div>
