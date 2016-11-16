@@ -5,13 +5,22 @@ import edu.school.ejb.EmailAccountFacadeLocal;
 import edu.school.entities.EmailAccount;
 import edu.school.entities.Mail;
 import edu.school.utilities.JsfUtils;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import javax.servlet.http.Part;
 
 @Named
 @ViewScoped
@@ -21,7 +30,7 @@ public class WriteMailController implements Serializable{
     private String para;
     private String subject;
     private String message;    
-    private UploadedFile file;
+    private Part file;
     
     @Inject
     private EmailAccount emailAccount;
@@ -57,11 +66,11 @@ public class WriteMailController implements Serializable{
         this.message = message;
     }
 
-    public UploadedFile getFile() {
+    public Part getFile() {
         return file;
     }
 
-    public void setFile(UploadedFile file) {
+    public void setFile(Part file) {
         this.file = file;
     }
     
@@ -69,43 +78,55 @@ public class WriteMailController implements Serializable{
         emailAccount = emailAccountFacade.find(1); // modificar esto de acuerdo a la cuenta que se tenga acceso
         mail.setUser(emailAccount.getUser());
         mail.setPassword(emailAccount.getPassword());
+        if(message == null || message.isEmpty()){
+            message = " ";
+        }
         mail.setMessage(message);
         mail.setSubject(subject);
         mail.setRecipient(para);
         
-        if(file != null){
-            System.out.println(file.getFileName());
-        } else {
-            System.out.println("No ha cargado el archivo");
-        }
+        String filePath = "c:\\uploads\\" + file.getSubmittedFileName();
         
-//        if(mailController.sendMail(emailAccount, mail)){
-//            JsfUtils.messageSuccess("Correo enviado con éxito");
-//            this.clearFields();
-//        } else {
-//            JsfUtils.messageSuccess("Ha ocurrido un problema el correo no se ha podido enviar");
-//        }
+        mail.setFilePath(filePath);
+        mail.setFileName(file.getSubmittedFileName());
+        
+        if(mailController.sendMail(emailAccount, mail)){
+            JsfUtils.messageSuccess("Correo enviado con éxito");
+            this.clearFields();
+            Path path = Paths.get(filePath);
+            try {
+                Files.deleteIfExists(path);
+            } catch (IOException ex) {
+                Logger.getLogger(WriteMailController.class.getName())
+                        .log(Level.SEVERE, "No pudo borrar el temporal", ex);
+            }
+        } else {
+            JsfUtils.messageSuccess("Ha ocurrido un problema el correo no se ha podido enviar");
+        }
+       
     }
     
-    public void uploadedFile(FileUploadEvent event){
-        file = event.getFile();
-        System.out.println(file.getFileName());
+    public void uploadedFile(){
+        try (InputStream input = file.getInputStream()){
+            Path path = Paths.get("c:\\uploads");
+            if(Files.notExists(path, LinkOption.NOFOLLOW_LINKS)){
+                Files.createDirectory(path);
+            }
+            
+            Files.copy(input, new File(path.toUri().getPath(), 
+                    file.getSubmittedFileName()).toPath());
+            
+        } catch (IOException e) {
+            Logger.getLogger(WriteMailController.class.getName())
+                    .log(Level.SEVERE, "Dio un error al cargar el archivo ", e);
+        }
     }
     
     public void clearFields(){
         this.setPara(null);
         this.setSubject(null);
         this.setMessage(null);
+        this.file = null;
     }
     
-    private String convertHtml(){
-        StringBuffer sb = new StringBuffer();
-        sb.append("<html>");
-        sb.append("<body>");
-        sb.append(message);
-        sb.append("</body>");
-        sb.append("</html>");
-        
-        return sb.toString();
-    }
 }

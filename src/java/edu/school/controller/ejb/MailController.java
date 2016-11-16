@@ -3,11 +3,12 @@ package edu.school.controller.ejb;
 import edu.school.entities.EmailAccount;
 import edu.school.entities.Mail;
 import edu.school.utilities.JsfUtils;
+import java.io.IOException;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.ejb.Stateless;
-import javax.mail.BodyPart;
+import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -52,8 +53,6 @@ public class MailController implements MailControllerLocal{
             }
             
             mimeMultipart.addBodyPart(text);
-            
-            
             
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(emailAccount.getUser()));
