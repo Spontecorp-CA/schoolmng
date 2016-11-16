@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <head>
         <title></title>
@@ -20,10 +21,22 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="x_panel">
-                            <div class="x_content">
-                                <h:form id="form" class="form-horizontal form-label-left">
-                                    <p:growl id="messages" showDetail="true"/>
+                            <h:form id="form2" 
+                                    enctype="multipart/form-data">
+                                <div class="x_content">
                                     <span class="section">Envío de Correo</span>
+                                    <h:inputFile id="file" value="#{writeMailController.file}" 
+                                                 style= "margin-left: 20%">
+                                        <f:ajax listener="#{writeMailController.uploadedFile()}"/>
+                                    </h:inputFile>
+                                </div>
+                            </h:form>  
+                            
+                            <div class="x_content">
+                                <h:form id="form1"  
+                                        class="form-horizontal form-label-left">
+                                    <p:growl id="messages" showDetail="true"/>
+                                    
                                     <div class="form-group col-md-9 col-sm-9 col-xs-12">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="para">
                                             Para: 
@@ -57,28 +70,22 @@
                                                   cut copy paste"
                                                   widgetVar="editorWidget" 
                                                   style="width: 60%; margin-left: 20%"/>
-                                        <p:fileUpload value="#{writeMailController.file}"
-                                                      fileUploadListener="#{writeMailController.uploadedFile}"
-                                                      mode="simple" skinSimple="true"
-                                                      label="Adjuntar" 
-                                                      style="width: 60%; margin-left: 20%"/>
                                     </div>
                                     
-                                    <div class="ln_solid"></div>
                                     <div class="form-group">
                                         <div class="col-md-6 col-md-offset-3">
                                             <p:commandButton id="ok"
                                                              value="Enviar"
                                                              action="#{writeMailController.sendMail()}"
                                                              styleClass="btn btn-success"
-                                                             update="messages">
+                                                             update="form1:messages">
                                                 <!--p:ajax update="matTable"/-->
                                             </p:commandButton>
                                             <p:commandButton id="newUser"
                                                              actionListener="#{writeMailController.clearFields()}"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary">
-                                                <p:ajax update="form"/>
+                                                <p:ajax update="form1"/>
                                             </p:commandButton>
                                             <p:commandButton id="cancel"
                                                              value="Cancelar"
