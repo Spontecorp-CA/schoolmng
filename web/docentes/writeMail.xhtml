@@ -28,16 +28,26 @@
                                     <span class="section">Envío de Correo</span>
 
                                     <div class="input-group">
-                                        <h:outputLabel for="file" 
-                                                       styleClass="fa fa-paperclip input-group-btn">
-                                            <span class="btn btn-primary">Incluir Archivo
-                                                <h:inputFile id="file" value="#{writeMailController.file}"
-                                                             style="display: none">
-                                                    <f:ajax listener="#{writeMailController.uploadedFile()}"/>
-                                                </h:inputFile>
-                                            </span>
-                                        </h:outputLabel>
-                                        <h:inputText styleClass="form-control" readonly="true" />
+                                        <div class="container">
+                                            <div class="row" style="margin-left: 35%;">
+                                                <div class="col-md-6">
+                                                    <h:outputLabel for="file" 
+                                                                   styleClass="fa fa-paperclip"
+                                                                   style="font-size: 26px;">
+                                                        <span class="btn btn-primary">Incluir Archivo
+                                                            <h:inputFile id="file" value="#{writeMailController.file}"
+                                                                         style="display: none">
+                                                                <f:ajax listener="#{writeMailController.uploadedFile()}"/>
+                                                            </h:inputFile>
+                                                        </span>
+                                                    </h:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h:inputText styleClass="form-control" 
+                                                                 readonly="true"/>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </h:form>  
