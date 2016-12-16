@@ -9,6 +9,7 @@ import edu.school.entities.Periodo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -70,6 +71,11 @@ public class AdminCursosController implements Serializable{
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
                             "Operación exitosa",
                             "Curso creado con éxito"));
+            curso.setPeriodoInt(null);
+            curso.setNivelId(null);
+            curso.setCodigo(null);
+            curso.setNombre(null);
+            curso.setSeccion(null);
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -93,11 +99,16 @@ public class AdminCursosController implements Serializable{
     }
     
     public List<SelectItem> getNiveles(){
-        List<Nivel> niveles = nivelFacade.findAll();
+        List<Nivel> niveles = nivelFacade.findAll().stream()
+                        .sorted((n1,n2) -> Integer.compare(n1.getPrefijo(), n2.getPrefijo()))
+                        .collect(Collectors.toList());
         List<SelectItem> itemsList = new ArrayList<>();
         itemsList.add(new SelectItem(null, "Seleccione Nivel..."));
         niveles.stream().forEach(n -> {
-            itemsList.add(new SelectItem(n, n.getNombre()));
+            String label = n.getNombre() + 
+                    (n.getEtapa() != null ? (" - " + n.getEtapa()):"");
+                    
+            itemsList.add(new SelectItem(n, label));
         });
         return itemsList;
     }

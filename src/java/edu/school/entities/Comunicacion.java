@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -29,7 +28,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "comunicacion")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Comunicacion.findAll", query = "SELECT c FROM Comunicacion c")})
+    @NamedQuery(name = "Comunicacion.findAll", query = "SELECT c FROM Comunicacion c")
+    , @NamedQuery(name = "Comunicacion.findById", query = "SELECT c FROM Comunicacion c WHERE c.id = :id")
+    , @NamedQuery(name = "Comunicacion.findByTipo", query = "SELECT c FROM Comunicacion c WHERE c.tipo = :tipo")
+    , @NamedQuery(name = "Comunicacion.findByValor", query = "SELECT c FROM Comunicacion c WHERE c.valor = :valor")})
 public class Comunicacion implements Serializable {
 
     private static final long serialVersionUID = 1L;

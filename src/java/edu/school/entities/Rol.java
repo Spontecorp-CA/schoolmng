@@ -29,7 +29,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "rol")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r")})
+    @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r")
+    , @NamedQuery(name = "Rol.findById", query = "SELECT r FROM Rol r WHERE r.id = :id")
+    , @NamedQuery(name = "Rol.findByName", query = "SELECT r FROM Rol r WHERE r.name = :name")})
 public class Rol implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,13 +48,13 @@ public class Rol implements Serializable {
 
     public Rol() {
     }
-    
-    public Rol(String name) {
-        this.name = name;
-    }
 
     public Rol(Integer id) {
         this.id = id;
+    }
+
+    public Rol(String name) {
+        this.name = name;
     }
 
     public Integer getId() {
@@ -102,7 +104,7 @@ public class Rol implements Serializable {
 
     @Override
     public String toString() {
-        return name;
+        return String.valueOf(id);
     }
     
 }

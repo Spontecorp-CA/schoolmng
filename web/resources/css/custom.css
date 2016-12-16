@@ -4129,3 +4129,45 @@ ul.notifications {
     border: 1px solid #e5e5e5; }
 
 /** /Dropzone.js **/
+
+
+/** Agregados por Goyo **/
+
+/**
+.label_upload{
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    padding: 2px;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 20%
+}
+
+.input_upload{
+    display: none;
+    margin-left: 20%
+} **/
+
+.btn-file {
+    margin-left: 20%;
+    position: relative;
+    overflow: hidden;
+    font-size: 1.2em;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+    
+}

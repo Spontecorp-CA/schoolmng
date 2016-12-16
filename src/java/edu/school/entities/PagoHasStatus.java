@@ -20,6 +20,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -30,7 +31,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "pago_has_status")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "PagoHasStatus.findAll", query = "SELECT p FROM PagoHasStatus p")})
+    @NamedQuery(name = "PagoHasStatus.findAll", query = "SELECT p FROM PagoHasStatus p")
+    , @NamedQuery(name = "PagoHasStatus.findById", query = "SELECT p FROM PagoHasStatus p WHERE p.id = :id")
+    , @NamedQuery(name = "PagoHasStatus.findByFecha", query = "SELECT p FROM PagoHasStatus p WHERE p.fecha = :fecha")})
 public class PagoHasStatus implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,6 +42,8 @@ public class PagoHasStatus implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
     private Date fecha;
@@ -54,6 +59,11 @@ public class PagoHasStatus implements Serializable {
 
     public PagoHasStatus(Integer id) {
         this.id = id;
+    }
+
+    public PagoHasStatus(Integer id, Date fecha) {
+        this.id = id;
+        this.fecha = fecha;
     }
 
     public Integer getId() {

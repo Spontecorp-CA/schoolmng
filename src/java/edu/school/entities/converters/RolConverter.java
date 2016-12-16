@@ -20,7 +20,7 @@ public class RolConverter implements Converter{
         if (value == null || value.length() == 0) {
             return null;
         }
-        return rolFacade.find(value);
+        return rolFacade.find(Integer.parseInt(value));
     }
 
     @Override

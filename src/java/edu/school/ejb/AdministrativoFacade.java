@@ -5,7 +5,7 @@
  */
 package edu.school.ejb;
 
-import edu.school.entities.Adminitrativo;
+import edu.school.entities.Administrativo;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
  * @author jgcastillo
  */
 @Stateless
-public class AdminitrativoFacade extends AbstractFacade<Adminitrativo> implements AdminitrativoFacadeLocal {
+public class AdministrativoFacade extends AbstractFacade<Administrativo> implements AdministrativoFacadeLocal {
 
     @PersistenceContext(unitName = "schoolmngPU")
     private EntityManager em;
@@ -25,8 +25,8 @@ public class AdminitrativoFacade extends AbstractFacade<Adminitrativo> implement
         return em;
     }
 
-    public AdminitrativoFacade() {
-        super(Adminitrativo.class);
+    public AdministrativoFacade() {
+        super(Administrativo.class);
     }
     
 }

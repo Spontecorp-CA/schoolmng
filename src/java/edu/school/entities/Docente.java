@@ -19,7 +19,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -32,7 +31,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "docente")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Docente.findAll", query = "SELECT d FROM Docente d")})
+    @NamedQuery(name = "Docente.findAll", query = "SELECT d FROM Docente d")
+    , @NamedQuery(name = "Docente.findById", query = "SELECT d FROM Docente d WHERE d.id = :id")
+    , @NamedQuery(name = "Docente.findByMailColegio", query = "SELECT d FROM Docente d WHERE d.mailColegio = :mailColegio")})
 public class Docente implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -44,14 +45,17 @@ public class Docente implements Serializable {
     @Size(max = 100)
     @Column(name = "mail_colegio")
     private String mailColegio;
+    @OneToMany(mappedBy = "docenteId")
+    private Collection<MateriaHasDocente> materiaHasDocenteCollection;
+    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
+    @ManyToOne
+    private Supervisor supervisorId;
     @JoinColumn(name = "datos_persona_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private DatosPersona datosPersonaId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne
     private User userId;
-    @OneToMany(mappedBy = "docenteId")
-    private Collection<MateriaHasDocente> materiaHasDocenteCollection;
     @OneToMany(mappedBy = "docenteId")
     private Collection<CursoHasDocente> cursoHasDocenteCollection;
 
@@ -78,6 +82,23 @@ public class Docente implements Serializable {
         this.mailColegio = mailColegio;
     }
 
+    @XmlTransient
+    public Collection<MateriaHasDocente> getMateriaHasDocenteCollection() {
+        return materiaHasDocenteCollection;
+    }
+
+    public void setMateriaHasDocenteCollection(Collection<MateriaHasDocente> materiaHasDocenteCollection) {
+        this.materiaHasDocenteCollection = materiaHasDocenteCollection;
+    }
+
+    public Supervisor getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(Supervisor supervisorId) {
+        this.supervisorId = supervisorId;
+    }
+
     public DatosPersona getDatosPersonaId() {
         return datosPersonaId;
     }
@@ -92,15 +113,6 @@ public class Docente implements Serializable {
 
     public void setUserId(User userId) {
         this.userId = userId;
-    }
-
-    @XmlTransient
-    public Collection<MateriaHasDocente> getMateriaHasDocenteCollection() {
-        return materiaHasDocenteCollection;
-    }
-
-    public void setMateriaHasDocenteCollection(Collection<MateriaHasDocente> materiaHasDocenteCollection) {
-        this.materiaHasDocenteCollection = materiaHasDocenteCollection;
     }
 
     @XmlTransient

@@ -29,7 +29,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "user")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")})
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+    , @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id")
+    , @NamedQuery(name = "User.findByCi", query = "SELECT u FROM User u WHERE u.ci = :ci")
+    , @NamedQuery(name = "User.findByUsr", query = "SELECT u FROM User u WHERE u.usr = :usr")
+    , @NamedQuery(name = "User.findByPsw", query = "SELECT u FROM User u WHERE u.psw = :psw")
+    , @NamedQuery(name = "User.findByStatus", query = "SELECT u FROM User u WHERE u.status = :status")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,11 +54,11 @@ public class User implements Serializable {
     @Column(name = "status")
     private Integer status;
     @OneToMany(mappedBy = "userId")
-    private Collection<Adminitrativo> adminitrativoCollection;
+    private Collection<UserHasRol> userHasRolCollection;
+    @OneToMany(mappedBy = "userId")
+    private Collection<Administrativo> administrativoCollection;
     @OneToMany(mappedBy = "userId")
     private Collection<Docente> docenteCollection;
-    @OneToMany(mappedBy = "userId")
-    private Collection<UserHasRol> userHasRolCollection;
     @OneToMany(mappedBy = "userId")
     private Collection<Representante> representanteCollection;
 
@@ -105,12 +110,21 @@ public class User implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Adminitrativo> getAdminitrativoCollection() {
-        return adminitrativoCollection;
+    public Collection<UserHasRol> getUserHasRolCollection() {
+        return userHasRolCollection;
     }
 
-    public void setAdminitrativoCollection(Collection<Adminitrativo> adminitrativoCollection) {
-        this.adminitrativoCollection = adminitrativoCollection;
+    public void setUserHasRolCollection(Collection<UserHasRol> userHasRolCollection) {
+        this.userHasRolCollection = userHasRolCollection;
+    }
+
+    @XmlTransient
+    public Collection<Administrativo> getAdministrativoCollection() {
+        return administrativoCollection;
+    }
+
+    public void setAdministrativoCollection(Collection<Administrativo> administrativoCollection) {
+        this.administrativoCollection = administrativoCollection;
     }
 
     @XmlTransient
@@ -120,15 +134,6 @@ public class User implements Serializable {
 
     public void setDocenteCollection(Collection<Docente> docenteCollection) {
         this.docenteCollection = docenteCollection;
-    }
-
-    @XmlTransient
-    public Collection<UserHasRol> getUserHasRolCollection() {
-        return userHasRolCollection;
-    }
-
-    public void setUserHasRolCollection(Collection<UserHasRol> userHasRolCollection) {
-        this.userHasRolCollection = userHasRolCollection;
     }
 
     @XmlTransient

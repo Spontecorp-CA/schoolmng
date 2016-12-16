@@ -35,7 +35,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "alumno")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Alumno.findAll", query = "SELECT a FROM Alumno a")})
+    @NamedQuery(name = "Alumno.findAll", query = "SELECT a FROM Alumno a")
+    , @NamedQuery(name = "Alumno.findById", query = "SELECT a FROM Alumno a WHERE a.id = :id")
+    , @NamedQuery(name = "Alumno.findByCi", query = "SELECT a FROM Alumno a WHERE a.ci = :ci")
+    , @NamedQuery(name = "Alumno.findByFechaIngreso", query = "SELECT a FROM Alumno a WHERE a.fechaIngreso = :fechaIngreso")
+    , @NamedQuery(name = "Alumno.findByFechaEgreso", query = "SELECT a FROM Alumno a WHERE a.fechaEgreso = :fechaEgreso")
+    , @NamedQuery(name = "Alumno.findByIdColegio", query = "SELECT a FROM Alumno a WHERE a.idColegio = :idColegio")})
 public class Alumno implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,12 +62,12 @@ public class Alumno implements Serializable {
     private String idColegio;
     @OneToMany(mappedBy = "alumnoId")
     private Collection<PagoAlumno> pagoAlumnoCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "alumnoId")
+    private Collection<AlumnoHasRepresentante> alumnoHasRepresentanteCollection;
     @JoinColumn(name = "datos_persona_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private DatosPersona datosPersonaId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "alumnoId")
-    private Collection<AlumnoHasRepresentante> alumnoHasRepresentanteCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "alumnoId")
+    @OneToMany(mappedBy = "alumnoId")
     private Collection<CursoHasAlumno> cursoHasAlumnoCollection;
 
     public Alumno() {
@@ -121,14 +126,6 @@ public class Alumno implements Serializable {
         this.pagoAlumnoCollection = pagoAlumnoCollection;
     }
 
-    public DatosPersona getDatosPersonaId() {
-        return datosPersonaId;
-    }
-
-    public void setDatosPersonaId(DatosPersona datosPersonaId) {
-        this.datosPersonaId = datosPersonaId;
-    }
-
     @XmlTransient
     public Collection<AlumnoHasRepresentante> getAlumnoHasRepresentanteCollection() {
         return alumnoHasRepresentanteCollection;
@@ -136,6 +133,14 @@ public class Alumno implements Serializable {
 
     public void setAlumnoHasRepresentanteCollection(Collection<AlumnoHasRepresentante> alumnoHasRepresentanteCollection) {
         this.alumnoHasRepresentanteCollection = alumnoHasRepresentanteCollection;
+    }
+
+    public DatosPersona getDatosPersonaId() {
+        return datosPersonaId;
+    }
+
+    public void setDatosPersonaId(DatosPersona datosPersonaId) {
+        this.datosPersonaId = datosPersonaId;
     }
 
     @XmlTransient
@@ -171,5 +176,5 @@ public class Alumno implements Serializable {
     public String toString() {
         return String.valueOf(id);
     }
-
+    
 }

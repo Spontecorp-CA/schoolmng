@@ -11,7 +11,15 @@ public class DocenteDashboardController extends DashboardFacade implements Seria
 
     @Override
     public String goUserPage() {
-        return null;
+        return "dashboard?faces-redirect=true";
+    }
+    
+    public String goWriteMail(){
+        return "writeMail?faces-redirect=true";
+    }
+    
+    public String goCircular(){
+        return "writeCircular?faces-redirect=true";
     }
     
 }

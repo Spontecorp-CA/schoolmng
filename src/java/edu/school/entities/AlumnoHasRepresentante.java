@@ -7,7 +7,6 @@ package edu.school.entities;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +27,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "alumno_has_representante")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AlumnoHasRepresentante.findAll", query = "SELECT a FROM AlumnoHasRepresentante a")})
+    @NamedQuery(name = "AlumnoHasRepresentante.findAll", query = "SELECT a FROM AlumnoHasRepresentante a")
+    , @NamedQuery(name = "AlumnoHasRepresentante.findById", query = "SELECT a FROM AlumnoHasRepresentante a WHERE a.id = :id")})
 public class AlumnoHasRepresentante implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,16 +46,16 @@ public class AlumnoHasRepresentante implements Serializable {
 
     public AlumnoHasRepresentante() {
     }
-    
-    public AlumnoHasRepresentante(Alumno alumno, Representante representante) {
-        this.alumnoId = alumno;
-        this.representanteId = representante;
-    }
 
     public AlumnoHasRepresentante(Integer id) {
         this.id = id;
     }
 
+    public AlumnoHasRepresentante(Alumno alumnoId, Representante representanteId){
+        this.alumnoId = alumnoId;
+        this.representanteId = representanteId;
+    }
+    
     public Integer getId() {
         return id;
     }
