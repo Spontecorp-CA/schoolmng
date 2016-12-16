@@ -25,6 +25,8 @@ public interface NivelFacadeLocal {
     Nivel find(Object id);
     
     Nivel findByNombre(String nombre);
+    
+    boolean exist(Nivel nivel);
 
     List<Nivel> findAll();
 

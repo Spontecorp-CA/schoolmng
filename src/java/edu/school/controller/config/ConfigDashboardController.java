@@ -64,23 +64,23 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
     }
     
     public String goConfigUsers(){
-        return "adminUsers";
+        return "adminUsers?faces-redirect=true";
     }
     
     public String goConfigPeriodos(){
-        return "adminPeriodo";
+        return "adminPeriodo?faces-redirect=true";
     }
     
     public String goConfigNiveles(){
-        return "adminNiveles";
+        return "adminNiveles?faces-redirect=true";
     }
     
     public String goConfigCursos() {
-        return "adminCursos";
+        return "adminCursos?faces-redirect=true";
     }
     
     public String goConfigStatusPago() {
-        return "adminStatusPago";
+        return "adminStatusPago?faces-redirect=true";
     }
     
     public void closeSession() {

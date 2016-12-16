@@ -103,7 +103,7 @@ public class LoginController implements Serializable {
             User u = userFacade.find(user);
             if (u != null && u.getUsr().equalsIgnoreCase(user)) {
                 answer = true;
-            }
+            } 
         } catch (NoResultException e) {
         }
         return answer;

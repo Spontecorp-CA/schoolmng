@@ -18,7 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -31,7 +30,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "colegio")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Colegio.findAll", query = "SELECT c FROM Colegio c")})
+    @NamedQuery(name = "Colegio.findAll", query = "SELECT c FROM Colegio c")
+    , @NamedQuery(name = "Colegio.findById", query = "SELECT c FROM Colegio c WHERE c.id = :id")
+    , @NamedQuery(name = "Colegio.findByNombre", query = "SELECT c FROM Colegio c WHERE c.nombre = :nombre")
+    , @NamedQuery(name = "Colegio.findByRif", query = "SELECT c FROM Colegio c WHERE c.rif = :rif")
+    , @NamedQuery(name = "Colegio.findByDireccion", query = "SELECT c FROM Colegio c WHERE c.direccion = :direccion")})
 public class Colegio implements Serializable {
 
     private static final long serialVersionUID = 1L;

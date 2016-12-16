@@ -69,6 +69,10 @@ public class AdminDashboardController extends DashboardFacade implements Seriali
         return "asociacursodocente";
     }
     
+    public String goDefineSupervisorDocente() {
+        return "definesupervisordocente?faces-redirect=true";
+    }
+    
     public String goAsignaPagosNivel() {
         return "asignapagosnivel";
     }

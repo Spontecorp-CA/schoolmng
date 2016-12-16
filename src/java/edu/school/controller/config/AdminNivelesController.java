@@ -4,6 +4,7 @@ import edu.school.ejb.NivelFacadeLocal;
 import edu.school.entities.Nivel;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -34,25 +35,51 @@ public class AdminNivelesController implements Serializable{
     }
 
     public void crearNivel() {
-        if (nivelFacade.findByNombre(nivel.getNombre()) == null) {
-            
+//        if (nivelFacade.findByNombre(nivel.getNombre()) == null) {
+//            
+//            nivelFacade.create(nivel);
+//
+//            nivel.setNombre("");
+//            nivel.setPrefijo(null);
+//            nivel.setEtapa("");
+//            FacesContext.getCurrentInstance().addMessage(null,
+//                    new FacesMessage(FacesMessage.SEVERITY_INFO,
+//                            "Operación exitosa",
+//                            "Nivel: " +nivel.getNombre() + ", creado con éxito"));
+//        } else {
+//            FacesContext.getCurrentInstance().addMessage(null,
+//                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//                            "Nivel ya existe",
+//                            "El nombre del Nivel "+ nivel.getNombre()
+//                                    +" ya existe, trate con otro nombre"));
+//        }
+        
+        if(!nivelFacade.exist(nivel)){
             nivelFacade.create(nivel);
-
-            nivel.setNombre("");
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
                             "Operación exitosa",
-                            "Nivel: " +nivel.getNombre() + ", creado con éxito"));
+                            "Nivel: " + nivel.getNombre()
+                            + ", etapa: " + nivel.getEtapa()
+                            + ", creado con éxito"));
+            nivel.setNombre("");
+            nivel.setPrefijo(null);
+            nivel.setEtapa("");
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR,
                             "Nivel ya existe",
-                            "El nombre del Nivel "+ nivel.getNombre()
-                                    +" ya existe, trate con otro nombre"));
+                            "El nivel " + nivel.getNombre()
+                            + " con etapa " + nivel.getEtapa()
+                            + " ya existe, trate con otro nombre y/o etapa"));
         }
     }
 
     public List<Nivel> getNiveles() {
-        return nivelFacade.findAll();
+        List<Nivel> niveles = nivelFacade.findAll();
+        niveles = niveles.stream()
+                .sorted((n1,n2) -> Integer.compare(n1.getPrefijo(), n2.getPrefijo()))
+                .collect(Collectors.toList());
+        return niveles;
     }    
 }

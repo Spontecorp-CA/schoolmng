@@ -43,5 +43,20 @@ public class NivelFacade extends AbstractFacade<Nivel> implements NivelFacadeLoc
         }
         return nivel;
     }
+
+    @Override
+    public boolean exist(Nivel nivel) {
+        try {
+            String query = "From Nivel n WHERE n.nombre = :nombre "
+                    + "AND n.etapa = :etapa";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("nombre", nivel.getNombre());
+            q.setParameter("etapa", nivel.getEtapa());
+            Nivel findIt = (Nivel) q.getSingleResult();
+            return true;
+        } catch (NoResultException e) {
+            return false;
+        }
+    }
     
 }

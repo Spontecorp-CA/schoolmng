@@ -18,4 +18,8 @@ public class DocenteDashboardController extends DashboardFacade implements Seria
         return "writeMail?faces-redirect=true";
     }
     
+    public String goCircular(){
+        return "writeCircular?faces-redirect=true";
+    }
+    
 }

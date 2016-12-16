@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <head>
+        <title></title>
+
+    </head>
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/docenteTemplate.xhtml">
+
+            <ui:define name="pageTitle">
+                Enviar correo
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <h:form id="form2" 
+                                    enctype="multipart/form-data">
+                                <div class="x_content">
+                                    <span class="section">Envío de Correo</span>
+
+                                    <div class="input-group">
+                                        <div class="container">
+                                            <div class="row" style="margin-left: 35%;">
+                                                <div class="col-md-6">
+                                                    <h:outputLabel for="file" 
+                                                                   styleClass="fa fa-paperclip"
+                                                                   style="font-size: 26px;">
+                                                        <span class="btn btn-primary">Incluir Archivo
+                                                            <h:inputFile id="file" value="#{writeMailController.file}"
+                                                                         style="display: none">
+                                                                <f:ajax listener="#{writeMailController.uploadedFile()}"/>
+                                                            </h:inputFile>
+                                                        </span>
+                                                    </h:outputLabel>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h:inputText styleClass="form-control" 
+                                                                 readonly="true"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>  
+
+                            <div class="x_content">
+                                <h:form id="form1"  
+                                        class="form-horizontal form-label-left">
+                                    <p:growl id="messages" showDetail="true"/>
+
+                                    <div class="form-group col-md-9 col-sm-9 col-xs-12">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="para">
+                                            Para: 
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <p:inputText id="para"
+                                                         value="#{writeMailController.para}"
+                                                         styleClass="form-control"
+                                                         placeholder="A quien va dirigido"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-9 col-sm-9 col-xs-12">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="asunto">
+                                            Asunto: 
+                                        </label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <p:inputText id="asunto"
+                                                         value="#{writeMailController.subject}"
+                                                         styleClass="form-control"
+                                                         placeholder="El asunto de la comunicación"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="x_content">
+                                        <p:editor id="editor" value="#{writeMailController.message}" 
+                                                  controls="bold italic underline strikethrough 
+                                                  subscript superscript font size style color 
+                                                  highlight bullets numbering alignleft center 
+                                                  alignright justify rule image link unlink 
+                                                  cut copy paste"
+                                                  widgetVar="editorWidget" 
+                                                  style="width: 60%; margin-left: 20%"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <p:commandButton id="ok"
+                                                             value="Enviar"
+                                                             action="#{writeMailController.sendMail()}"
+                                                             styleClass="btn btn-success"
+                                                             update="form1:messages">
+                                                <p:ajax update="form2:file"/>
+                                            </p:commandButton>
+                                            <p:commandButton id="newUser"
+                                                             actionListener="#{writeMailController.clearFields()}"
+                                                             value="Nuevo"
+                                                             styleClass="btn btn-primary">
+                                                <p:ajax update="form1 form2"/>
+                                            </p:commandButton>
+                                            <p:commandButton id="cancel"
+                                                             value="Cancelar"
+                                                             action="#{docenteDashboardController.goUserPage()}"
+                                                             styleClass="btn btn-danger"
+                                                             immediate="true"/>
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    $(function () {
+                        // We can attach the `fileselect` event to all file inputs on the page
+                        $(document).on('change', ':file', function () {
+                            var input = $(this),
+                                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                            input.trigger('fileselect', [numFiles, label]);
+                        });
+
+                        // We can watch for our custom `fileselect` event like this
+                        $(document).ready(function () {
+                            $(':file').on('fileselect', function (event, numFiles, label) {
+
+                                var input = $(this).parents('.input-group').find(':text'),
+                                        log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                                if (input.length) {
+                                    input.val(log);
+                                } else {
+                                    if (log)
+                                        alert(log);
+                                }
+
+                            });
+                        });
+
+                    });
+                </script>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

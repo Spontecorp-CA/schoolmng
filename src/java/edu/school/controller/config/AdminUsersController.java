@@ -4,7 +4,7 @@ import edu.school.ejb.DatosPersonaFacadeLocal;
 import edu.school.ejb.RolFacadeLocal;
 import edu.school.ejb.UserFacadeLocal;
 import edu.school.ejb.UserHasRolFacadeLocal;
-import edu.school.entities.Adminitrativo;
+import edu.school.entities.Administrativo;
 import edu.school.entities.DatosPersona;
 import edu.school.entities.Docente;
 import edu.school.entities.Representante;
@@ -64,17 +64,18 @@ public class AdminUsersController implements Serializable {
     public List<SelectItem> getRoles() {
         List<Rol> rolList = rolFacade.findAll();
         List<SelectItem> roles = new ArrayList<>();
+        roles.add(0, new SelectItem(null, "Seleccione ..."));
         rolList.stream()
-                .filter((actor) -> !actor.getName().equals(Constantes.ROL_ALUMNO)
-                        && !actor.getName().equals(Constantes.ROL_CONFIGURADOR))
-                .forEach((actor) -> {
-                    roles.add(new SelectItem(actor, actor.getName()));
+                .filter((rol1) -> !rol1.getName().equals(Constantes.ROL_ALUMNO)
+                        && !rol1.getName().equals(Constantes.ROL_CONFIGURADOR))
+                .forEach((rol1) -> {
+                    roles.add(new SelectItem(rol1, rol1.getName()));
                 });
+        
         return roles;
     }
 
     public void createUser() {
-
         DatosPersona dpTemp = datosPersonaFacade.find(datosPersona.getCi().intValue());
         if (dpTemp != null) {
             FacesContext.getCurrentInstance()
@@ -88,7 +89,7 @@ public class AdminUsersController implements Serializable {
 
         switch (rol.getName()) {
             case Constantes.ROL_ADMINISTRATIVO:
-                Adminitrativo administrativo = new Adminitrativo();
+                Administrativo administrativo = new Administrativo();
                 administrativo.setDatosPersonaId(datosPersona);
                 userHasRol.setEscritorio(Constantes.ESCRITORIO_ADMIN);
                 break;

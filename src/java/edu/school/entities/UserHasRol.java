@@ -28,7 +28,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "user_has_rol")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UserHasRol.findAll", query = "SELECT u FROM UserHasRol u")})
+    @NamedQuery(name = "UserHasRol.findAll", query = "SELECT u FROM UserHasRol u")
+    , @NamedQuery(name = "UserHasRol.findById", query = "SELECT u FROM UserHasRol u WHERE u.id = :id")
+    , @NamedQuery(name = "UserHasRol.findByEscritorio", query = "SELECT u FROM UserHasRol u WHERE u.escritorio = :escritorio")})
 public class UserHasRol implements Serializable {
 
     private static final long serialVersionUID = 1L;

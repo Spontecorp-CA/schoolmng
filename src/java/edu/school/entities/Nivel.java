@@ -29,7 +29,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "nivel")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Nivel.findAll", query = "SELECT n FROM Nivel n")})
+    @NamedQuery(name = "Nivel.findAll", query = "SELECT n FROM Nivel n")
+    , @NamedQuery(name = "Nivel.findById", query = "SELECT n FROM Nivel n WHERE n.id = :id")
+    , @NamedQuery(name = "Nivel.findByNombre", query = "SELECT n FROM Nivel n WHERE n.nombre = :nombre")
+    , @NamedQuery(name = "Nivel.findByPrefijo", query = "SELECT n FROM Nivel n WHERE n.prefijo = :prefijo")
+    , @NamedQuery(name = "Nivel.findByEtapa", query = "SELECT n FROM Nivel n WHERE n.etapa = :etapa")})
 public class Nivel implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,6 +45,11 @@ public class Nivel implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
+    @Column(name = "prefijo")
+    private Integer prefijo;
+    @Size(max = 25)
+    @Column(name = "etapa")
+    private String etapa;
     @OneToMany(mappedBy = "nivelId")
     private Collection<Curso> cursoCollection;
 
@@ -65,6 +74,22 @@ public class Nivel implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Integer getPrefijo() {
+        return prefijo;
+    }
+
+    public void setPrefijo(Integer prefijo) {
+        this.prefijo = prefijo;
+    }
+
+    public String getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(String etapa) {
+        this.etapa = etapa;
     }
 
     @XmlTransient

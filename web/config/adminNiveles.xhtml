@@ -48,6 +48,38 @@
                                                          requiredMessage="Debe colocar el nombre"/>
                                         </div>
                                     </div>
+                                    
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="prefijo">
+                                            Prefijo del Nivel: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:inputText id="prefijo" 
+                                                         value="#{adminNivelesController.nivel.prefijo}"
+                                                         styleClass="form-control col-md-7 col-xs-12" 
+                                                         placeholder="Agregue el prefijo" 
+                                                         required="true"
+                                                         requiredMessage="Debe colocar el prefijo"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="etapa">
+                                            Etapa del Nivel: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:selectOneMenu id="etapa"
+                                                             value="#{adminNivelesController.nivel.etapa}"
+                                                             styleClass="col-md-4 col-xs-12">
+                                                <f:selectItem itemLabel="Sin etapa" itemValue=""/>
+                                                <f:selectItem itemLabel="1ra Etapa" itemValue="1ra Etapa"/>
+                                                <f:selectItem itemLabel="2da Etapa" itemValue="2da Etapa"/>
+                                                <f:selectItem itemLabel="3ra Etapa" itemValue="3ra Etapa"/>
+                                                <f:selectItem itemLabel="4ta Etapa" itemValue="4ta Etapa"/>
+                                                <f:selectItem itemLabel="5ta Etapa" itemValue="5ta Etapa"/>
+                                            </p:selectOneMenu>
+                                        </div>
+                                    </div>
 
                                     <div class="ln_solid"></div>
                                     <div class="form-group">
@@ -99,6 +131,9 @@
 
                                             <p:column>
                                                 <h:outputText value="#{item.nombre}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText value="#{item.etapa}"/>
                                             </p:column>
 
                                         </p:dataTable>

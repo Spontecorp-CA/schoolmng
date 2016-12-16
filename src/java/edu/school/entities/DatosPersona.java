@@ -34,7 +34,17 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "datos_persona")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "DatosPersona.findAll", query = "SELECT d FROM DatosPersona d")})
+    @NamedQuery(name = "DatosPersona.findAll", query = "SELECT d FROM DatosPersona d")
+    , @NamedQuery(name = "DatosPersona.findById", query = "SELECT d FROM DatosPersona d WHERE d.id = :id")
+    , @NamedQuery(name = "DatosPersona.findByNombre", query = "SELECT d FROM DatosPersona d WHERE d.nombre = :nombre")
+    , @NamedQuery(name = "DatosPersona.findByApellido", query = "SELECT d FROM DatosPersona d WHERE d.apellido = :apellido")
+    , @NamedQuery(name = "DatosPersona.findByCi", query = "SELECT d FROM DatosPersona d WHERE d.ci = :ci")
+    , @NamedQuery(name = "DatosPersona.findByNacionalidad", query = "SELECT d FROM DatosPersona d WHERE d.nacionalidad = :nacionalidad")
+    , @NamedQuery(name = "DatosPersona.findByFechaNacimiento", query = "SELECT d FROM DatosPersona d WHERE d.fechaNacimiento = :fechaNacimiento")
+    , @NamedQuery(name = "DatosPersona.findByEmail", query = "SELECT d FROM DatosPersona d WHERE d.email = :email")
+    , @NamedQuery(name = "DatosPersona.findByTelefono", query = "SELECT d FROM DatosPersona d WHERE d.telefono = :telefono")
+    , @NamedQuery(name = "DatosPersona.findByCelular", query = "SELECT d FROM DatosPersona d WHERE d.celular = :celular")
+    , @NamedQuery(name = "DatosPersona.findBySexo", query = "SELECT d FROM DatosPersona d WHERE d.sexo = :sexo")})
 public class DatosPersona implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -73,13 +83,15 @@ public class DatosPersona implements Serializable {
     @Column(name = "sexo")
     private Character sexo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "datosPersonaId")
-    private Collection<Adminitrativo> adminitrativoCollection;
+    private Collection<Administrativo> administrativoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "datosPersonaId")
     private Collection<Docente> docenteCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "datosPersonaId")
     private Collection<Alumno> alumnoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "datosPersonaId")
     private Collection<Representante> representanteCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "datosPersonaId")
+    private Collection<Supervisor> supervisorCollection;
 
     public DatosPersona() {
     }
@@ -177,12 +189,12 @@ public class DatosPersona implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Adminitrativo> getAdminitrativoCollection() {
-        return adminitrativoCollection;
+    public Collection<Administrativo> getAdministrativoCollection() {
+        return administrativoCollection;
     }
 
-    public void setAdminitrativoCollection(Collection<Adminitrativo> adminitrativoCollection) {
-        this.adminitrativoCollection = adminitrativoCollection;
+    public void setAdministrativoCollection(Collection<Administrativo> administrativoCollection) {
+        this.administrativoCollection = administrativoCollection;
     }
 
     @XmlTransient
@@ -210,6 +222,15 @@ public class DatosPersona implements Serializable {
 
     public void setRepresentanteCollection(Collection<Representante> representanteCollection) {
         this.representanteCollection = representanteCollection;
+    }
+
+    @XmlTransient
+    public Collection<Supervisor> getSupervisorCollection() {
+        return supervisorCollection;
+    }
+
+    public void setSupervisorCollection(Collection<Supervisor> supervisorCollection) {
+        this.supervisorCollection = supervisorCollection;
     }
 
     @Override
