@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
         <f:facet name="first">
@@ -97,6 +98,28 @@
                                             </ul>
 
                                         </li>
+
+                                        <li>
+                                            <a>
+                                                <i class="fa fa-user"></i>
+                                                Supervidores
+                                                <span class="fa fa-chevron-down"></span>
+                                            </a>
+                                        
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <h:commandLink action="#{configDashboardController.goSupervisorAgregar()}">
+                                                        Agregar Supervisor
+                                                    </h:commandLink>
+                                                </li>
+                                                <li>
+                                                    <h:commandLink action="#{configDashboardController.goSupervisorEditar()}">
+                                                        Editar Supervisor
+                                                    </h:commandLink>
+                                                </li>
+                                            </ul>
+                                        </li>
+
                                         <li>
                                             <h:commandLink action="#{configDashboardController.goConfigPeriodos()}">
                                                 <i class="fa fa-institution"></i>
@@ -116,14 +139,14 @@
                                                 Configurar Cursos
                                             </h:commandLink>
                                         </li>
-                                        
+
                                         <li>
                                             <h:commandLink action="#{configDashboardController.goConfigStatusPago()}">
                                                 <i class="fa fa-check-circle"></i>
                                                 Configurar Status de Pago 
                                             </h:commandLink>
                                         </li>
-                                        
+
                                     </ul>
                                 </div>
                             </div>

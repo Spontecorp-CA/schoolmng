@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
+
+            <ui:define name="pageName">
+                Gestión de Supervisor
+            </ui:define>
+
+            <ui:define name="content">
+                <div class=" container">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>
+                                        <!-- subtitulo de la página -->
+                                        Agregar Supervisor
+                                    </h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+
+                                    <!-- contenido de la página -->
+
+                                    <form jsf:id="form" class="form-horizontal form-label-left">
+
+                                        <div class="col-xs-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label" for="usuario">Usuario: </label>
+                                                <p:autoComplete id="usuario" 
+                                                                value="#{adminSupervisorAgregar.supervisor}"
+                                                                completeMethod="#{adminSupervisorAgregar.completeUser}"
+                                                                forceSelection="true"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label" for="destinatario">Supervisa a:</label>
+                                                <p:selectOneRadio id="destinatario" 
+                                                                  value="#{adminSupervisorAgregar.grupo}"
+                                                                  layout="grid"
+                                                                  columns="1"
+                                                                  style="padding: 10px">
+                                                    <f:selectItem itemLabel=" Grado" itemValue="Grado"/>
+                                                    <f:selectItem itemLabel=" Nivel" itemValue="Nivel"/>
+                                                    <f:selectItem itemLabel=" Colegio" itemValue="Colegio"/>
+                                                </p:selectOneRadio>
+                                            </div>
+                                        </div>
+                                        <div class="ln_solid"></div>
+                                        <div class="form-group">
+                                            <div class="col-md-6 col-md-offset-3">
+                                                <p:commandButton id="ok"
+                                                                 value="Aceptar"
+                                                                 styleClass="btn btn-success"
+                                                                 actionListener="#{adminSupervisorAgregar.createSuper()}"/>
+                                                <p:commandButton id="newUser"
+                                                                 value="Nuevo"
+                                                                 styleClass="btn btn-primary"
+                                                                 actionListener="#{adminSupervisorAgregar.clearFields()}"/>
+                                                <p:commandButton id="cancel"
+                                                                 value="Cancelar"
+                                                                 styleClass="btn btn-danger"
+                                                                 action="#{adminDashboardController.goUserPage()}"
+                                                                 immediate="true"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <p:messages autoUpdate="true" showDetail="true"
+                                                    closable="true"
+                                                    />
+                                        <!--<p:growl id="growl" autoUpdate="true" life="2000" showDetail="true"/>-->
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12 col-lg-12">
+                            <p:dataTable var="super"
+                                         value="#{adminSupervisorAgregar.supervisores}"
+                                         styleClass="table-striped"
+                                         scrollable="true"
+                                         scrollHeight="150">
+                                <p:column headerText="Supervisor">
+                                    <h:outputText value="#{super.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Grupo">
+                                    <h:outputText value="#{super.grupo}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

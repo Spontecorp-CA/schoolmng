@@ -4171,3 +4171,9 @@ ul.notifications {
     display: block;
     
 }
+
+/* Sobrescritura de las clases de primefaces*/
+.ui-selectoneradio label{
+    padding-left: 10px;
+    padding-right: 10px;
+}

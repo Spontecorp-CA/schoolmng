@@ -13,6 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -36,6 +38,8 @@ public class WriteMailController implements Serializable{
     private Part file;
     private String directory;
     private String fileLabel;
+    private String grupo;
+    private List<String> grupos;
     
     @Inject
     private EmailAccount emailAccount;
@@ -65,6 +69,29 @@ public class WriteMailController implements Serializable{
         }
         
         fileLabel = "  No ha seleccionado archivo";
+        
+        grupos = makeGrupos();
+    }
+    
+    private List<String> makeGrupos(){
+        List<String> groups = new ArrayList<>();
+        groups.add("Sección");
+        groups.add("Grado");
+        groups.add("Nivel");
+        groups.add("Colegio");
+        return groups;
+    }
+
+    public String getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
+    }
+
+    public List<String> getGrupos() {
+        return grupos;
     }
     
     public String getPara() {
