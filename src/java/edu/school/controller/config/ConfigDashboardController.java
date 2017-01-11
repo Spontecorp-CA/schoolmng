@@ -83,6 +83,14 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         return "adminStatusPago?faces-redirect=true";
     }
     
+    public String goSupervisorAgregar() {
+        return "adminSupervisorAgregar?faces-redirect=true";
+    }
+    
+    public String goSupervisorEditar() {
+        return "adminSupervisorEditar?faces-redirect=true";
+    }
+    
     public void closeSession() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
     }
