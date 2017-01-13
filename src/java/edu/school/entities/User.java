@@ -8,6 +8,7 @@ package edu.school.entities;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,10 +58,16 @@ public class User implements Serializable {
     private Collection<UserHasRol> userHasRolCollection;
     @OneToMany(mappedBy = "userId")
     private Collection<Administrativo> administrativoCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Collection<Autorizacion> autorizacionCollection;
     @OneToMany(mappedBy = "userId")
     private Collection<Docente> docenteCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Collection<Circular> circularCollection;
     @OneToMany(mappedBy = "userId")
     private Collection<Representante> representanteCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    private Collection<Supervisor> supervisorCollection;
 
     public User() {
     }
@@ -128,6 +135,15 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    public Collection<Autorizacion> getAutorizacionCollection() {
+        return autorizacionCollection;
+    }
+
+    public void setAutorizacionCollection(Collection<Autorizacion> autorizacionCollection) {
+        this.autorizacionCollection = autorizacionCollection;
+    }
+
+    @XmlTransient
     public Collection<Docente> getDocenteCollection() {
         return docenteCollection;
     }
@@ -137,12 +153,30 @@ public class User implements Serializable {
     }
 
     @XmlTransient
+    public Collection<Circular> getCircularCollection() {
+        return circularCollection;
+    }
+
+    public void setCircularCollection(Collection<Circular> circularCollection) {
+        this.circularCollection = circularCollection;
+    }
+
+    @XmlTransient
     public Collection<Representante> getRepresentanteCollection() {
         return representanteCollection;
     }
 
     public void setRepresentanteCollection(Collection<Representante> representanteCollection) {
         this.representanteCollection = representanteCollection;
+    }
+
+    @XmlTransient
+    public Collection<Supervisor> getSupervisorCollection() {
+        return supervisorCollection;
+    }
+
+    public void setSupervisorCollection(Collection<Supervisor> supervisorCollection) {
+        this.supervisorCollection = supervisorCollection;
     }
 
     @Override

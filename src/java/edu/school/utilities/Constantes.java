@@ -6,6 +6,8 @@ package edu.school.utilities;
  */
 public class Constantes {
     
+    public static final String PERSISTANCE_UNIT = "schoolmngPU";
+    
     public static final String ROL_CONFIGURADOR = "Configurador";
     public static final String ROL_ADMINISTRATIVO = "Administrativo";
     public static final String ROL_DOCENTE = "Docente";
@@ -16,6 +18,7 @@ public class Constantes {
     public static final String ESCRITORIO_ADMIN = "/administrativos/dashboard";
     public static final String ESCRITORIO_DOCENTE = "/docentes/dashboard";
     public static final String ESCRITORIO_REPRESENTANTE = "/representantes/dashboard";
+    public static final String ESCRITORIO_ALUMNO = "/alumnos/dashboard";
 
     public static final int USUARIO_ACTIVO = 1;
     public static final int USUARIO_INACTIVO = 0;

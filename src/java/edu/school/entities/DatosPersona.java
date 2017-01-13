@@ -90,8 +90,6 @@ public class DatosPersona implements Serializable {
     private Collection<Alumno> alumnoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "datosPersonaId")
     private Collection<Representante> representanteCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "datosPersonaId")
-    private Collection<Supervisor> supervisorCollection;
 
     public DatosPersona() {
     }
@@ -222,15 +220,6 @@ public class DatosPersona implements Serializable {
 
     public void setRepresentanteCollection(Collection<Representante> representanteCollection) {
         this.representanteCollection = representanteCollection;
-    }
-
-    @XmlTransient
-    public Collection<Supervisor> getSupervisorCollection() {
-        return supervisorCollection;
-    }
-
-    public void setSupervisorCollection(Collection<Supervisor> supervisorCollection) {
-        this.supervisorCollection = supervisorCollection;
     }
 
     @Override

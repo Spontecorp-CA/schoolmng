@@ -6,6 +6,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Docente;
+import edu.school.utilities.Constantes;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,7 +18,7 @@ import javax.persistence.PersistenceContext;
 @Stateless
 public class DocenteFacade extends AbstractFacade<Docente> implements DocenteFacadeLocal {
 
-    @PersistenceContext(unitName = "schoolmngPU")
+    @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
 
     @Override
