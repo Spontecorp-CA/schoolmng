@@ -2,6 +2,7 @@ package edu.school.ejb;
 
 import edu.school.entities.User;
 import edu.school.entities.UserHasRol;
+import edu.school.utilities.Constantes;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -12,7 +13,7 @@ import javax.persistence.Query;
 @Stateless
 public class UserHasRolFacade extends AbstractFacade<UserHasRol> implements UserHasRolFacadeLocal {
 
-    @PersistenceContext(unitName = "schoolmngPU")
+    @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
 
     @Override

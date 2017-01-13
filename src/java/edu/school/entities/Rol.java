@@ -56,7 +56,7 @@ public class Rol implements Serializable {
     public Rol(String name) {
         this.name = name;
     }
-
+    
     public Integer getId() {
         return id;
     }

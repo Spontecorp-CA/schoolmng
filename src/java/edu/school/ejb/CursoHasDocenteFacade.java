@@ -8,6 +8,7 @@ package edu.school.ejb;
 import edu.school.entities.Curso;
 import edu.school.entities.CursoHasDocente;
 import edu.school.entities.Docente;
+import edu.school.utilities.Constantes;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -23,7 +24,7 @@ import javax.persistence.Query;
 @Stateless
 public class CursoHasDocenteFacade extends AbstractFacade<CursoHasDocente> implements CursoHasDocenteFacadeLocal {
 
-    @PersistenceContext(unitName = "schoolmngPU")
+    @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
 
     @Override

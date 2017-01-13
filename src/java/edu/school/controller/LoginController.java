@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.persistence.NoResultException;
+import edu.school.controller.dataprueba.DataPruebaControllerLocal;
 
 @Named
 @ViewScoped
@@ -30,6 +31,10 @@ public class LoginController implements Serializable {
     private RolFacadeLocal rolFacade;
     @EJB
     private UserHasRolFacadeLocal uhRolFacade;
+    
+    // este ejb debe eliminarse al entrar en producción
+    @EJB
+    private DataPruebaControllerLocal dataPruebaController;
 
     private String usuario; //= "jadmin@test.com";
     private String password;
@@ -58,6 +63,9 @@ public class LoginController implements Serializable {
         if (!verifyUserConfigurador()) {
             createUserConfigurador();
         }
+        
+        // este método se debe eliminar enproducción
+        dataPruebaController.verifyDataInicial();
     }
 
     private void createUserConfigurador() {

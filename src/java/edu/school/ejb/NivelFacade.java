@@ -6,6 +6,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Nivel;
+import edu.school.utilities.Constantes;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -19,7 +20,7 @@ import javax.persistence.Query;
 @Stateless
 public class NivelFacade extends AbstractFacade<Nivel> implements NivelFacadeLocal {
 
-    @PersistenceContext(unitName = "schoolmngPU")
+    @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
 
     @Override

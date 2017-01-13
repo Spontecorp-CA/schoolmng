@@ -6,6 +6,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Periodo;
+import edu.school.utilities.Constantes;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -19,7 +20,7 @@ import javax.persistence.Query;
 @Stateless
 public class PeriodoFacade extends AbstractFacade<Periodo> implements PeriodoFacadeLocal {
 
-    @PersistenceContext(unitName = "schoolmngPU")
+    @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
 
     @Override
