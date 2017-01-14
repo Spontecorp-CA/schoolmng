@@ -8,19 +8,20 @@ package edu.school.ejb;
 import edu.school.entities.Curso;
 import edu.school.entities.CursoHasDocente;
 import edu.school.entities.Docente;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
-/**
- *
- * @author jgcastillo
- */
 @Local
 public interface CursoHasDocenteFacadeLocal {
 
     void create(CursoHasDocente cursoHasDocente);
+    
+    void batchCreate(Collection<CursoHasDocente> collection);
 
     void edit(CursoHasDocente cursoHasDocente);
+    
+    void batchEdit(Collection<CursoHasDocente> collection);
 
     void remove(CursoHasDocente cursoHasDocente);
 

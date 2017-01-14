@@ -1,24 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.ejb;
 
 import edu.school.entities.Docente;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
-/**
- *
- * @author jgcastillo
- */
 @Local
 public interface DocenteFacadeLocal {
 
     void create(Docente docente);
+    
+    void batchCreate(Collection<Docente> collection);
 
     void edit(Docente docente);
+    
+    void batchEdit(Collection<Docente> collection);
 
     void remove(Docente docente);
 

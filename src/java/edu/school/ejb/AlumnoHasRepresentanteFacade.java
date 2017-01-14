@@ -19,7 +19,8 @@ import javax.persistence.Query;
  * @author jgcastillo
  */
 @Stateless
-public class AlumnoHasRepresentanteFacade extends AbstractFacade<AlumnoHasRepresentante> implements AlumnoHasRepresentanteFacadeLocal {
+public class AlumnoHasRepresentanteFacade extends AbstractFacade<AlumnoHasRepresentante> 
+        implements AlumnoHasRepresentanteFacadeLocal {
 
     @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;

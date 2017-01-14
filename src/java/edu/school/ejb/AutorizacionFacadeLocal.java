@@ -6,15 +6,21 @@
 package edu.school.ejb;
 
 import edu.school.entities.Autorizacion;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
 @Local
 public interface AutorizacionFacadeLocal {
+    
     void create(Autorizacion autorizacion);
+    
+    void batchCreate(Collection<Autorizacion> collection);
 
     void edit(Autorizacion autorizacion);
 
+    void batchEdit(Collection<Autorizacion> collection);
+    
     void remove(Autorizacion autorizacion);
 
     Autorizacion find(Object id);

@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Circular;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -8,8 +9,12 @@ import javax.ejb.Local;
 public interface CircularFacadeLocal {
     
     void create(Circular autorizacion);
+    
+    void batchCreate(Collection<Circular> collection);
 
     void edit(Circular autorizacion);
+    
+    void batchEdit(Collection<Circular> collection);
 
     void remove(Circular autorizacion);
 

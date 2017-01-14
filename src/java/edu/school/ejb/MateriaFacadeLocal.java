@@ -1,24 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.ejb;
 
 import edu.school.entities.Materia;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
-/**
- *
- * @author jgcastillo
- */
 @Local
 public interface MateriaFacadeLocal {
 
     void create(Materia materia);
+    
+    void batchCreate(Collection<Materia> collection);
 
     void edit(Materia materia);
+    
+    void batchEdit(Collection<Materia> collection);
 
     void remove(Materia materia);
 

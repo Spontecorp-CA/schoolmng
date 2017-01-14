@@ -6,6 +6,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Administrativo;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -17,8 +18,12 @@ import javax.ejb.Local;
 public interface AdministrativoFacadeLocal {
 
     void create(Administrativo adminitrativo);
+    
+    void batchCreate(Collection<Administrativo> administrativoColl);
 
     void edit(Administrativo adminitrativo);
+    
+    void batchEdit(Collection<Administrativo> administrativoColl);
 
     void remove(Administrativo adminitrativo);
 

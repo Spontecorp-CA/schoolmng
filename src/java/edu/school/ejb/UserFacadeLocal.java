@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.User;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -8,8 +9,12 @@ import javax.ejb.Local;
 public interface UserFacadeLocal {
 
     void create(User user);
+    
+    void batchCreate(Collection<User> collection);
 
     void edit(User user);
+    
+    void batchEdit(Collection<User> collection);
 
     void remove(User user);
 

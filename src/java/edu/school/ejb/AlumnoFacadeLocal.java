@@ -6,8 +6,8 @@
 package edu.school.ejb;
 
 import edu.school.entities.Alumno;
-import edu.school.entities.Curso;
-import edu.school.entities.Nivel;
+import edu.school.entities.DatosPersona;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -19,12 +19,18 @@ import javax.ejb.Local;
 public interface AlumnoFacadeLocal {
 
     void create(Alumno alumno);
+    
+    void batchCreate(Collection<Alumno> alumnoColl);
 
     void edit(Alumno alumno);
+    
+     void batchEdit(Collection<Alumno> alumnoColl);
 
     void remove(Alumno alumno);
 
     Alumno find(Object id);
+    
+    Alumno findxDatosPersona(DatosPersona dp);
 
     List<Alumno> findAll();
     
