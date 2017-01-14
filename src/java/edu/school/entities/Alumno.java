@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Alumno.findAll", query = "SELECT a FROM Alumno a")
     , @NamedQuery(name = "Alumno.findById", query = "SELECT a FROM Alumno a WHERE a.id = :id")
-    , @NamedQuery(name = "Alumno.findByCi", query = "SELECT a FROM Alumno a WHERE a.ci = :ci")
     , @NamedQuery(name = "Alumno.findByFechaIngreso", query = "SELECT a FROM Alumno a WHERE a.fechaIngreso = :fechaIngreso")
     , @NamedQuery(name = "Alumno.findByFechaEgreso", query = "SELECT a FROM Alumno a WHERE a.fechaEgreso = :fechaEgreso")
     , @NamedQuery(name = "Alumno.findByIdColegio", query = "SELECT a FROM Alumno a WHERE a.idColegio = :idColegio")})
@@ -49,8 +48,6 @@ public class Alumno implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "ci")
-    private Integer ci;
     @Column(name = "fecha_ingreso")
     @Temporal(TemporalType.DATE)
     private Date fechaIngreso;
@@ -83,14 +80,6 @@ public class Alumno implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getCi() {
-        return ci;
-    }
-
-    public void setCi(Integer ci) {
-        this.ci = ci;
     }
 
     public Date getFechaIngreso() {

@@ -159,7 +159,7 @@ public class CargaArchivoAlumnos implements Serializable {
             if (numberValue < 10000000) {
                 alumno.setIdColegio(number.toString());
             } else {
-                alumno.setCi(numberValue);
+                //alumno.setCi(numberValue);
                 dpAl.setCi(numberValue);
             }
             dpAl.setApellido(row.getCell(CELL_APELLIDO).getStringCellValue());
@@ -231,7 +231,7 @@ public class CargaArchivoAlumnos implements Serializable {
                 sb.append(dp.getApellido()).append("      ");
                 sb.append(dp.getNombre()).append("      ");
                 sb.append(alumno.getIdColegio() != null ? alumno.getIdColegio() : "").append("      ");
-                sb.append(alumno.getCi() != null ? alumno.getCi() : "").append("      ");
+                //sb.append(alumno.getCi() != null ? alumno.getCi() : "").append("      ");
 
                 rep = ahr.getRepresentanteId();
                 dpRep = rep.getDatosPersonaId();

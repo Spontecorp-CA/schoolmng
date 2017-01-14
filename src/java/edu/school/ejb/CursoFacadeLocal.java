@@ -1,32 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.ejb;
 
 import edu.school.entities.Curso;
 import edu.school.entities.Nivel;
 import edu.school.entities.Periodo;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
-/**
- *
- * @author jgcastillo
- */
 @Local
 public interface CursoFacadeLocal {
 
     void create(Curso curso);
+    
+    void batchCreate(Collection<Curso> collection);
 
     void edit(Curso curso);
+    
+    void batchEdit(Collection<Curso> collection);
 
     void remove(Curso curso);
 
     Curso find(Object id);
     
     Curso find(String codigo, String nombre, Periodo periodo);
+    
+    Curso findByCodigo(String codigo);
     
     List<Curso> findAll();
     

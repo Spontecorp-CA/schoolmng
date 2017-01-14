@@ -7,6 +7,7 @@ package edu.school.ejb;
 
 import edu.school.entities.Alumno;
 import edu.school.entities.AlumnoHasRepresentante;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -18,8 +19,12 @@ import javax.ejb.Local;
 public interface AlumnoHasRepresentanteFacadeLocal {
 
     void create(AlumnoHasRepresentante alumnoHasRepresentante);
+    
+    void batchCreate(Collection<AlumnoHasRepresentante> collection);
 
     void edit(AlumnoHasRepresentante alumnoHasRepresentante);
+    
+    void batchEdit(Collection<AlumnoHasRepresentante> collection);
 
     void remove(AlumnoHasRepresentante alumnoHasRepresentante);
 

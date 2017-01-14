@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.EmailAccount;
+import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -8,8 +9,12 @@ import javax.ejb.Local;
 public interface EmailAccountFacadeLocal {
 
     void create(EmailAccount emailAccount);
+    
+    void batchCreate(Collection<EmailAccount> collection);
 
     void edit(EmailAccount emailAccount);
+    
+    void batchEdit(Collection<EmailAccount> collection);
 
     void remove(EmailAccount emailAccount);
 

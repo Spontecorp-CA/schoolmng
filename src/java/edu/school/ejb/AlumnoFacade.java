@@ -1,20 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.ejb;
 
 import edu.school.entities.Alumno;
+import edu.school.entities.DatosPersona;
 import edu.school.utilities.Constantes;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
-/**
- *
- * @author jgcastillo
- */
 @Stateless
 public class AlumnoFacade extends AbstractFacade<Alumno> implements AlumnoFacadeLocal {
 
@@ -28,6 +22,20 @@ public class AlumnoFacade extends AbstractFacade<Alumno> implements AlumnoFacade
 
     public AlumnoFacade() {
         super(Alumno.class);
+    }
+
+    @Override
+    public Alumno findxDatosPersona(DatosPersona dp) {
+        Alumno alumno = null;
+        try {
+            String query = "FROM Alumno a WHERE a.datosPersonaId = :dp";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("dp", dp);
+            alumno = (Alumno) q.getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("Alumno con ci " + dp.getCi() + " no encontrado");
+        }
+        return alumno;
     }
     
 }

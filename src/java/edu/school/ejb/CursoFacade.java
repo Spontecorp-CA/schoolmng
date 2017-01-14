@@ -5,6 +5,8 @@ import edu.school.entities.Nivel;
 import edu.school.entities.Periodo;
 import edu.school.utilities.Constantes;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -46,6 +48,22 @@ public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLoc
         return curso;
     }
 
+    @Override
+    public Curso findByCodigo(String codigo) {
+        Curso curso = null;
+        try {
+            String query = "FROM Curso c WHERE c.codigo = :codigo";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("codigo", codigo);
+            curso = (Curso) q.getSingleResult();
+        } catch (NoResultException e) {
+            Logger.getLogger(CursoFacade.class.getName())
+                    .log(Level.WARNING, "No se encontró un curso con código {0}",
+                            codigo);
+        }
+        return curso;
+    }
+    
     @Override
     public List<Curso> findAllOrdered() {
         List<Curso> cursos = null;
