@@ -32,7 +32,7 @@ public class DatosPersonaFacade extends AbstractFacade<DatosPersona> implements 
     }
 
     @Override
-    public DatosPersona find(int ci) {
+    public DatosPersona findByCi(int ci) {
         DatosPersona datosPersona = null;
         try {
             String query = "FROM DatosPersona dp WHERE dp.ci = :ci";
