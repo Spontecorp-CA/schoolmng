@@ -3,10 +3,13 @@ package edu.school.controller.config;
 import edu.school.ejb.AdministrativoFacadeLocal;
 import edu.school.ejb.DatosPersonaFacadeLocal;
 import edu.school.ejb.DocenteFacadeLocal;
+import edu.school.ejb.HasSupervisorFacadeLocal;
+import edu.school.ejb.SupervisorFacadeLocal;
 import edu.school.entities.Administrativo;
 import edu.school.entities.DatosPersona;
 import edu.school.entities.Docente;
-import edu.school.entities.User;
+import edu.school.entities.Supervisor;
+import edu.school.excepciones.DocenteNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +29,10 @@ public class AdminSupervisorAgregar implements Serializable{
     private AdministrativoFacadeLocal administrativoFacade;
     @EJB
     private DocenteFacadeLocal docenteFacade;
+    @EJB
+    private SupervisorFacadeLocal supervisorFacade; 
+    @EJB
+    private HasSupervisorFacadeLocal hasSupervisorFacade;
     @EJB
     private DatosPersonaFacadeLocal datosPersonaFacade;
     
@@ -77,12 +84,12 @@ public class AdminSupervisorAgregar implements Serializable{
     private void makeSupervisores(){
         supervisores = new ArrayList<>();
 
-        supervisores.add(new Supervisor("Luis Alvarado", "1er Grado"));
-        supervisores.add(new Supervisor("Rosa Centeno", "2do Grado"));
-        supervisores.add(new Supervisor("Andreina Oropeza", "Primaria"));
-        supervisores.add(new Supervisor("Juan Girafales", "3er año"));
-        supervisores.add(new Supervisor("Rodolfo Carrasquero", "Bachillerato básico"));
-        supervisores.add(new Supervisor("Carmen Mirabal", "Bachillerato ciencias"));
+//        supervisores.add(new Supervisor("Luis Alvarado", "1er Grado"));
+//        supervisores.add(new Supervisor("Rosa Centeno", "2do Grado"));
+//        supervisores.add(new Supervisor("Andreina Oropeza", "Primaria"));
+//        supervisores.add(new Supervisor("Juan Girafales", "3er año"));
+//        supervisores.add(new Supervisor("Rodolfo Carrasquero", "Bachillerato básico"));
+//        supervisores.add(new Supervisor("Carmen Mirabal", "Bachillerato ciencias"));
     }
     
     public List<String> completeUser(String query) {
@@ -145,8 +152,18 @@ public class AdminSupervisorAgregar implements Serializable{
     }
 
     public void createSuper(){
-        System.out.println("Va a crear el supervisor " + supervisor
-                + " de " + grupo);
+        Object candidato = findCandidato(supervisor);
+        if (candidato != null) {
+            DatosPersona dp;
+            if (candidato instanceof Docente) {
+                dp = ((Docente) candidato).getDatosPersonaId();
+            } else {
+                dp = ((Administrativo) candidato).getDatosPersonaId();
+            }
+
+            System.out.println("va a colocar de supervisor a " + dp.getNombre()
+                    + ", " + dp.getApellido());
+        }
     }
     
     public void clearFields(){
@@ -167,38 +184,27 @@ public class AdminSupervisorAgregar implements Serializable{
     }
     
     public void onRowEdit(RowEditEvent event) {
-        System.out.println("Se cambió a " + ((Supervisor) event.getObject()).getGrupo());
+        //System.out.println("Se cambió a " + ((Supervisor) event.getObject()).getGrupo());
     }
 
     public void onRowCancel(RowEditEvent event) {
-        System.out.println("Se canceló " + ((Supervisor) event.getObject()).getGrupo());
+        //System.out.println("Se canceló " + ((Supervisor) event.getObject()).getGrupo());
     }
-
     
-    public class Supervisor{
-        private String nombre;
-        private String grupo;
-
-        public Supervisor(String nombre, String grupo) {
-            this.nombre = nombre;
-            this.grupo = grupo;
-        }
-
-        public String getNombre() {
-            return nombre;
-        }
-
-        public void setNombre(String nombre) {
-            this.nombre = nombre;
-        }
-
-        public String getGrupo() {
-            return grupo;
-        }
-
-        public void setGrupo(String grupo) {
-            this.grupo = grupo;
+    private Object findCandidato(String str){
+        Object candidato = null;
+        int dospuntos = str.lastIndexOf(":");
+        String ciStr = str.substring(dospuntos + 1).trim();
+        int ci = Integer.parseInt(ciStr);
+        
+        try {
+            candidato = docenteFacade.findByCi(ci);
+        } catch (DocenteNotFoundException e) {
+            candidato = administrativoFacade.findByCi(ci);
         }
         
+        
+        return candidato;
     }
+    
 }

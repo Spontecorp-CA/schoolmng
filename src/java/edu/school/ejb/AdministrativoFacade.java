@@ -1,20 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.ejb;
 
+import static com.sun.xml.ws.spi.db.BindingContextFactory.LOGGER;
 import edu.school.entities.Administrativo;
 import edu.school.utilities.Constantes;
+import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
-/**
- *
- * @author jgcastillo
- */
 @Stateless
 public class AdministrativoFacade extends AbstractFacade<Administrativo> implements AdministrativoFacadeLocal {
 
@@ -28,6 +23,21 @@ public class AdministrativoFacade extends AbstractFacade<Administrativo> impleme
 
     public AdministrativoFacade() {
         super(Administrativo.class);
+    }
+    
+    @Override
+    public Administrativo findByCi(int ci) {
+        Administrativo administrativo = null;
+        try {
+            String query = "FROM Administrativo doc JOIN doc.userId u "
+                    + "WHERE u.ci = :ci";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("ci", ci);
+            administrativo = (Administrativo) q.getSingleResult();
+        } catch (NoResultException e) {
+            LOGGER.log(Level.WARNING, e.toString(), e);
+        }
+        return administrativo;
     }
     
 }

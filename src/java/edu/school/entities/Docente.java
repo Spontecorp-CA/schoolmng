@@ -45,11 +45,6 @@ public class Docente implements Serializable {
     @Size(max = 100)
     @Column(name = "mail_colegio")
     private String mailColegio;
-    @OneToMany(mappedBy = "docenteId")
-    private Collection<MateriaHasDocente> materiaHasDocenteCollection;
-    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
-    @ManyToOne
-    private Supervisor supervisorId;
     @JoinColumn(name = "datos_persona_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private DatosPersona datosPersonaId;
@@ -57,7 +52,7 @@ public class Docente implements Serializable {
     @ManyToOne
     private User userId;
     @OneToMany(mappedBy = "docenteId")
-    private Collection<CursoHasDocente> cursoHasDocenteCollection;
+    private Collection<HasSupervisor> hasSupervisorCollection;
 
     public Docente() {
     }
@@ -82,23 +77,6 @@ public class Docente implements Serializable {
         this.mailColegio = mailColegio;
     }
 
-    @XmlTransient
-    public Collection<MateriaHasDocente> getMateriaHasDocenteCollection() {
-        return materiaHasDocenteCollection;
-    }
-
-    public void setMateriaHasDocenteCollection(Collection<MateriaHasDocente> materiaHasDocenteCollection) {
-        this.materiaHasDocenteCollection = materiaHasDocenteCollection;
-    }
-
-    public Supervisor getSupervisorId() {
-        return supervisorId;
-    }
-
-    public void setSupervisorId(Supervisor supervisorId) {
-        this.supervisorId = supervisorId;
-    }
-
     public DatosPersona getDatosPersonaId() {
         return datosPersonaId;
     }
@@ -116,12 +94,12 @@ public class Docente implements Serializable {
     }
 
     @XmlTransient
-    public Collection<CursoHasDocente> getCursoHasDocenteCollection() {
-        return cursoHasDocenteCollection;
+    public Collection<HasSupervisor> getHasSupervisorCollection() {
+        return hasSupervisorCollection;
     }
 
-    public void setCursoHasDocenteCollection(Collection<CursoHasDocente> cursoHasDocenteCollection) {
-        this.cursoHasDocenteCollection = cursoHasDocenteCollection;
+    public void setHasSupervisorCollection(Collection<HasSupervisor> hasSupervisorCollection) {
+        this.hasSupervisorCollection = hasSupervisorCollection;
     }
 
     @Override

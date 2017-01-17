@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Docente;
+import edu.school.excepciones.DocenteNotFoundException;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -25,5 +26,7 @@ public interface DocenteFacadeLocal {
     List<Docente> findRange(int[] range);
 
     int count();
+
+    Docente findByCi(int ci) throws DocenteNotFoundException;
     
 }
