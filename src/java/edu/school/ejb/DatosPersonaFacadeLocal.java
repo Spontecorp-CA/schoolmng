@@ -20,7 +20,7 @@ public interface DatosPersonaFacadeLocal {
 
     DatosPersona find(Object id);
     
-    DatosPersona find(int ci);
+    DatosPersona findByCi(int ci);
 
     List<DatosPersona> findAll();
 

@@ -1,9 +1,18 @@
 package edu.school.controller.config;
 
+import edu.school.ejb.AdministrativoFacadeLocal;
+import edu.school.ejb.DatosPersonaFacadeLocal;
+import edu.school.ejb.DocenteFacadeLocal;
+import edu.school.entities.Administrativo;
+import edu.school.entities.DatosPersona;
+import edu.school.entities.Docente;
+import edu.school.entities.User;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.primefaces.event.CellEditEvent;
@@ -13,6 +22,13 @@ import org.primefaces.event.RowEditEvent;
 @ViewScoped
 public class AdminSupervisorAgregar implements Serializable{
 
+    @EJB
+    private AdministrativoFacadeLocal administrativoFacade;
+    @EJB
+    private DocenteFacadeLocal docenteFacade;
+    @EJB
+    private DatosPersonaFacadeLocal datosPersonaFacade;
+    
     private String supervisor;
     private String grupo;
     private List<String> usuarios;
@@ -25,16 +41,36 @@ public class AdminSupervisorAgregar implements Serializable{
     }
     
     private List<String> makeUserList(){
+        
+        List<Administrativo> administrativos = administrativoFacade.findAll();
+        List<Docente> docentes = docenteFacade.findAll();
         usuarios = new ArrayList<>();
-        
-        usuarios.add("Juan Perez");
-        usuarios.add("Domingo Guzman");
-        usuarios.add("Jose Masparrote");
-        usuarios.add("Luis Calzadilla");
-        usuarios.add("María Julia Alvarez");
-        usuarios.add("Antonio Fuentes");
-        usuarios.add("Pedro Martínez");
-        
+
+        StringBuilder sb;
+        DatosPersona dp;
+        for (Administrativo admin : administrativos) {
+            if (admin.getId() != null) {
+                sb = new StringBuilder();
+                dp = admin.getDatosPersonaId();
+                sb.append(dp.getApellido());
+                sb.append(", ").append(dp.getNombre());
+                sb.append(": ").append(dp.getCi());
+                usuarios.add(sb.toString());
+            }
+        }
+
+        for (Docente admin : docentes) {
+            if (admin.getId() != null) {
+                sb = new StringBuilder();
+                dp = admin.getDatosPersonaId();
+                sb.append(dp.getApellido());
+                sb.append(", ").append(dp.getNombre());
+                sb.append(": ").append(dp.getCi());
+                usuarios.add(sb.toString());
+            }
+        }
+
+        Collections.sort(usuarios);
         return usuarios;
     }
     
