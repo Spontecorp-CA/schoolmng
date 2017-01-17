@@ -34,5 +34,7 @@ public interface AdministrativoFacadeLocal {
     List<Administrativo> findRange(int[] range);
 
     int count();
+
+    Administrativo findByCi(int ci);
     
 }
