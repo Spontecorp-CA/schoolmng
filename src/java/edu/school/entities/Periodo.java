@@ -43,8 +43,8 @@ public class Periodo implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(mappedBy = "periodoInt")
-    private Collection<Curso> cursoCollection;
+    @OneToMany(mappedBy = "periodoId")
+    private Collection<Seccion> seccionCollection;
 
     public Periodo() {
     }
@@ -70,12 +70,12 @@ public class Periodo implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Curso> getCursoCollection() {
-        return cursoCollection;
+    public Collection<Seccion> getSeccionCollection() {
+        return seccionCollection;
     }
 
-    public void setCursoCollection(Collection<Curso> cursoCollection) {
-        this.cursoCollection = cursoCollection;
+    public void setSeccionCollection(Collection<Seccion> seccionCollection) {
+        this.seccionCollection = seccionCollection;
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Periodo implements Serializable {
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return "edu.school.entities.Periodo[ id=" + id + " ]";
     }
     
 }

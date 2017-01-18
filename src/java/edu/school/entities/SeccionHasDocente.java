@@ -24,12 +24,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author jgcastillo
  */
 @Entity
-@Table(name = "has_supervisor")
+@Table(name = "seccion_has_docente")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "HasSupervisor.findAll", query = "SELECT h FROM HasSupervisor h")
-    , @NamedQuery(name = "HasSupervisor.findById", query = "SELECT h FROM HasSupervisor h WHERE h.id = :id")})
-public class HasSupervisor implements Serializable {
+    @NamedQuery(name = "SeccionHasDocente.findAll", query = "SELECT s FROM SeccionHasDocente s")
+    , @NamedQuery(name = "SeccionHasDocente.findById", query = "SELECT s FROM SeccionHasDocente s WHERE s.id = :id")})
+public class SeccionHasDocente implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -37,20 +37,17 @@ public class HasSupervisor implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "administrativo_id", referencedColumnName = "id")
+    @JoinColumn(name = "seccion_id", referencedColumnName = "id")
     @ManyToOne
-    private Administrativo administrativoId;
+    private Seccion seccionId;
     @JoinColumn(name = "docente_id", referencedColumnName = "id")
     @ManyToOne
     private Docente docenteId;
-    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Supervisor supervisorId;
 
-    public HasSupervisor() {
+    public SeccionHasDocente() {
     }
 
-    public HasSupervisor(Integer id) {
+    public SeccionHasDocente(Integer id) {
         this.id = id;
     }
 
@@ -62,12 +59,12 @@ public class HasSupervisor implements Serializable {
         this.id = id;
     }
 
-    public Administrativo getAdministrativoId() {
-        return administrativoId;
+    public Seccion getSeccionId() {
+        return seccionId;
     }
 
-    public void setAdministrativoId(Administrativo administrativoId) {
-        this.administrativoId = administrativoId;
+    public void setSeccionId(Seccion seccionId) {
+        this.seccionId = seccionId;
     }
 
     public Docente getDocenteId() {
@@ -76,14 +73,6 @@ public class HasSupervisor implements Serializable {
 
     public void setDocenteId(Docente docenteId) {
         this.docenteId = docenteId;
-    }
-
-    public Supervisor getSupervisorId() {
-        return supervisorId;
-    }
-
-    public void setSupervisorId(Supervisor supervisorId) {
-        this.supervisorId = supervisorId;
     }
 
     @Override
@@ -96,10 +85,10 @@ public class HasSupervisor implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof HasSupervisor)) {
+        if (!(object instanceof SeccionHasDocente)) {
             return false;
         }
-        HasSupervisor other = (HasSupervisor) object;
+        SeccionHasDocente other = (SeccionHasDocente) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -108,7 +97,7 @@ public class HasSupervisor implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.HasSupervisor[ id=" + id + " ]";
+        return "edu.school.entities.SeccionHasDocente[ id=" + id + " ]";
     }
     
 }

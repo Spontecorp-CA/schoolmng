@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.ejb;
 
 import edu.school.entities.Alumno;
-import edu.school.entities.Curso;
-import edu.school.entities.CursoHasAlumno;
+import edu.school.entities.Seccion;
+import edu.school.entities.SeccionHasAlumno;
 import edu.school.entities.Periodo;
 import edu.school.utilities.Constantes;
 import java.util.List;
@@ -22,7 +17,7 @@ import javax.persistence.Query;
  * @author jgcastillo
  */
 @Stateless
-public class CursoHasAlumnoFacade extends AbstractFacade<CursoHasAlumno> implements CursoHasAlumnoFacadeLocal {
+public class SeccionHasAlumnoFacade extends AbstractFacade<SeccionHasAlumno> implements SeccionHasAlumnoFacadeLocal {
 
     @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
@@ -32,17 +27,17 @@ public class CursoHasAlumnoFacade extends AbstractFacade<CursoHasAlumno> impleme
         return em;
     }
 
-    public CursoHasAlumnoFacade() {
-        super(CursoHasAlumno.class);
+    public SeccionHasAlumnoFacade() {
+        super(SeccionHasAlumno.class);
     }
 
     @Override
-    public List<CursoHasAlumno> findAll(Curso curso) {
-        List<CursoHasAlumno> lista = null;
+    public List<SeccionHasAlumno> findAll(Seccion seccion) {
+        List<SeccionHasAlumno> lista = null;
         try {
-            String query = "FROM CursoHasAlumno cha WHERE cha.cursoId = :curso";
+            String query = "FROM SeccionHasAlumno cha WHERE cha.seccionId = :seccion";
             Query q = getEntityManager().createQuery(query);
-            q.setParameter("curso", curso);
+            q.setParameter("seccion", seccion);
             lista = q.getResultList();
         } catch (NoResultException e) {
         }
@@ -50,26 +45,26 @@ public class CursoHasAlumnoFacade extends AbstractFacade<CursoHasAlumno> impleme
     }
 
     @Override
-    public CursoHasAlumno find(Alumno alumno, Periodo periodo) {
-        CursoHasAlumno curso = null;
+    public SeccionHasAlumno find(Alumno alumno, Periodo periodo) {
+        SeccionHasAlumno seccion = null;
         try {
-            List<CursoHasAlumno> lista = findAll(alumno);
-            for(CursoHasAlumno cha : lista){
-                if(cha.getCursoId().getPeriodoInt().equals(periodo)){
-                    curso = cha;
+            List<SeccionHasAlumno> lista = findAll(alumno);
+            for(SeccionHasAlumno cha : lista){
+                if(cha.getSeccionId().getPeriodoId().equals(periodo)){
+                    seccion = cha;
                     break;
                 }
             }
         } catch (NoResultException e) {
         }
-        return curso;
+        return seccion;
     }
     
     @Override
-    public List<CursoHasAlumno> findAll(Alumno alumno){
-        List<CursoHasAlumno> lista = null;
+    public List<SeccionHasAlumno> findAll(Alumno alumno){
+        List<SeccionHasAlumno> lista = null;
         try {
-            String query = "FROM CursoHasAlumno cha WHERE cha.alumnoId = :alumno";
+            String query = "FROM SeccionHasAlumno cha WHERE cha.alumnoId = :alumno";
             Query q = getEntityManager().createQuery(query);
             q.setParameter("alumno", alumno);
             lista = q.getResultList();

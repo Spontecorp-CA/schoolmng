@@ -100,7 +100,7 @@ public class Materia implements Serializable {
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return "edu.school.entities.Materia[ id=" + id + " ]";
     }
     
 }

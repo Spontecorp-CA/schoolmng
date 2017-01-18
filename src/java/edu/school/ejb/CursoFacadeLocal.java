@@ -1,41 +1,31 @@
 package edu.school.ejb;
 
 import edu.school.entities.Curso;
-import edu.school.entities.Nivel;
-import edu.school.entities.Periodo;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
 
 @Local
 public interface CursoFacadeLocal {
+    
+    public void create(Curso curso);
 
-    void create(Curso curso);
-    
-    void batchCreate(Collection<Curso> collection);
+    public void batchCreate(Collection<Curso> col);
 
-    void edit(Curso curso);
-    
-    void batchEdit(Collection<Curso> collection);
+    public void edit(Curso curso);
 
-    void remove(Curso curso);
+    public void batchEdit(Collection<Curso> col);
 
-    Curso find(Object id);
-    
-    Curso find(String codigo, String nombre, Periodo periodo);
-    
-    Curso findByCodigo(String codigo);
-    
-    List<Curso> findAll();
-    
-    List<Curso> findAll(Nivel nivel);
-    
-    List<Curso> findAll(Periodo periodo, Nivel nivel);
-    
-    List<Curso> findAllOrdered();
+    public void remove(Curso curso);
 
-    List<Curso> findRange(int[] range);
+    public Curso find(Object id);
 
-    int count();
-    
+    public List<Curso> findAll();
+
+    public List<Curso> findRange(int[] range);
+
+    public int count();
+
+    Curso findByName(String nombre);
+
 }

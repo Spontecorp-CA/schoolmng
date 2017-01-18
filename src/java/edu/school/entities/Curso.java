@@ -8,6 +8,7 @@ package edu.school.entities;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,10 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Curso.findAll", query = "SELECT c FROM Curso c")
     , @NamedQuery(name = "Curso.findById", query = "SELECT c FROM Curso c WHERE c.id = :id")
-    , @NamedQuery(name = "Curso.findByCodigo", query = "SELECT c FROM Curso c WHERE c.codigo = :codigo")
-    , @NamedQuery(name = "Curso.findByNombre", query = "SELECT c FROM Curso c WHERE c.nombre = :nombre")
-    , @NamedQuery(name = "Curso.findBySeccion", query = "SELECT c FROM Curso c WHERE c.seccion = :seccion")
-    , @NamedQuery(name = "Curso.findByMailColegio", query = "SELECT c FROM Curso c WHERE c.mailColegio = :mailColegio")})
+    , @NamedQuery(name = "Curso.findByNombre", query = "SELECT c FROM Curso c WHERE c.nombre = :nombre")})
 public class Curso implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,27 +44,16 @@ public class Curso implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Size(max = 45)
-    @Column(name = "codigo")
-    private String codigo;
-    @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @Size(max = 45)
-    @Column(name = "seccion")
-    private String seccion;
-    @Size(max = 100)
-    @Column(name = "mail_colegio")
-    private String mailColegio;
-    @OneToMany(mappedBy = "cursoId")
-    private Collection<CursoHasAlumno> cursoHasAlumnoCollection;
-    @JoinColumn(name = "nivel_id", referencedColumnName = "id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoId")
+    private Collection<Seccion> seccionCollection;
+    @JoinColumn(name = "etapa_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Etapa etapaId;
+    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
     @ManyToOne
-    private Nivel nivelId;
-    @JoinColumn(name = "periodo_int", referencedColumnName = "id")
-    @ManyToOne
-    private Periodo periodoInt;
-    @OneToMany(mappedBy = "cursoId")
-    private Collection<CursoHasDocente> cursoHasDocenteCollection;
+    private Supervisor supervisorId;
 
     public Curso() {
     }
@@ -83,14 +70,6 @@ public class Curso implements Serializable {
         this.id = id;
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
     public String getNombre() {
         return nombre;
     }
@@ -99,54 +78,29 @@ public class Curso implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getSeccion() {
-        return seccion;
-    }
-
-    public void setSeccion(String seccion) {
-        this.seccion = seccion;
-    }
-
-    public String getMailColegio() {
-        return mailColegio;
-    }
-
-    public void setMailColegio(String mailColegio) {
-        this.mailColegio = mailColegio;
-    }
-
     @XmlTransient
-    public Collection<CursoHasAlumno> getCursoHasAlumnoCollection() {
-        return cursoHasAlumnoCollection;
+    public Collection<Seccion> getSeccionCollection() {
+        return seccionCollection;
     }
 
-    public void setCursoHasAlumnoCollection(Collection<CursoHasAlumno> cursoHasAlumnoCollection) {
-        this.cursoHasAlumnoCollection = cursoHasAlumnoCollection;
+    public void setSeccionCollection(Collection<Seccion> seccionCollection) {
+        this.seccionCollection = seccionCollection;
     }
 
-    public Nivel getNivelId() {
-        return nivelId;
+    public Etapa getEtapaId() {
+        return etapaId;
     }
 
-    public void setNivelId(Nivel nivelId) {
-        this.nivelId = nivelId;
+    public void setEtapaId(Etapa etapaId) {
+        this.etapaId = etapaId;
     }
 
-    public Periodo getPeriodoInt() {
-        return periodoInt;
+    public Supervisor getSupervisorId() {
+        return supervisorId;
     }
 
-    public void setPeriodoInt(Periodo periodoInt) {
-        this.periodoInt = periodoInt;
-    }
-
-    @XmlTransient
-    public Collection<CursoHasDocente> getCursoHasDocenteCollection() {
-        return cursoHasDocenteCollection;
-    }
-
-    public void setCursoHasDocenteCollection(Collection<CursoHasDocente> cursoHasDocenteCollection) {
-        this.cursoHasDocenteCollection = cursoHasDocenteCollection;
+    public void setSupervisorId(Supervisor supervisorId) {
+        this.supervisorId = supervisorId;
     }
 
     @Override
@@ -171,7 +125,7 @@ public class Curso implements Serializable {
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return "edu.school.entities.Curso[ id=" + id + " ]";
     }
     
 }

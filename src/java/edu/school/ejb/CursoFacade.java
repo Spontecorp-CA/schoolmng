@@ -1,10 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Curso;
-import edu.school.entities.Nivel;
-import edu.school.entities.Periodo;
 import edu.school.utilities.Constantes;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -13,97 +10,34 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
-/**
- *
- * @author jgcastillo
- */
 @Stateless
 public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLocal {
 
     @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
+    
+    public CursoFacade() {
+        super(Curso.class);
+    }
 
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
 
-    public CursoFacade() {
-        super(Curso.class);
-    }
-
     @Override
-    public Curso find(String codigo, String nombre, Periodo periodo) {
+    public Curso findByName(String nombre) {
         Curso curso = null;
         try {
-            String query = "FROM Curso c WHERE c.codigo = :codigo AND "
-                    + "c.nombre = :nombre AND c.periodoInt = :periodo";
-            Query q = getEntityManager().createQuery(query);
-            q.setParameter("codigo", codigo);
+            String query = "FROM Curso c WHERE c.nombre = :nombre";
+            Query q = getEntityManager().createQuery(query, Curso.class);
             q.setParameter("nombre", nombre);
-            q.setParameter("periodo", periodo);
-            curso = (Curso) q.getSingleResult();
-        } catch (NoResultException e) {
-        }
-        return curso;
-    }
-
-    @Override
-    public Curso findByCodigo(String codigo) {
-        Curso curso = null;
-        try {
-            String query = "FROM Curso c WHERE c.codigo = :codigo";
-            Query q = getEntityManager().createQuery(query);
-            q.setParameter("codigo", codigo);
             curso = (Curso) q.getSingleResult();
         } catch (NoResultException e) {
             Logger.getLogger(CursoFacade.class.getName())
-                    .log(Level.WARNING, "No se encontró un curso con código {0}",
-                            codigo);
+                    .log(Level.WARNING, "No se ha encontrado un curso con nombre {0}",
+                            nombre);
         }
         return curso;
     }
-    
-    @Override
-    public List<Curso> findAllOrdered() {
-        List<Curso> cursos = null;
-        try {
-            String query = "FROM Curso c ORDER BY c.periodoInt, c.nivelId";
-            Query q = getEntityManager().createQuery(query);
-            cursos = q.getResultList();
-        } catch (Exception e) {
-        }
-        return cursos;
-    }
-
-    @Override
-    public List<Curso> findAll(Nivel nivel) {
-        List<Curso> cursos = null;
-        try {
-            String query = "FROM Curso c WHERE c.nivelId = :nivel";
-            Query q = getEntityManager().createQuery(query);
-            q.setParameter("nivel", nivel);
-            cursos = q.getResultList();
-        } catch (Exception e) {
-            System.err.println("Error en CursoFacade metodo findAll(Nivel nivel): " 
-                    + e.getMessage());
-        }
-        return cursos;
-    }
-
-    @Override
-    public List<Curso> findAll(Periodo periodo, Nivel nivel) {
-        List<Curso> cursos = null;
-        try {
-            String query = "FROM Curso c WHERE c.periodoInt = :periodo "
-                    + "AND c.nivelId = :nivel";
-            Query q = getEntityManager().createQuery(query);
-            q.setParameter("periodo", periodo);
-            q.setParameter("nivel", nivel);
-            cursos = q.getResultList();
-        } catch (Exception e) {
-        }
-        return cursos;
-    }
-
 }

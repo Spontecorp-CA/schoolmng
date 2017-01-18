@@ -5,8 +5,8 @@
  */
 package edu.school.ejb;
 
-import edu.school.entities.Curso;
-import edu.school.entities.CursoHasDocente;
+import edu.school.entities.Seccion;
+import edu.school.entities.SeccionHasDocente;
 import edu.school.entities.Docente;
 import edu.school.utilities.Constantes;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import javax.persistence.Query;
  * @author jgcastillo
  */
 @Stateless
-public class CursoHasDocenteFacade extends AbstractFacade<CursoHasDocente> implements CursoHasDocenteFacadeLocal {
+public class SeccionHasDocenteFacade extends AbstractFacade<SeccionHasDocente> implements SeccionHasDocenteFacadeLocal {
 
     @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
@@ -32,17 +32,17 @@ public class CursoHasDocenteFacade extends AbstractFacade<CursoHasDocente> imple
         return em;
     }
 
-    public CursoHasDocenteFacade() {
-        super(CursoHasDocente.class);
+    public SeccionHasDocenteFacade() {
+        super(SeccionHasDocente.class);
     }
 
     @Override
-    public List<CursoHasDocente> findAll(Curso curso) {
-        List<CursoHasDocente> lista = null;
+    public List<SeccionHasDocente> findAll(Seccion seccion) {
+        List<SeccionHasDocente> lista = null;
         try {
-            String query = "FROM CursoHasDocente chd WHERE chd.cursoId = :curso";
+            String query = "FROM SeccionHasDocente chd WHERE chd.cursoId = :seccion";
             Query q = getEntityManager().createQuery(query);
-            q.setParameter("curso", curso);
+            q.setParameter("seccion", seccion);
             lista = q.getResultList();
         } catch (NoResultException e) {
         }
@@ -50,16 +50,16 @@ public class CursoHasDocenteFacade extends AbstractFacade<CursoHasDocente> imple
     }
     
     @Override
-    public List<Curso> findAll(Docente docente) {
-        List<Curso> lista = null;
+    public List<Seccion> findAll(Docente docente) {
+        List<Seccion> lista = null;
         try {
-            String query = "FROM CursoHasDocente chd WHERE chd.docenteId = :docente";
+            String query = "FROM SeccionHasDocente chd WHERE chd.docenteId = :docente";
             Query q = getEntityManager().createQuery(query);
             q.setParameter("docente", docente);
-            List<CursoHasDocente> chdList = q.getResultList();
+            List<SeccionHasDocente> chdList = q.getResultList();
             lista = new ArrayList<>();
-            for(CursoHasDocente chd : chdList){
-                lista.add(chd.getCursoId());
+            for(SeccionHasDocente chd : chdList){
+                lista.add(chd.getSeccionId());
             }
         } catch (NoResultException e) {
         }

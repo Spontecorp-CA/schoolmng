@@ -1,10 +1,6 @@
 package edu.school.controller.administrativos;
 
-import edu.school.ejb.CursoFacadeLocal;
-import edu.school.ejb.CursoHasDocenteFacadeLocal;
 import edu.school.ejb.DocenteFacadeLocal;
-import edu.school.entities.Curso;
-import edu.school.entities.CursoHasDocente;
 import edu.school.entities.Docente;
 import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
@@ -15,6 +11,10 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.primefaces.model.DualListModel;
+import edu.school.ejb.SeccionHasDocenteFacadeLocal;
+import edu.school.ejb.SeccionFacadeLocal;
+import edu.school.entities.Seccion;
+import edu.school.entities.SeccionHasDocente;
 
 @Named
 @ViewScoped
@@ -23,12 +23,12 @@ public class AsociaCursoDocenteController implements Serializable {
     @EJB
     private DocenteFacadeLocal docenteFacade;
     @EJB
-    private CursoFacadeLocal cursoFacade;
+    private SeccionFacadeLocal seccionFacade;
     @EJB
-    private CursoHasDocenteFacadeLocal chdFacade;
+    private SeccionHasDocenteFacadeLocal chdFacade;
 
     private List<Docente> docentes;
-    private DualListModel<Curso> cursos;
+    private DualListModel<Seccion> secciones;
     private Docente docenteSelected;
 
     @PostConstruct
@@ -43,12 +43,12 @@ public class AsociaCursoDocenteController implements Serializable {
         return docentes;
     }
 
-    public DualListModel<Curso> getCursos() {
-        return cursos;
+    public DualListModel<Seccion> getCursos() {
+        return secciones;
     }
 
-    public void setCursos(DualListModel<Curso> cursos) {
-        this.cursos = cursos;
+    public void setCursos(DualListModel<Seccion> secciones) {
+        this.secciones = secciones;
     }
 
     public Docente getDocenteSelected() {
@@ -60,20 +60,20 @@ public class AsociaCursoDocenteController implements Serializable {
     }
 
     public void saveSelection() {
-        List<Curso> cursosSelected = (List<Curso>) cursos.getTarget();
-        List<CursoHasDocente> chdList = new ArrayList<>();
+        List<Seccion> seccionesSelected = (List<Seccion>) secciones.getTarget();
+        List<SeccionHasDocente> chdList = new ArrayList<>();
         
-        if (!cursosSelected.isEmpty()) {
-            if (!cursosSelected.isEmpty()) {
-                cursosSelected.stream().forEach(cur -> {
-                    CursoHasDocente chd = new CursoHasDocente();
+        if (!seccionesSelected.isEmpty()) {
+            if (!seccionesSelected.isEmpty()) {
+                seccionesSelected.stream().forEach(cur -> {
+                    SeccionHasDocente chd = new SeccionHasDocente();
                     chd.setDocenteId(docenteSelected);
-                    chd.setCursoId(cur);
+                    chd.setSeccionId(cur);
                     chdList.add(chd);
                 });
             }
         } else {
-            JsfUtils.messageError("No ha seleccionado cursos para este profesor");
+            JsfUtils.messageError("No ha seleccionado secciones para este profesor");
             return;
         }
 
@@ -93,8 +93,8 @@ public class AsociaCursoDocenteController implements Serializable {
         return docenteFacade.findAll();
     }
 
-    private List<Curso> makeCursoList() {
-        return cursoFacade.findAll();
+    private List<Seccion> makeSeccionList() {
+        return seccionFacade.findAll();
     }
     
     public void clearFields(){
@@ -103,8 +103,8 @@ public class AsociaCursoDocenteController implements Serializable {
     }
     
     private void makeDualList(){
-        List<Curso> cursosSourge = makeCursoList();
-        List<Curso> cursosTarget = new ArrayList();
-        cursos = new DualListModel<>(cursosSourge, cursosTarget);
+        List<Seccion> seccionesSourge = makeSeccionList();
+        List<Seccion> seccionesTarget = new ArrayList();
+        secciones = new DualListModel<>(seccionesSourge, seccionesTarget);
     }
 }

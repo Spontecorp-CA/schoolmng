@@ -1,18 +1,18 @@
 package edu.school.entities.converters;
 
-import edu.school.ejb.CursoFacadeLocal;
-import edu.school.entities.Curso;
+import edu.school.entities.Seccion;
 import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import edu.school.ejb.SeccionFacadeLocal;
 
-@FacesConverter("edu.school.entities.converters.CursoConverter")
-public class CursoConverter implements Converter {
+@FacesConverter("edu.school.entities.converters.SeccionConverter")
+public class SeccionConverter implements Converter {
 
     @EJB
-    private CursoFacadeLocal cursoFacade;
+    private SeccionFacadeLocal seccionFacade;
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component,
@@ -22,7 +22,7 @@ public class CursoConverter implements Converter {
             return null;
         }
         try {
-            return cursoFacade.find(Integer.parseInt(value));
+            return seccionFacade.find(Integer.parseInt(value));
         } catch (NumberFormatException e) {
             return null;
         }
@@ -34,13 +34,13 @@ public class CursoConverter implements Converter {
         if (value == null) {
             return null;
         }
-        if (value instanceof Curso) {
+        if (value instanceof Seccion) {
             return value.toString();
         } else {
             throw new IllegalArgumentException("El objecto "
                     + value + " es de tipo "
                     + value.getClass().getName()
-                    + "; se espera: " + Curso.class.getName());
+                    + "; se espera: " + Seccion.class.getName());
         }
     }
 }

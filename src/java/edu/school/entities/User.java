@@ -58,8 +58,6 @@ public class User implements Serializable {
     private Collection<UserHasRol> userHasRolCollection;
     @OneToMany(mappedBy = "userId")
     private Collection<Administrativo> administrativoCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private Collection<Autorizacion> autorizacionCollection;
     @OneToMany(mappedBy = "userId")
     private Collection<Docente> docenteCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
@@ -132,15 +130,6 @@ public class User implements Serializable {
 
     public void setAdministrativoCollection(Collection<Administrativo> administrativoCollection) {
         this.administrativoCollection = administrativoCollection;
-    }
-
-    @XmlTransient
-    public Collection<Autorizacion> getAutorizacionCollection() {
-        return autorizacionCollection;
-    }
-
-    public void setAutorizacionCollection(Collection<Autorizacion> autorizacionCollection) {
-        this.autorizacionCollection = autorizacionCollection;
     }
 
     @XmlTransient

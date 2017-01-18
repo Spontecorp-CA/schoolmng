@@ -22,7 +22,7 @@ public interface UserFacadeLocal {
     
     User find(String name);
     
-    User find(int ci);
+    User findByCi(int ci);
 
     List<User> findAll();
 
