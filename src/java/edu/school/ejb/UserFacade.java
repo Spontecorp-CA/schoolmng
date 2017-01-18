@@ -41,7 +41,7 @@ public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal 
     }
 
     @Override
-    public User find(int ci) {
+    public User findByCi(int ci) {
         User user = null;
         try {
             String query = "FROM User u WHERE u.ci = :ci";

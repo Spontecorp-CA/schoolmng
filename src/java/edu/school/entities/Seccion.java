@@ -28,13 +28,13 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author jgcastillo
  */
 @Entity
-@Table(name = "docente")
+@Table(name = "seccion")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Docente.findAll", query = "SELECT d FROM Docente d")
-    , @NamedQuery(name = "Docente.findById", query = "SELECT d FROM Docente d WHERE d.id = :id")
-    , @NamedQuery(name = "Docente.findByMailColegio", query = "SELECT d FROM Docente d WHERE d.mailColegio = :mailColegio")})
-public class Docente implements Serializable {
+    @NamedQuery(name = "Seccion.findAll", query = "SELECT s FROM Seccion s")
+    , @NamedQuery(name = "Seccion.findById", query = "SELECT s FROM Seccion s WHERE s.id = :id")
+    , @NamedQuery(name = "Seccion.findByCodigo", query = "SELECT s FROM Seccion s WHERE s.codigo = :codigo")})
+public class Seccion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,24 +42,27 @@ public class Docente implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Size(max = 100)
-    @Column(name = "mail_colegio")
-    private String mailColegio;
-    @OneToMany(mappedBy = "docenteId")
-    private Collection<MateriaHasDocente> materiaHasDocenteCollection;
-    @OneToMany(mappedBy = "docenteId")
+    @Size(max = 5)
+    @Column(name = "codigo")
+    private String codigo;
+    @Size(max = 2)
+    @Column(name = "seccion")
+    private String seccion;
+    @OneToMany(mappedBy = "seccionId")
+    private Collection<SeccionHasAlumno> seccionHasAlumnoCollection;
+    @OneToMany(mappedBy = "seccionId")
     private Collection<SeccionHasDocente> seccionHasDocenteCollection;
-    @JoinColumn(name = "datos_persona_id", referencedColumnName = "id")
+    @JoinColumn(name = "curso_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private DatosPersona datosPersonaId;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private Curso cursoId;
+    @JoinColumn(name = "periodo_id", referencedColumnName = "id")
     @ManyToOne
-    private User userId;
+    private Periodo periodoId;
 
-    public Docente() {
+    public Seccion() {
     }
 
-    public Docente(Integer id) {
+    public Seccion(Integer id) {
         this.id = id;
     }
 
@@ -71,21 +74,29 @@ public class Docente implements Serializable {
         this.id = id;
     }
 
-    public String getMailColegio() {
-        return mailColegio;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setMailColegio(String mailColegio) {
-        this.mailColegio = mailColegio;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(String seccion) {
+        this.seccion = seccion;
     }
 
     @XmlTransient
-    public Collection<MateriaHasDocente> getMateriaHasDocenteCollection() {
-        return materiaHasDocenteCollection;
+    public Collection<SeccionHasAlumno> getSeccionHasAlumnoCollection() {
+        return seccionHasAlumnoCollection;
     }
 
-    public void setMateriaHasDocenteCollection(Collection<MateriaHasDocente> materiaHasDocenteCollection) {
-        this.materiaHasDocenteCollection = materiaHasDocenteCollection;
+    public void setSeccionHasAlumnoCollection(Collection<SeccionHasAlumno> seccionHasAlumnoCollection) {
+        this.seccionHasAlumnoCollection = seccionHasAlumnoCollection;
     }
 
     @XmlTransient
@@ -97,20 +108,20 @@ public class Docente implements Serializable {
         this.seccionHasDocenteCollection = seccionHasDocenteCollection;
     }
 
-    public DatosPersona getDatosPersonaId() {
-        return datosPersonaId;
+    public Curso getCursoId() {
+        return cursoId;
     }
 
-    public void setDatosPersonaId(DatosPersona datosPersonaId) {
-        this.datosPersonaId = datosPersonaId;
+    public void setCursoId(Curso cursoId) {
+        this.cursoId = cursoId;
     }
 
-    public User getUserId() {
-        return userId;
+    public Periodo getPeriodoId() {
+        return periodoId;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setPeriodoId(Periodo periodoId) {
+        this.periodoId = periodoId;
     }
 
     @Override
@@ -123,10 +134,10 @@ public class Docente implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Docente)) {
+        if (!(object instanceof Seccion)) {
             return false;
         }
-        Docente other = (Docente) object;
+        Seccion other = (Seccion) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -135,7 +146,7 @@ public class Docente implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.Docente[ id=" + id + " ]";
+        return "edu.school.entities.Seccion[ id=" + id + " ]";
     }
     
 }

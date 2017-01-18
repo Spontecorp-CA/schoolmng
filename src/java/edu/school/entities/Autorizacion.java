@@ -46,9 +46,6 @@ public class Autorizacion implements Serializable {
     @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Supervisor supervisorId;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private User userId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "autorizacionId")
     private Collection<AutorizacionStatus> autorizacionStatusCollection;
 
@@ -81,14 +78,6 @@ public class Autorizacion implements Serializable {
 
     public void setSupervisorId(Supervisor supervisorId) {
         this.supervisorId = supervisorId;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
     }
 
     @XmlTransient

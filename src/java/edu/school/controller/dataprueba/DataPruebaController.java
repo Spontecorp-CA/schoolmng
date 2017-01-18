@@ -3,12 +3,10 @@ package edu.school.controller.dataprueba;
 import edu.school.ejb.AdministrativoFacadeLocal;
 import edu.school.ejb.AlumnoFacadeLocal;
 import edu.school.ejb.AlumnoHasRepresentanteFacadeLocal;
+import edu.school.ejb.ColegioFacadeLocal;
 import edu.school.ejb.CursoFacadeLocal;
-import edu.school.ejb.CursoHasAlumnoFacadeLocal;
-import edu.school.ejb.CursoHasDocenteFacadeLocal;
 import edu.school.ejb.DatosPersonaFacadeLocal;
 import edu.school.ejb.DocenteFacadeLocal;
-import edu.school.ejb.NivelFacadeLocal;
 import edu.school.ejb.RepresentanteFacadeLocal;
 import edu.school.ejb.RolFacadeLocal;
 import edu.school.ejb.UserFacadeLocal;
@@ -16,12 +14,8 @@ import edu.school.ejb.UserHasRolFacadeLocal;
 import edu.school.entities.Administrativo;
 import edu.school.entities.Alumno;
 import edu.school.entities.AlumnoHasRepresentante;
-import edu.school.entities.Curso;
-import edu.school.entities.CursoHasAlumno;
-import edu.school.entities.CursoHasDocente;
 import edu.school.entities.DatosPersona;
 import edu.school.entities.Docente;
-import edu.school.entities.Nivel;
 import edu.school.entities.Representante;
 import edu.school.entities.Rol;
 import edu.school.entities.User;
@@ -34,10 +28,23 @@ import java.util.List;
 import java.util.Random;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import edu.school.ejb.SeccionHasDocenteFacadeLocal;
+import edu.school.ejb.EtapaFacadeLocal;
+import edu.school.ejb.SeccionHasAlumnoFacadeLocal;
+import edu.school.ejb.SeccionFacadeLocal;
+import edu.school.entities.Colegio;
+import edu.school.entities.Curso;
+import edu.school.entities.Etapa;
+import edu.school.entities.Seccion;
+import edu.school.entities.SeccionHasAlumno;
+import edu.school.entities.SeccionHasDocente;
+import java.util.Collections;
 
 @Stateless
 public class DataPruebaController implements DataPruebaControllerLocal {
 
+    @EJB
+    private ColegioFacadeLocal colegioFacade;
     @EJB
     private UserFacadeLocal userFacade;
     @EJB
@@ -57,13 +64,15 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     @EJB
     private AlumnoHasRepresentanteFacadeLocal ahrFacade;
     @EJB
-    private NivelFacadeLocal nivelFacade;
+    private EtapaFacadeLocal etapaFacade;
     @EJB
     private CursoFacadeLocal cursoFacade;
     @EJB
-    private CursoHasAlumnoFacadeLocal cursoHasAlumnoFacade;
+    private SeccionFacadeLocal seccionFacade;
     @EJB
-    private CursoHasDocenteFacadeLocal cursoHasDocenteFacade;
+    private SeccionHasAlumnoFacadeLocal seccionHasAlumnoFacade;
+    @EJB
+    private SeccionHasDocenteFacadeLocal seccionHasDocenteFacade;
 
     @Override
     public void verifyDataInicial() {
@@ -74,15 +83,26 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     }
 
     public void loadDataInicial() {
+        creaColegio();
         loadUsers();
         loadDatosPersona();
-        asignaRoles();
+        defineRoles();
         loadPersonal();
         relacionAlumnoRepresentante();
-        createNiveles();
+        createEtapas();
         createCursos();
-        asociaAlumnoCurso();
-        asociaDocenteCurso();
+        createSecciones();
+        asociaAlumnoSeccion();
+        asociaDocenteSeccion();
+    }
+    
+    private void creaColegio(){
+        Colegio colegio = new Colegio();
+        colegio.setNombre("U.E. Colegio Belagua");
+        colegio.setDireccion("Guatire");
+        
+        colegioFacade.create(colegio);
+        System.out.println("Creado el Colegio...");
     }
 
     private void loadUsers() {
@@ -136,11 +156,10 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         usuarios.add(createUser(5678913, "nrepre@test.com",
                 Utilities.getSecurePassword("123456")));
 
-        for (User user : usuarios) {
-            userFacade.create(user);
-        }
+        userFacade.batchCreate(usuarios);
 
-        System.out.println("Creados los usuarios");
+        usuarios = userFacade.findAll();
+        System.out.println("Creados " + usuarios.size() + " usuarios.");
     }
 
     private void loadDatosPersona() {
@@ -192,35 +211,40 @@ public class DataPruebaController implements DataPruebaControllerLocal {
 
         datosPersonaFacade.batchCreate(datospers);
 
-        System.out.println("Creados los datos personales");
+        List<DatosPersona> dpList = datosPersonaFacade.findAll();
+        System.out.println("Creados " + dpList.size() + " datos personales");
     }
 
-    private void asignaRoles() {
+    private void defineRoles() {
+        
         List<UserHasRol> uhrList = new ArrayList<>();
 
         // usuario administrativo
-        User user = userFacade.find(1234567);
-        Rol rol = rolFacade.find(2);
-        String escritorio = Constantes.ESCRITORIO_ADMIN;
-        uhrList.add(createUHR(2, user, rol, escritorio));
+        User user = userFacade.findByCi(1234567);
+        UserHasRol uhr = asignarRol(user, "Administrativo");
+        uhrList.add(uhr);
 
         // asigna los roles de los docentes
         for (int cedula = 4567890; cedula < 4567897; cedula++) {
-            User doc = userFacade.find(cedula);
-            UserHasRol uhr = asignarRol(doc, "Docente");
+            User doc = userFacade.findByCi(cedula);
+            uhr = asignarRol(doc, "Docente");
             uhrList.add(uhr);
         }
 
         // asigna los roles a los representantes
         for (int cedula = 5678900; cedula < 5678914; cedula++) {
-            User doc = userFacade.find(cedula);
-            UserHasRol uhr = asignarRol(doc, "Representante");
+            User doc = userFacade.findByCi(cedula);
+            uhr = asignarRol(doc, "Representante");
             uhrList.add(uhr);
         }
 
+        System.out.println("Antes de crearlos tiene : " + uhrList.size() + " elementos");
+        
         uhRolFacade.batchCreate(uhrList);
 
-        System.out.println("Asignados los roles iniciales");
+        uhrList = uhRolFacade.findAll();
+        System.out.println("Asignados " + uhrList.size() + " roles iniciales");
+        
     }
 
     private UserHasRol asignarRol(User user, String rolName) {
@@ -246,27 +270,27 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     }
 
     private void loadPersonal() {
-        User user = userFacade.find(1234567);
+        User user = userFacade.findByCi(1234567);
         createPersonal(user, "Admin");
 
         // se agregan los docentes
         for (int cedula = 4567890; cedula < 4567897; cedula++) {
-            user = userFacade.find(cedula);
+            user = userFacade.findByCi(cedula);
             createPersonal(user, "Docente");
         }
 
         // se agregan los representantes
         for (int cedula = 5678900; cedula < 5678914; cedula++) {
-            user = userFacade.find(cedula);
+            user = userFacade.findByCi(cedula);
             createPersonal(user, "Representante");
         }
 
         // se agregan los alumnos
         for (int cedula = 8901230; cedula < 8901246; cedula++) {
-            DatosPersona dp = datosPersonaFacade.find(cedula);
+            DatosPersona dp = datosPersonaFacade.findByCi(cedula);
             createAlumno(dp);
 
-            Alumno alumno = alumnoFacade.findxDatosPersona(dp);
+            //Alumno alumno = alumnoFacade.findxDatosPersona(dp);
         }
     }
 
@@ -321,7 +345,7 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     }
 
     private void createPersonal(User user, String tipo) {
-        DatosPersona dp = datosPersonaFacade.find(user.getCi().intValue());
+        DatosPersona dp = datosPersonaFacade.findByCi(user.getCi());
         switch (tipo) {
             case "Admin":
                 Administrativo admin = new Administrativo();
@@ -360,377 +384,457 @@ public class DataPruebaController implements DataPruebaControllerLocal {
 
     private void relacionAlumnoRepresentante() {
         List<AlumnoHasRepresentante> ahrList = new ArrayList<>();
-
-        Alumno alumno = null;
-        Representante representante = null;
         AlumnoHasRepresentante ahr = null;
-        for (int ind = 1; ind < 15; ind++) {
-            if (ind < 13) {
-                alumno = alumnoFacade.find(ind);
-                representante = representanteFacade.find(ind);
-
+        
+        List<Alumno> alumnos = alumnoFacade.findAll();
+        List<Representante> representantes = representanteFacade.findAll();
+        Collections.shuffle(representantes);
+        Collections.shuffle(alumnos);
+        
+        int cantRepresentante = representantes.size();
+        
+        int ind = 0;
+        int j;
+        for(Representante repre : representantes){
+            if(ind < (cantRepresentante - 2)){
                 ahr = new AlumnoHasRepresentante();
-                ahr.setAlumnoId(alumno);
-                ahr.setRepresentanteId(representante);
+                ahr.setAlumnoId(alumnos.get(ind));
+                ahr.setRepresentanteId(representantes.get(ind));
                 ahrList.add(ahr);
             } else {
-                int j = 0;
-                if (ind == 13) {
+                if(ind == (cantRepresentante - 2)){
                     j = ind;
                 } else {
                     j = ind + 1;
                 }
-
-                alumno = alumnoFacade.find(j);
-                representante = representanteFacade.find(ind);
                 ahr = new AlumnoHasRepresentante();
-                ahr.setAlumnoId(alumno);
-                ahr.setRepresentanteId(representante);
+                ahr.setAlumnoId(alumnos.get(j));
+                ahr.setRepresentanteId(representantes.get(ind));
                 ahrList.add(ahr);
 
-                alumno = alumnoFacade.find((j + 1));
-                representante = representanteFacade.find(ind);
                 ahr = new AlumnoHasRepresentante();
-                ahr.setAlumnoId(alumno);
-                ahr.setRepresentanteId(representante);
+                ahr.setAlumnoId(alumnos.get(j + 1));
+                ahr.setRepresentanteId(representantes.get(ind));
                 ahrList.add(ahr);
             }
+            ind++;
         }
-
+        
         ahrFacade.batchCreate(ahrList);
-        System.out.println("Se relacionan los alumnos a sus representantes");
+        
+        ahrList = ahrFacade.findAll();
+        System.out.println("Se relacionan " + ahrList.size() + " alumnos a sus representantes");
     }
 
-    private void createNiveles() {
-        List<Nivel> niveles = new ArrayList<>();
-        Nivel nivel = new Nivel();
+    private void createEtapas() {
+        
+        Colegio colegio = colegioFacade.findAll().get(0);
+        
+        List<Etapa> etapas = new ArrayList<>();
+        Etapa etapa = new Etapa();
 
-        nivel.setPrefijo(0);
-        nivel.setNombre("Prescolar");
-        nivel.setEtapa("Prescolar");
-        niveles.add(nivel);
+        etapa.setPrefijo(0);
+        etapa.setNombre("Prescolar");
+        etapa.setColegioId(colegio);
+        etapas.add(etapa);
 
-        nivel = new Nivel();
-        nivel.setPrefijo(1);
-        nivel.setNombre("Primaria_1");
-        nivel.setEtapa("Primaria_1");
-        niveles.add(nivel);
+        etapa = new Etapa();
+        etapa.setPrefijo(1);
+        etapa.setNombre("Primaria 1");
+        etapa.setColegioId(colegio);
+        etapas.add(etapa);
 
-        nivel = new Nivel();
-        nivel.setPrefijo(2);
-        nivel.setNombre("Primaria_2");
-        nivel.setEtapa("Primaria_2");
-        niveles.add(nivel);
+        etapa = new Etapa();
+        etapa.setPrefijo(2);
+        etapa.setNombre("Primaria 2");
+        etapa.setColegioId(colegio);
+        etapas.add(etapa);
 
-        nivel = new Nivel();
-        nivel.setPrefijo(3);
-        nivel.setNombre("Bachillerato_1");
-        nivel.setEtapa("Bachillerato_1");
-        niveles.add(nivel);
+        etapa = new Etapa();
+        etapa.setPrefijo(3);
+        etapa.setColegioId(colegio);
+        etapa.setNombre("Bachillerato 1");
+        etapas.add(etapa);
 
-        nivel = new Nivel();
-        nivel.setPrefijo(4);
-        nivel.setNombre("Bachillerato_4");
-        nivel.setEtapa("Bachillerato_4");
-        niveles.add(nivel);
+        etapa = new Etapa();
+        etapa.setPrefijo(4);
+        etapa.setColegioId(colegio);
+        etapa.setNombre("Bachillerato 4");
+        etapas.add(etapa);
 
-        nivelFacade.batchCreate(niveles);
+        etapaFacade.batchCreate(etapas);
 
-        System.out.println("Creado los niveles");
+        etapas = etapaFacade.findAll();
+        System.out.println("Se crearon " + etapas.size() + " etapas");
     }
-
-    private void createCursos() {
+    
+    private void createCursos(){
         List<Curso> cursos = new ArrayList<>();
         Curso curso = new Curso();
-
-        Nivel nivel = nivelFacade.findByPrefijo(0);
-        curso.setCodigo("0MA");
-        curso.setNivelId(nivel);
+        
+        Etapa etapa = etapaFacade.findByPrefijo(0);
+        curso.setEtapaId(etapa);
         curso.setNombre("Maternal");
         cursos.add(curso);
-
+        
         curso = new Curso();
-        curso.setCodigo("01A");
-        curso.setNivelId(nivel);
-        curso.setNombre("Prescolar 1A");
-        curso.setSeccion("A");
+        curso.setEtapaId(etapa);
+        curso.setNombre("Prescolar 1");
         cursos.add(curso);
-
+        
         curso = new Curso();
-        curso.setCodigo("01B");
-        curso.setNivelId(nivel);
-        curso.setNombre("Prescolar 1B");
-        curso.setSeccion("B");
+        curso.setEtapaId(etapa);
+        curso.setNombre("Prescolar 2");
         cursos.add(curso);
-
+        
         curso = new Curso();
-        curso.setCodigo("02A");
-        curso.setNivelId(nivel);
-        curso.setNombre("Prescolar 2A");
-        curso.setSeccion("A");
+        curso.setEtapaId(etapa);
+        curso.setNombre("Prescolar 3");
         cursos.add(curso);
-
+        
+        etapa = etapaFacade.findByPrefijo(1);
         curso = new Curso();
-        curso.setCodigo("02B");
-        curso.setNivelId(nivel);
-        curso.setNombre("Prescolar 2B");
-        curso.setSeccion("B");
+        curso.setEtapaId(etapa);
+        curso.setNombre("1er grado");
         cursos.add(curso);
-
+        
         curso = new Curso();
-        curso.setCodigo("03A");
-        curso.setNivelId(nivel);
-        curso.setNombre("Prescolar 3A");
-        curso.setSeccion("A");
+        curso.setEtapaId(etapa);
+        curso.setNombre("2do grado");
         cursos.add(curso);
-
-        nivel = nivelFacade.findByPrefijo(1);
+        
         curso = new Curso();
-        curso.setCodigo("11A");
-        curso.setNivelId(nivel);
-        curso.setNombre("1er grado A");
-        curso.setSeccion("A");
+        curso.setEtapaId(etapa);
+        curso.setNombre("3er grado");
         cursos.add(curso);
-
+        
+        etapa = etapaFacade.findByPrefijo(2);
         curso = new Curso();
-        curso.setCodigo("11B");
-        curso.setNivelId(nivel);
-        curso.setNombre("1er grado B");
-        curso.setSeccion("B");
+        curso.setEtapaId(etapa);
+        curso.setNombre("4to grado");
         cursos.add(curso);
-
+        
         curso = new Curso();
-        curso.setCodigo("12A");
-        curso.setNivelId(nivel);
-        curso.setNombre("2do grado A");
-        curso.setSeccion("A");
+        curso.setEtapaId(etapa);
+        curso.setNombre("5to grado");
         cursos.add(curso);
-
+        
         curso = new Curso();
-        curso.setCodigo("12B");
-        curso.setNivelId(nivel);
-        curso.setNombre("2do grado B");
-        curso.setSeccion("B");
+        curso.setEtapaId(etapa);
+        curso.setNombre("6to grado");
         cursos.add(curso);
-
+        
+        etapa = etapaFacade.findByPrefijo(3);
         curso = new Curso();
-        curso.setCodigo("13A");
-        curso.setNivelId(nivel);
-        curso.setNombre("3er grado A");
-        curso.setSeccion("A");
+        curso.setEtapaId(etapa);
+        curso.setNombre("7mo grado");
         cursos.add(curso);
-
+        
         curso = new Curso();
-        curso.setCodigo("13B");
-        curso.setNivelId(nivel);
-        curso.setNombre("3er grado B");
-        curso.setSeccion("B");
+        curso.setEtapaId(etapa);
+        curso.setNombre("8vo grado");
         cursos.add(curso);
-
-        nivel = nivelFacade.findByPrefijo(2);
+        
         curso = new Curso();
-        curso.setCodigo("24A");
-        curso.setNivelId(nivel);
-        curso.setNombre("4to grado A");
-        curso.setSeccion("A");
+        curso.setEtapaId(etapa);
+        curso.setNombre("9no grado");
         cursos.add(curso);
-
+        
+        etapa = etapaFacade.findByPrefijo(4);
         curso = new Curso();
-        curso.setCodigo("24B");
-        curso.setNivelId(nivel);
-        curso.setNombre("4to grado B");
-        curso.setSeccion("B");
+        curso.setEtapaId(etapa);
+        curso.setNombre("4to año");
         cursos.add(curso);
-
+        
         curso = new Curso();
-        curso.setCodigo("25A");
-        curso.setNivelId(nivel);
-        curso.setNombre("5to grado A");
-        curso.setSeccion("A");
+        curso.setEtapaId(etapa);
+        curso.setNombre("5to año");
         cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("25B");
-        curso.setNivelId(nivel);
-        curso.setNombre("5to grado B");
-        curso.setSeccion("B");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("26A");
-        curso.setNivelId(nivel);
-        curso.setNombre("6to grado A");
-        curso.setSeccion("A");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("26B");
-        curso.setNivelId(nivel);
-        curso.setNombre("6to grado B");
-        curso.setSeccion("B");
-        cursos.add(curso);
-
-        nivel = nivelFacade.findByPrefijo(3);
-        curso = new Curso();
-        curso.setCodigo("37A");
-        curso.setNivelId(nivel);
-        curso.setNombre("1er año A");
-        curso.setSeccion("A");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("37B");
-        curso.setNivelId(nivel);
-        curso.setNombre("1er año B");
-        curso.setSeccion("B");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("38A");
-        curso.setNivelId(nivel);
-        curso.setNombre("2do año A");
-        curso.setSeccion("A");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("38B");
-        curso.setNivelId(nivel);
-        curso.setNombre("2do año B");
-        curso.setSeccion("B");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("39A");
-        curso.setNivelId(nivel);
-        curso.setNombre("3er año A");
-        curso.setSeccion("A");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("39B");
-        curso.setNivelId(nivel);
-        curso.setNombre("3er año B");
-        curso.setSeccion("B");
-        cursos.add(curso);
-
-        nivel = nivelFacade.findByPrefijo(4);
-        curso = new Curso();
-        curso.setCodigo("41A");
-        curso.setNivelId(nivel);
-        curso.setNombre("4to año A");
-        curso.setSeccion("A");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("41B");
-        curso.setNivelId(nivel);
-        curso.setNombre("4to año B");
-        curso.setSeccion("B");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("42A");
-        curso.setNivelId(nivel);
-        curso.setNombre("5to año A");
-        curso.setSeccion("A");
-        cursos.add(curso);
-
-        curso = new Curso();
-        curso.setCodigo("42B");
-        curso.setNivelId(nivel);
-        curso.setNombre("4to año B");
-        curso.setSeccion("B");
-        cursos.add(curso);
-
+        
         cursoFacade.batchCreate(cursos);
-        System.out.println("cursos creados");
+        
+        cursos = cursoFacade.findAll();
+        System.out.println("Se crearon " + cursos.size() + " cursos");
     }
 
-    private void asociaAlumnoCurso() {
+    private void createSecciones() {
+        List<Seccion> secciones = new ArrayList<>();
+        Seccion seccion = new Seccion();
+
+        Curso curso = cursoFacade.findByName("Maternal");
+        seccion.setCodigo("0MA");
+        seccion.setCursoId(curso);
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        curso = cursoFacade.findByName("Prescolar 1");
+        seccion.setCodigo("01A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("01B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("Prescolar 2");
+        seccion = new Seccion();
+        seccion.setCodigo("02A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("02B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("Prescolar 3");
+        seccion = new Seccion();
+        seccion.setCodigo("03A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("1er grado");
+        seccion = new Seccion();
+        seccion.setCodigo("11A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("11B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("2do grado");
+        seccion = new Seccion();
+        seccion.setCodigo("12A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("12B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("3er grado");
+        seccion = new Seccion();
+        seccion.setCodigo("13A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("13B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("4to grado");
+        seccion = new Seccion();
+        seccion.setCodigo("24A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("24B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("5to grado");
+        seccion = new Seccion();
+        seccion.setCodigo("25A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("25B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("6to grado");
+        seccion = new Seccion();
+        seccion.setCodigo("26A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("26B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("7mo grado");
+        seccion = new Seccion();
+        seccion.setCodigo("37A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("37B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("8vo grado");
+        seccion = new Seccion();
+        seccion.setCodigo("38A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("38B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("9no grado");
+        seccion = new Seccion();
+        seccion.setCodigo("39A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("39B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("4to año");
+        seccion = new Seccion();
+        seccion.setCodigo("41A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("41B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        curso = cursoFacade.findByName("5to año");
+        seccion = new Seccion();
+        seccion.setCodigo("42A");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("A");
+        secciones.add(seccion);
+
+        seccion = new Seccion();
+        seccion.setCodigo("42B");
+        seccion.setCursoId(curso);
+        seccion.setSeccion("B");
+        secciones.add(seccion);
+
+        seccionFacade.batchCreate(secciones);
+        
+        secciones = seccionFacade.findAll();
+        System.out.println("Se crearon " + secciones.size() + " secciones");
+    }
+
+    private void asociaAlumnoSeccion() {
         List<Alumno> alumnos = alumnoFacade.findAll();
-        List<CursoHasAlumno> chaList = new ArrayList<>();
+        List<SeccionHasAlumno> chaList = new ArrayList<>();
 
-        CursoHasAlumno cha = null;
-        Curso curso = cursoFacade.findByCodigo("01A");
+        SeccionHasAlumno cha = null;
+        Seccion seccion = seccionFacade.findByCodigo("01A");
         for (int i = 0; i < 2; i++) {
-            cha = new CursoHasAlumno();
+            cha = new SeccionHasAlumno();
             cha.setAlumnoId(alumnos.get(i));
-            cha.setCursoId(curso);
+            cha.setSeccionId(seccion);
             chaList.add(cha);
         }
 
-        curso = cursoFacade.findByCodigo("11A");
+        seccion = seccionFacade.findByCodigo("11A");
         for (int i = 2; i < 4; i++) {
-            cha = new CursoHasAlumno();
+            cha = new SeccionHasAlumno();
             cha.setAlumnoId(alumnos.get(i));
-            cha.setCursoId(curso);
+            cha.setSeccionId(seccion);
             chaList.add(cha);
         }
 
-        curso = cursoFacade.findByCodigo("24A");
+        seccion = seccionFacade.findByCodigo("24A");
         for (int i = 4; i < 8; i++) {
-            cha = new CursoHasAlumno();
+            cha = new SeccionHasAlumno();
             cha.setAlumnoId(alumnos.get(i));
-            cha.setCursoId(curso);
+            cha.setSeccionId(seccion);
             chaList.add(cha);
         }
         
-        curso = cursoFacade.findByCodigo("37A");
+        seccion = seccionFacade.findByCodigo("37A");
         for (int i = 8; i < 12; i++) {
-            cha = new CursoHasAlumno();
+            cha = new SeccionHasAlumno();
             cha.setAlumnoId(alumnos.get(i));
-            cha.setCursoId(curso);
+            cha.setSeccionId(seccion);
             chaList.add(cha);
         }
         
-        curso = cursoFacade.findByCodigo("41A");
+        seccion = seccionFacade.findByCodigo("41A");
         for (int i = 12; i < 16; i++) {
-            cha = new CursoHasAlumno();
+            cha = new SeccionHasAlumno();
             cha.setAlumnoId(alumnos.get(i));
-            cha.setCursoId(curso);
+            cha.setSeccionId(seccion);
             chaList.add(cha);
         }
         
-        cursoHasAlumnoFacade.batchCreate(chaList);
+        seccionHasAlumnoFacade.batchCreate(chaList);
         
-        System.out.println("Alumnos asignados a los cursos");
+        System.out.println("Alumnos asignados a los seccions");
     }
 
-    private void asociaDocenteCurso() {
+    private void asociaDocenteSeccion() {
         List<Docente> docentes = docenteFacade.findAll();
-        List<CursoHasDocente> chdList = new ArrayList<>();
+        List<SeccionHasDocente> chdList = new ArrayList<>();
         
-        Curso curso = cursoFacade.findByCodigo("01A");
-        CursoHasDocente chd = new CursoHasDocente();
-        chd.setCursoId(curso);
+        Seccion seccion = seccionFacade.findByCodigo("01A");
+        SeccionHasDocente chd = new SeccionHasDocente();
+        chd.setSeccionId(seccion);
         chd.setDocenteId(docentes.get(0));
         chdList.add(chd);
         
-        curso = cursoFacade.findByCodigo("11A");
-        chd = new CursoHasDocente();
-        chd.setCursoId(curso);
+        seccion = seccionFacade.findByCodigo("11A");
+        chd = new SeccionHasDocente();
+        chd.setSeccionId(seccion);
         chd.setDocenteId(docentes.get(1));
         chdList.add(chd);
         
-        curso = cursoFacade.findByCodigo("24A");
-        chd = new CursoHasDocente();
-        chd.setCursoId(curso);
+        seccion = seccionFacade.findByCodigo("24A");
+        chd = new SeccionHasDocente();
+        chd.setSeccionId(seccion);
         chd.setDocenteId(docentes.get(2));
         chdList.add(chd);
         
-        curso = cursoFacade.findByCodigo("37A");
-        chd = new CursoHasDocente();
-        chd.setCursoId(curso);
+        seccion = seccionFacade.findByCodigo("37A");
+        chd = new SeccionHasDocente();
+        chd.setSeccionId(seccion);
         chd.setDocenteId(docentes.get(3));
         chdList.add(chd);
         
-        curso = cursoFacade.findByCodigo("41A");
-        chd = new CursoHasDocente();
-        chd.setCursoId(curso);
+        seccion = seccionFacade.findByCodigo("41A");
+        chd = new SeccionHasDocente();
+        chd.setSeccionId(seccion);
         chd.setDocenteId(docentes.get(4));
         chdList.add(chd);
         
-        cursoHasDocenteFacade.batchCreate(chdList);
-        System.out.println("Asignados docentes a cursos");
+        seccionHasDocenteFacade.batchCreate(chdList);
+        
+        chdList = seccionHasDocenteFacade.findAll();
+        System.out.println("Se asignaron " + chdList.size() + " docentes a seccions");
     }
 }

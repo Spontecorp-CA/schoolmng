@@ -24,12 +24,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author jgcastillo
  */
 @Entity
-@Table(name = "curso_has_alumno")
+@Table(name = "seccion_has_alumno")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "CursoHasAlumno.findAll", query = "SELECT c FROM CursoHasAlumno c")
-    , @NamedQuery(name = "CursoHasAlumno.findById", query = "SELECT c FROM CursoHasAlumno c WHERE c.id = :id")})
-public class CursoHasAlumno implements Serializable {
+    @NamedQuery(name = "SeccionHasAlumno.findAll", query = "SELECT s FROM SeccionHasAlumno s")
+    , @NamedQuery(name = "SeccionHasAlumno.findById", query = "SELECT s FROM SeccionHasAlumno s WHERE s.id = :id")})
+public class SeccionHasAlumno implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,14 +40,14 @@ public class CursoHasAlumno implements Serializable {
     @JoinColumn(name = "alumno_id", referencedColumnName = "id")
     @ManyToOne
     private Alumno alumnoId;
-    @JoinColumn(name = "curso_id", referencedColumnName = "id")
+    @JoinColumn(name = "seccion_id", referencedColumnName = "id")
     @ManyToOne
-    private Curso cursoId;
+    private Seccion seccionId;
 
-    public CursoHasAlumno() {
+    public SeccionHasAlumno() {
     }
 
-    public CursoHasAlumno(Integer id) {
+    public SeccionHasAlumno(Integer id) {
         this.id = id;
     }
 
@@ -67,12 +67,12 @@ public class CursoHasAlumno implements Serializable {
         this.alumnoId = alumnoId;
     }
 
-    public Curso getCursoId() {
-        return cursoId;
+    public Seccion getSeccionId() {
+        return seccionId;
     }
 
-    public void setCursoId(Curso cursoId) {
-        this.cursoId = cursoId;
+    public void setSeccionId(Seccion seccionId) {
+        this.seccionId = seccionId;
     }
 
     @Override
@@ -85,10 +85,10 @@ public class CursoHasAlumno implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof CursoHasAlumno)) {
+        if (!(object instanceof SeccionHasAlumno)) {
             return false;
         }
-        CursoHasAlumno other = (CursoHasAlumno) object;
+        SeccionHasAlumno other = (SeccionHasAlumno) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -97,7 +97,7 @@ public class CursoHasAlumno implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.CursoHasAlumno[ id=" + id + " ]";
+        return "edu.school.entities.SeccionHasAlumno[ id=" + id + " ]";
     }
     
 }

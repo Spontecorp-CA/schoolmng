@@ -33,4 +33,8 @@ public class Constantes {
     public static final String PARENTESCO_PADRE = "Padre";
     public static final String PARENTESCO_MADRE = "Madre";
     public static final String PARENTESCO_OTRO = "Otro";
+    
+    public static final String GRUPO_GRADO = "Grado";
+    public static final String GRUPO_ETAPA = "Etapa";
+    public static final String GRUPO_COLEGIO = "Colegio";
 }

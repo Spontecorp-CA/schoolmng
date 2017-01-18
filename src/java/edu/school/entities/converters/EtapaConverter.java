@@ -1,18 +1,18 @@
 package edu.school.entities.converters;
 
-import edu.school.ejb.NivelFacadeLocal;
-import edu.school.entities.Nivel;
+import edu.school.entities.Etapa;
 import javax.ejb.EJB;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import edu.school.ejb.EtapaFacadeLocal;
 
-@FacesConverter("edu.school.entities.converters.NivelConverter")
-public class NivelConverter implements Converter{
+@FacesConverter("edu.school.entities.converters.EtapaConverter")
+public class EtapaConverter implements Converter{
 
     @EJB
-    private NivelFacadeLocal nivelFacade;
+    private EtapaFacadeLocal etapaFacade;
     
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, 
@@ -21,7 +21,7 @@ public class NivelConverter implements Converter{
             return null;
         }
         try {
-            return nivelFacade.find(Integer.parseInt(value));
+            return etapaFacade.find(Integer.parseInt(value));
         } catch (NumberFormatException e) {
             return null;
         }
@@ -33,13 +33,13 @@ public class NivelConverter implements Converter{
         if (value == null) {
             return null;
         }
-        if (value instanceof Nivel) {
+        if (value instanceof Etapa) {
             return value.toString();
         } else {
             throw new IllegalArgumentException("El objecto "
                     + value + " es de tipo "
                     + value.getClass().getName()
-                    + "; se espera: " + Nivel.class.getName());
+                    + "; se espera: " + Etapa.class.getName());
         }
     }
     

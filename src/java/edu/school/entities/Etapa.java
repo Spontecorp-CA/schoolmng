@@ -8,11 +8,14 @@ package edu.school.entities;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -26,15 +29,14 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author jgcastillo
  */
 @Entity
-@Table(name = "nivel")
+@Table(name = "etapa")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Nivel.findAll", query = "SELECT n FROM Nivel n")
-    , @NamedQuery(name = "Nivel.findById", query = "SELECT n FROM Nivel n WHERE n.id = :id")
-    , @NamedQuery(name = "Nivel.findByNombre", query = "SELECT n FROM Nivel n WHERE n.nombre = :nombre")
-    , @NamedQuery(name = "Nivel.findByPrefijo", query = "SELECT n FROM Nivel n WHERE n.prefijo = :prefijo")
-    , @NamedQuery(name = "Nivel.findByEtapa", query = "SELECT n FROM Nivel n WHERE n.etapa = :etapa")})
-public class Nivel implements Serializable {
+    @NamedQuery(name = "Etapa.findAll", query = "SELECT e FROM Etapa e")
+    , @NamedQuery(name = "Etapa.findById", query = "SELECT e FROM Etapa e WHERE e.id = :id")
+    , @NamedQuery(name = "Etapa.findByNombre", query = "SELECT e FROM Etapa e WHERE e.nombre = :nombre")
+    , @NamedQuery(name = "Etapa.findByPrefijo", query = "SELECT e FROM Etapa e WHERE e.prefijo = :prefijo")})
+public class Etapa implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -47,16 +49,19 @@ public class Nivel implements Serializable {
     private String nombre;
     @Column(name = "prefijo")
     private Integer prefijo;
-    @Size(max = 25)
-    @Column(name = "etapa")
-    private String etapa;
-    @OneToMany(mappedBy = "nivelId")
+    @JoinColumn(name = "colegio_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Colegio colegioId;
+    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
+    @ManyToOne
+    private Supervisor supervisorId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "etapaId")
     private Collection<Curso> cursoCollection;
 
-    public Nivel() {
+    public Etapa() {
     }
 
-    public Nivel(Integer id) {
+    public Etapa(Integer id) {
         this.id = id;
     }
 
@@ -84,12 +89,20 @@ public class Nivel implements Serializable {
         this.prefijo = prefijo;
     }
 
-    public String getEtapa() {
-        return etapa;
+    public Colegio getColegioId() {
+        return colegioId;
     }
 
-    public void setEtapa(String etapa) {
-        this.etapa = etapa;
+    public void setColegioId(Colegio colegioId) {
+        this.colegioId = colegioId;
+    }
+
+    public Supervisor getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(Supervisor supervisorId) {
+        this.supervisorId = supervisorId;
     }
 
     @XmlTransient
@@ -111,10 +124,10 @@ public class Nivel implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Nivel)) {
+        if (!(object instanceof Etapa)) {
             return false;
         }
-        Nivel other = (Nivel) object;
+        Etapa other = (Etapa) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -123,7 +136,7 @@ public class Nivel implements Serializable {
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return "edu.school.entities.Etapa[ id=" + id + " ]";
     }
     
 }

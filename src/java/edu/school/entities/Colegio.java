@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -52,6 +54,11 @@ public class Colegio implements Serializable {
     @Size(max = 255)
     @Column(name = "direccion")
     private String direccion;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "colegioId")
+    private Collection<Etapa> etapaCollection;
+    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
+    @ManyToOne
+    private Supervisor supervisorId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "colegioId")
     private Collection<Comunicacion> comunicacionCollection;
 
@@ -92,6 +99,23 @@ public class Colegio implements Serializable {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    @XmlTransient
+    public Collection<Etapa> getEtapaCollection() {
+        return etapaCollection;
+    }
+
+    public void setEtapaCollection(Collection<Etapa> etapaCollection) {
+        this.etapaCollection = etapaCollection;
+    }
+
+    public Supervisor getSupervisorId() {
+        return supervisorId;
+    }
+
+    public void setSupervisorId(Supervisor supervisorId) {
+        this.supervisorId = supervisorId;
     }
 
     @XmlTransient

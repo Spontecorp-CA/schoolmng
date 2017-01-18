@@ -46,18 +46,31 @@
                                                                 forceSelection="true"/>
                                             </div>
                                         </div>
-                                        <div class="col-xs-12 col-md-6">
+                                        <div class="col-xs-6 col-md-3">
                                             <div class="form-group">
                                                 <label class="control-label" for="destinatario">Supervisa a:</label>
                                                 <p:selectOneRadio id="destinatario" 
-                                                                  value="#{adminSupervisorAgregar.grupo}"
+                                                                  value="#{adminSupervisorAgregar.nivel}"
                                                                   layout="grid"
                                                                   columns="1"
                                                                   style="padding: 10px">
                                                     <f:selectItem itemLabel=" Grado" itemValue="Grado"/>
-                                                    <f:selectItem itemLabel=" Nivel" itemValue="Nivel"/>
+                                                    <f:selectItem itemLabel=" Etapa" itemValue="Etapa"/>
                                                     <f:selectItem itemLabel=" Colegio" itemValue="Colegio"/>
+                                                    <p:ajax update="grupo" />
                                                 </p:selectOneRadio>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 col-md-3">
+                                            <div class="form-group">
+                                                <p:selectOneMenu id="grupo"
+                                                                 value="#{adminSupervisorAgregar.grupo}"
+                                                                 style="width: 100px;">
+                                                    <f:selectItems var="grp"
+                                                                   value="#{adminSupervisorAgregar.grupos}"
+                                                                   itemLabel="#{grp}"
+                                                                   itemValue="#{grp}"/>s
+                                                </p:selectOneMenu>
                                             </div>
                                         </div>
                                         <div class="ln_solid"></div>

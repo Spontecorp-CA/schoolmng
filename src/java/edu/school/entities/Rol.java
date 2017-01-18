@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.entities;
 
 import java.io.Serializable;
@@ -21,10 +16,6 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-/**
- *
- * @author jgcastillo
- */
 @Entity
 @Table(name = "rol")
 @XmlRootElement
@@ -49,14 +40,14 @@ public class Rol implements Serializable {
     public Rol() {
     }
 
+    public Rol(String name) {
+        this.name = name;
+    }
+
     public Rol(Integer id) {
         this.id = id;
     }
 
-    public Rol(String name) {
-        this.name = name;
-    }
-    
     public Integer getId() {
         return id;
     }
@@ -104,7 +95,7 @@ public class Rol implements Serializable {
 
     @Override
     public String toString() {
-        return String.valueOf(id);
+        return "edu.school.entities.Rol[ id=" + id + " ]";
     }
     
 }
