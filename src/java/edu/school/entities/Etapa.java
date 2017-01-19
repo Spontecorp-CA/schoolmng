@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package edu.school.entities;
 
 import java.io.Serializable;
@@ -36,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Etapa.findById", query = "SELECT e FROM Etapa e WHERE e.id = :id")
     , @NamedQuery(name = "Etapa.findByNombre", query = "SELECT e FROM Etapa e WHERE e.nombre = :nombre")
     , @NamedQuery(name = "Etapa.findByPrefijo", query = "SELECT e FROM Etapa e WHERE e.prefijo = :prefijo")})
-public class Etapa implements Serializable {
+public class Etapa implements Serializable, Comparable<Etapa> {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -49,14 +44,13 @@ public class Etapa implements Serializable {
     private String nombre;
     @Column(name = "prefijo")
     private Integer prefijo;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "etapaId")
+    private Collection<Curso> cursoCollection;
     @JoinColumn(name = "colegio_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Colegio colegioId;
-    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
-    @ManyToOne
-    private Supervisor supervisorId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "etapaId")
-    private Collection<Curso> cursoCollection;
+    @OneToMany(mappedBy = "etapaId")
+    private Collection<StatusSupervisor> statusSupervisorCollection;
 
     public Etapa() {
     }
@@ -89,6 +83,15 @@ public class Etapa implements Serializable {
         this.prefijo = prefijo;
     }
 
+    @XmlTransient
+    public Collection<Curso> getCursoCollection() {
+        return cursoCollection;
+    }
+
+    public void setCursoCollection(Collection<Curso> cursoCollection) {
+        this.cursoCollection = cursoCollection;
+    }
+
     public Colegio getColegioId() {
         return colegioId;
     }
@@ -97,21 +100,13 @@ public class Etapa implements Serializable {
         this.colegioId = colegioId;
     }
 
-    public Supervisor getSupervisorId() {
-        return supervisorId;
-    }
-
-    public void setSupervisorId(Supervisor supervisorId) {
-        this.supervisorId = supervisorId;
-    }
-
     @XmlTransient
-    public Collection<Curso> getCursoCollection() {
-        return cursoCollection;
+    public Collection<StatusSupervisor> getStatusSupervisorCollection() {
+        return statusSupervisorCollection;
     }
 
-    public void setCursoCollection(Collection<Curso> cursoCollection) {
-        this.cursoCollection = cursoCollection;
+    public void setStatusSupervisorCollection(Collection<StatusSupervisor> statusSupervisorCollection) {
+        this.statusSupervisorCollection = statusSupervisorCollection;
     }
 
     @Override
@@ -137,6 +132,11 @@ public class Etapa implements Serializable {
     @Override
     public String toString() {
         return "edu.school.entities.Etapa[ id=" + id + " ]";
+    }
+
+    @Override
+    public int compareTo(Etapa etp) {
+        return (this.getPrefijo().compareTo(etp.getPrefijo()));
     }
     
 }

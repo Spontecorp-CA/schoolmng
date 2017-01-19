@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Curso;
+import edu.school.entities.Etapa;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -27,5 +28,7 @@ public interface CursoFacadeLocal {
     public int count();
 
     Curso findByName(String nombre);
+
+    List<Curso> findAllByEtapa(Etapa etapa);
 
 }

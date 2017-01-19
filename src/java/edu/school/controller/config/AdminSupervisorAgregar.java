@@ -1,23 +1,35 @@
 package edu.school.controller.config;
 
 import edu.school.ejb.AdministrativoFacadeLocal;
+import edu.school.ejb.CursoFacadeLocal;
 import edu.school.ejb.DatosPersonaFacadeLocal;
 import edu.school.ejb.DocenteFacadeLocal;
+import edu.school.ejb.EtapaFacadeLocal;
 import edu.school.ejb.SeccionHasDocenteFacadeLocal;
+import edu.school.ejb.StatusSupervisorFacadeLocal;
 import edu.school.ejb.SupervisorFacadeLocal;
 import edu.school.ejb.UserFacadeLocal;
 import edu.school.entities.Administrativo;
+import edu.school.entities.Curso;
 import edu.school.entities.DatosPersona;
 import edu.school.entities.Docente;
+import edu.school.entities.Etapa;
 import edu.school.entities.Seccion;
+import edu.school.entities.StatusSupervisor;
 import edu.school.entities.Supervisor;
 import edu.school.entities.User;
 import edu.school.excepciones.DocenteNotFoundException;
 import edu.school.utilities.Constantes;
+import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -38,15 +50,22 @@ public class AdminSupervisorAgregar implements Serializable {
     @EJB
     private SupervisorFacadeLocal supervisorFacade;
     @EJB
+    private StatusSupervisorFacadeLocal statusSupervisorFacade;
+    @EJB
     private DatosPersonaFacadeLocal datosPersonaFacade;
     @EJB
     private SeccionHasDocenteFacadeLocal seccionHasDocenteFacade;
+    @EJB
+    private CursoFacadeLocal cursoFacade;
+    @EJB
+    private EtapaFacadeLocal etapaFacade;
 
-    private String supervisor;
+    private String supervisor = "";
     private String nivel = Constantes.GRUPO_GRADO;
     private String grupo;
     private List<String> usuarios;
-    private List<Supervisor> supervisores;
+    private List<String[]> supervisores;
+    private static final Logger LOGGER = Logger.getLogger(AdminSupervisorAgregar.class.getName());
 
     @PostConstruct
     public void init() {
@@ -90,7 +109,26 @@ public class AdminSupervisorAgregar implements Serializable {
 
     private void makeSupervisores() {
         supervisores = new ArrayList<>();
-
+        List<StatusSupervisor> ssList = statusSupervisorFacade
+                .findAllByStatus(Constantes.SUPERVISOR_ACTIVO);
+        for(StatusSupervisor ss : ssList){
+            String[] datos = new String[2];
+            StringBuffer sbnombre = new StringBuffer();
+            StringBuffer sbgrupo = new StringBuffer();
+            User user = ss.getSupervisorId().getUserId();
+            DatosPersona dp = datosPersonaFacade.findByCi(user.getCi());
+            sbnombre.append(dp.getApellido()).append(", ").append(dp.getNombre());
+            datos[0] = sbnombre.toString();
+            if(null != ss.getColegioId()){
+                datos[1] = "Colegio";
+            } else if( null != ss.getEtapaId()){
+                datos[1] = ss.getEtapaId().getNombre();
+            } else if( null != ss.getCursoId()){
+                datos[1] = ss.getCursoId().getNombre();
+            }
+            supervisores.add(datos);
+        }
+        
 //        supervisores.add(new Supervisor("Luis Alvarado", "1er Grado"));
 //        supervisores.add(new Supervisor("Rosa Centeno", "2do Grado"));
 //        supervisores.add(new Supervisor("Andreina Oropeza", "Primaria"));
@@ -110,7 +148,7 @@ public class AdminSupervisorAgregar implements Serializable {
         return filtrados;
     }
 
-    public List<Supervisor> getSupervisores() {
+    public List<String[]> getSupervisores() {
         return supervisores;
     }
 
@@ -144,65 +182,90 @@ public class AdminSupervisorAgregar implements Serializable {
 
     public List<String> getGrupos() {
         List<String> grupos = new ArrayList<>();
+        Map<Etapa, List<Curso>> cursosMap = mapearCursos();
+
         switch (nivel) {
             case Constantes.GRUPO_GRADO:
-                grupos.add("Maternal");
-                grupos.add("Prescolar 1");
-                grupos.add("Prescolar 2");
-                grupos.add("Prescolar 3");
-                grupos.add("1er Grado");
-                grupos.add("2do Grado");
-                grupos.add("3er Grado");
-                grupos.add("4to Grado");
-                grupos.add("5to Grado");
-                grupos.add("6to Grado");
-                grupos.add("1er año");
-                grupos.add("2do año");
-                grupos.add("3er año");
-                grupos.add("4to año");
-                grupos.add("5to año");
+                for (Map.Entry<Etapa, List<Curso>> mapa : cursosMap.entrySet()) {
+                    List<Curso> cursos = mapa.getValue();
+                    cursos.sort((Curso c1, Curso c2)
+                            -> c1.getNombre().compareTo(c2.getNombre()));
+
+                    for (Curso curso : cursos) {
+                        grupos.add(curso.getNombre());
+                    }
+                }
                 break;
             case Constantes.GRUPO_ETAPA:
-                grupos.add("Prescolar");
-                grupos.add("Primaria 1");
-                grupos.add("Primaria 2");
-                grupos.add("Bachillerato 1");
-                grupos.add("Bachillerato 2");
+                for (Map.Entry<Etapa, List<Curso>> mapa : cursosMap.entrySet()) {
+                    grupos.add(mapa.getKey().getNombre());
+                }
                 break;
             case Constantes.GRUPO_COLEGIO:
                 grupos.add("Colegio");
                 break;
         }
+
         return grupos;
     }
 
     public void createSuper() {
-        Object candidato = findCandidato(supervisor);
-        User user;
-        if (candidato != null) {
-            DatosPersona dp;
-            if (candidato instanceof Docente) {
-                Docente docente = (Docente) candidato;
-                dp = docente.getDatosPersonaId();
-                user = docente.getUserId();
-//
-//                switch (nivel) {
-//                    case Constantes.GRUPO_GRADO:
-//                        break;
-//                    case Constantes.GRUPO_ETAPA:
-//                        break;
-//                    case Constantes.GRUPO_COLEGIO:
-//                        break;
-//                }
+        if (null != supervisor) {
+            if (!supervisor.isEmpty()) {
+                Object candidato = findCandidato(supervisor);
+                User user;
+                DatosPersona dp;
+
+                if (candidato instanceof Docente) {
+                    Docente docente = (Docente) candidato;
+                    dp = docente.getDatosPersonaId();
+                    user = docente.getUserId();
+                } else {
+                    dp = ((Administrativo) candidato).getDatosPersonaId();
+                    user = ((Administrativo) candidato).getUserId();
+                }
+
+                LOGGER.log(Level.INFO, "va a colocar de supervisor a {0} {1} , para el grupo {2}",
+                        new Object[]{dp.getNombre(), dp.getApellido(), grupo});
+
+                Supervisor superv = new Supervisor();
+                superv.setUserId(user);
+
+                switch (nivel) {
+                    case Constantes.GRUPO_GRADO:
+                        Curso grado = cursoFacade.findByName(grupo);
+                        StatusSupervisor ss = statusSupervisorFacade.findByGrupo(grado);
+                        if(null != ss){
+                            Supervisor sup = ss.getSupervisorId();
+                            System.out.println("Encontró a " + sup.getUserId());
+                        } else {
+                            supervisorFacade.create(superv);
+                            
+                            ss = new StatusSupervisor();
+                            ss.setSupervisorId(superv);
+                            ss.setCursoId(grado);
+                            ss.setFechaIn(new Date());
+                            ss.setStatus(Constantes.SUPERVISOR_ACTIVO);
+                            
+                            statusSupervisorFacade.create(ss);
+                            LOGGER.log(Level.INFO, "{0} asignado como supervisor de {1}",
+                                    new Object[]{dp.getNombre(), dp.getApellido(), grupo});
+                            JsfUtils.messageSuccess("Supervidor asignado correctamente");
+                        }
+                        break;
+                    case Constantes.GRUPO_ETAPA:
+                        // buscar en las etapas
+                        break;
+                    case Constantes.GRUPO_COLEGIO:
+                        // buscar en el colegio
+                        break;
+                }
 
             } else {
-                dp = ((Administrativo) candidato).getDatosPersonaId();
-                user = ((Administrativo) candidato).getUserId();
+                JsfUtils.messageWarning("Debe seleccionar a un usuario");
             }
-
-            System.out.println("va a colocar de supervisor a " + dp.getNombre()
-                    + " " + dp.getApellido()
-                    + ", para el grupo " + grupo);
+        } else {
+            JsfUtils.messageWarning("Debe seleccionar a un usuario");
         }
     }
 
@@ -210,7 +273,7 @@ public class AdminSupervisorAgregar implements Serializable {
         supervisor = null;
         nivel = null;
     }
-
+    
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         System.out.println("oldValue: " + oldValue);
@@ -248,6 +311,19 @@ public class AdminSupervisorAgregar implements Serializable {
 
     private List<Seccion> findSeccion(Docente docente) {
         return seccionHasDocenteFacade.findAll(docente);
+    }
+
+    private Map<Etapa, List<Curso>> mapearCursos() {
+
+        Map<Etapa, List<Curso>> cursosMap = new TreeMap<>();
+        List<Etapa> etapas = etapaFacade.findAll();
+
+        for (Etapa et : etapas) {
+            List<Curso> cursos = cursoFacade.findAllByEtapa(et);
+            cursosMap.put(et, cursos);
+        }
+
+        return cursosMap;
     }
 
 }

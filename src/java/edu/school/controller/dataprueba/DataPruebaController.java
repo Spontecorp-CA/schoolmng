@@ -459,7 +459,7 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         etapa = new Etapa();
         etapa.setPrefijo(4);
         etapa.setColegioId(colegio);
-        etapa.setNombre("Bachillerato 4");
+        etapa.setNombre("Bachillerato 2");
         etapas.add(etapa);
 
         etapaFacade.batchCreate(etapas);

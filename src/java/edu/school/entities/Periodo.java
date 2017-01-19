@@ -6,7 +6,6 @@
 package edu.school.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,11 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,7 +28,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Periodo.findAll", query = "SELECT p FROM Periodo p")
     , @NamedQuery(name = "Periodo.findById", query = "SELECT p FROM Periodo p WHERE p.id = :id")
-    , @NamedQuery(name = "Periodo.findByNombre", query = "SELECT p FROM Periodo p WHERE p.nombre = :nombre")})
+    , @NamedQuery(name = "Periodo.findByNombre", query = "SELECT p FROM Periodo p WHERE p.nombre = :nombre")
+    , @NamedQuery(name = "Periodo.findByStatus", query = "SELECT p FROM Periodo p WHERE p.status = :status")})
 public class Periodo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,8 +41,8 @@ public class Periodo implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(mappedBy = "periodoId")
-    private Collection<Seccion> seccionCollection;
+    @Column(name = "status")
+    private Integer status;
 
     public Periodo() {
     }
@@ -69,13 +67,12 @@ public class Periodo implements Serializable {
         this.nombre = nombre;
     }
 
-    @XmlTransient
-    public Collection<Seccion> getSeccionCollection() {
-        return seccionCollection;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setSeccionCollection(Collection<Seccion> seccionCollection) {
-        this.seccionCollection = seccionCollection;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     @Override
