@@ -8,7 +8,6 @@ package edu.school.entities;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,14 +45,11 @@ public class Curso implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoId")
-    private Collection<Seccion> seccionCollection;
     @JoinColumn(name = "etapa_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Etapa etapaId;
-    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
-    @ManyToOne
-    private Supervisor supervisorId;
+    @OneToMany(mappedBy = "cursoId")
+    private Collection<StatusSupervisor> statusSupervisorCollection;
 
     public Curso() {
     }
@@ -78,15 +74,6 @@ public class Curso implements Serializable {
         this.nombre = nombre;
     }
 
-    @XmlTransient
-    public Collection<Seccion> getSeccionCollection() {
-        return seccionCollection;
-    }
-
-    public void setSeccionCollection(Collection<Seccion> seccionCollection) {
-        this.seccionCollection = seccionCollection;
-    }
-
     public Etapa getEtapaId() {
         return etapaId;
     }
@@ -95,12 +82,13 @@ public class Curso implements Serializable {
         this.etapaId = etapaId;
     }
 
-    public Supervisor getSupervisorId() {
-        return supervisorId;
+    @XmlTransient
+    public Collection<StatusSupervisor> getStatusSupervisorCollection() {
+        return statusSupervisorCollection;
     }
 
-    public void setSupervisorId(Supervisor supervisorId) {
-        this.supervisorId = supervisorId;
+    public void setStatusSupervisorCollection(Collection<StatusSupervisor> statusSupervisorCollection) {
+        this.statusSupervisorCollection = statusSupervisorCollection;
     }
 
     @Override

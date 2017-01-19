@@ -14,8 +14,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -56,11 +54,8 @@ public class Colegio implements Serializable {
     private String direccion;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "colegioId")
     private Collection<Etapa> etapaCollection;
-    @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
-    @ManyToOne
-    private Supervisor supervisorId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "colegioId")
-    private Collection<Comunicacion> comunicacionCollection;
+    @OneToMany(mappedBy = "colegioId")
+    private Collection<StatusSupervisor> statusSupervisorCollection;
 
     public Colegio() {
     }
@@ -110,21 +105,13 @@ public class Colegio implements Serializable {
         this.etapaCollection = etapaCollection;
     }
 
-    public Supervisor getSupervisorId() {
-        return supervisorId;
-    }
-
-    public void setSupervisorId(Supervisor supervisorId) {
-        this.supervisorId = supervisorId;
-    }
-
     @XmlTransient
-    public Collection<Comunicacion> getComunicacionCollection() {
-        return comunicacionCollection;
+    public Collection<StatusSupervisor> getStatusSupervisorCollection() {
+        return statusSupervisorCollection;
     }
 
-    public void setComunicacionCollection(Collection<Comunicacion> comunicacionCollection) {
-        this.comunicacionCollection = comunicacionCollection;
+    public void setStatusSupervisorCollection(Collection<StatusSupervisor> statusSupervisorCollection) {
+        this.statusSupervisorCollection = statusSupervisorCollection;
     }
 
     @Override
