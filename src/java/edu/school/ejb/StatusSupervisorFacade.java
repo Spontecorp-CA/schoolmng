@@ -36,13 +36,11 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
         StringBuilder query = new StringBuilder();
         query.append("FROM StatusSupervisor ss WHERE");
         if (obj instanceof Curso) {
-            Curso curso = (Curso) obj;
             query.append(" ss.cursoId = :param");
         } else if (obj instanceof Etapa) {
-            Etapa etapa = (Etapa) obj;
             query.append(" ss.etapaId = :param");
         } else {
-            // aqui va el colegio
+            query.append(" ss.colegioId = :param");
         }
 
         try {
@@ -52,7 +50,7 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
             q.setParameter("status", status);
             ss = (StatusSupervisor) q.getSingleResult();
         } catch (NoResultException e) {
-            System.out.println("NO encontró resultado");
+            System.out.println("No encontró resultado");
         }
         return ss;
     }
