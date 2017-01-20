@@ -83,7 +83,7 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     }
 
     public void loadDataInicial() {
-        creaColegio();
+        createColegio();
         loadUsers();
         loadDatosPersona();
         defineRoles();
@@ -96,9 +96,10 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         asociaDocenteSeccion();
     }
     
-    private void creaColegio(){
+    private void createColegio(){
         Colegio colegio = new Colegio();
         colegio.setNombre("U.E. Colegio Belagua");
+        colegio.setRif("J12345678");
         colegio.setDireccion("Guatire");
         
         colegioFacade.create(colegio);

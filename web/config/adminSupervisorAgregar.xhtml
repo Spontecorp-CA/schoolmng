@@ -79,11 +79,13 @@
                                                 <p:commandButton id="ok"
                                                                  value="Aceptar"
                                                                  styleClass="btn btn-success"
-                                                                 actionListener="#{adminSupervisorAgregar.createSuper()}"/>
+                                                                 actionListener="#{adminSupervisorAgregar.createSuper()}"
+                                                                 update=":form :dataTable"/>
                                                 <p:commandButton id="newUser"
                                                                  value="Nuevo"
                                                                  styleClass="btn btn-primary"
-                                                                 actionListener="#{adminSupervisorAgregar.clearFields()}"/>
+                                                                 actionListener="#{adminSupervisorAgregar.clearFields()}"
+                                                                 update=":form :dataTable"/>
                                                 <p:commandButton id="cancel"
                                                                  value="Cancelar"
                                                                  styleClass="btn btn-danger"
@@ -105,7 +107,8 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-md-12 col-lg-12">
-                            <p:dataTable var="super"
+                            <p:dataTable id="dataTable"
+                                         var="super"
                                          value="#{adminSupervisorAgregar.supervisores}"
                                          styleClass="table-striped"
                                          scrollable="true"

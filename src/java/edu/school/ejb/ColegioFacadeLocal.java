@@ -25,5 +25,7 @@ public interface ColegioFacadeLocal {
     List<Colegio> findRange(int[] range);
 
     int count();
+
+    Colegio findByRif(String rif);
     
 }
