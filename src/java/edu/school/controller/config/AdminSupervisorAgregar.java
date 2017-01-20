@@ -387,5 +387,82 @@ public class AdminSupervisorAgregar implements Serializable {
 
         return cursosMap;
     }
+    
+    public List<SupervisorData> getSupervisoresData(){
+        List<SupervisorData> supdataList = new ArrayList<>();
+        
+        List<StatusSupervisor> ssList = statusSupervisorFacade
+                        .findAllByStatus(Constantes.SUPERVISOR_ACTIVO);
+        for(StatusSupervisor ss : ssList){
+            SupervisorData sd = new SupervisorData(ss);
+            supdataList.add(sd);
+        }
+        return supdataList;
+    }
+    
+    private class SupervisorData{
+        private int id;
+        private String nombre;
+        private String grupo;
+        private StatusSupervisor ss;
+        
+        SupervisorData(StatusSupervisor ss){
+            this.ss = ss;
+            convertToSupervisorData();
+        }
+        
+        private void convertToSupervisorData(){
+            User user = ss.getSupervisorId().getUserId();
+            
+            DatosPersona dp = datosPersonaFacade.findByCi(user.getCi());
+            this.id = dp.getCi();
+            StringBuilder sb = new StringBuilder();
+            sb.append(dp.getApellido()).append(", ");
+            sb.append(dp.getNombre());
+            this.nombre = sb.toString();
+            
+            if (null != ss.getCursoId()){
+                this.grupo = ss.getCursoId().getNombre();
+            } else if (null != ss.getEtapaId()){
+                this.grupo = ss.getEtapaId().getNombre();
+            } else {
+                this.grupo = "Colegio";
+            }
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public String getGrupo() {
+            return grupo;
+        }
+
+        public void setGrupo(String grupo) {
+            this.grupo = grupo;
+        }
+
+        public StatusSupervisor getSs() {
+            return ss;
+        }
+
+        public void setSs(StatusSupervisor ss) {
+            this.ss = ss;
+        }
+
+        
+    }
 
 }

@@ -35,53 +35,23 @@
                                     <h:form id="form">
                                         <div class="row">
                                             <div class="col-xs-12 col-md-12 col-lg-12">
-                                                <p:dataTable id="dataTable"
-                                                             var="super"
-                                                             value="#{adminSupervisorAgregar.supervisores}"
-                                                             styleClass="table-striped"
-                                                             editable="true"
-                                                             editMode="row"
-                                                             widgetVar="cellSupers">
-<!--                                                    <p:ajax event="cellEdit" listener="#{adminSupervisorAgregar.onCellEdit}" 
-                                                            update=":form:dataTable" 
-                                                            immediate="true"
-                                                            process="@this"/>-->
-                                                    <p:ajax event="rowEdit" listener="#{adminSupervisorAgregar.onRowEdit}" 
-                                                            update=":form:dataTable" 
-                                                            immediate="true"/>
-                                                    <p:ajax event="rowEditCancel" listener="#{adminSupervisorAgregar.onRowCancel}" 
-                                                            update=":form:dataTable" 
-                                                            immediate="true"/>
-                                                    
-                                                    <p:column headerText="Supervisor">
-                                                        <h:outputText value="#{super.nombre}"/>
+                                                <p:dataTable id="datalist" value="#{adminSupervisorAgregar.supervisoresData}" var="item"
+                                                             selectionMode="single" 
+                                                             paginator="true"
+                                                             rowKey="#{item.id}"
+                                                             rows="10"
+                                                             rowsPerPageTemplate="10,20,30,40,50"
+                                                             >
+                                                    <p:column headerText="C.I.">
+                                                        <h:outputText value="#{item.id}"/>
+                                                    </p:column>
+                                                    <p:column headerText="Nombre">
+                                                        <h:outputText value="#{item.nombre}"/>
                                                     </p:column>
                                                     <p:column headerText="Grupo">
-                                                        <p:cellEditor>
-                                                            <f:facet name="output">
-                                                                <h:outputText value="#{super.grupo}"/>
-                                                            </f:facet>
-                                                            <f:facet name="input">
-                                                                <h:selectOneMenu value="#{super.grupo}"
-                                                                                 style="width: 100%">
-                                                                    <f:selectItems value="#{adminSupervisorAgregar.grupos}"
-                                                                                   var="grup"
-                                                                                   itemLabel="#{grup}"
-                                                                                   itemValue="#{grup}"/>
-                                                                </h:selectOneMenu>
-                                                            </f:facet>
-                                                        </p:cellEditor>
-                                                    </p:column>
-                                                    <p:column style="width:32px">
-                                                        <p:rowEditor />
+                                                        <h:outputText value="#{item.grupo}"/>
                                                     </p:column>
                                                 </p:dataTable>
-<!--                                                <p:contextMenu for="dataTable" widgetVar="cMenu">   
-                                                    <p:menuitem value="Editar Grupo" icon="ui-icon-search" 
-                                                                onclick="PF('cellSupers').showCellEditor();return false;"/>  
-                                                    <p:menuitem value="Ocultar Menu" icon="ui-icon-close" 
-                                                                onclick="PF('cMenu').hide()"/>  
-                                                </p:contextMenu> -->
                                             </div>
                                         </div>
                                     </h:form>
