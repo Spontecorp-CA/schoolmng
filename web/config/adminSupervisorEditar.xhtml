@@ -35,13 +35,17 @@
                                     <h:form id="form">
                                         <div class="row">
                                             <div class="col-xs-12 col-md-12 col-lg-12">
-                                                <p:dataTable id="datalist" value="#{adminSupervisorAgregar.supervisoresData}" var="item"
-                                                             selectionMode="single" 
+                                                <p:dataTable id="datalist" 
+                                                             value="#{adminSupervisorAgregar.supervisoresData}" 
+                                                             var="item"
+                                                             selectionMode="single"
+                                                             selection="#{adminSupervisorAgregar.selected}"
                                                              paginator="true"
                                                              rowKey="#{item.id}"
                                                              rows="10"
-                                                             rowsPerPageTemplate="10,20,30,40,50"
-                                                             >
+                                                             rowsPerPageTemplate="10,20,30,40,50">
+                                                    <p:ajax event="rowSelect" update="viewButton editButton"/>
+                                                    <p:ajax event="rowUnselect" update="viewButton editButton"/>
                                                     <p:column headerText="C.I.">
                                                         <h:outputText value="#{item.id}"/>
                                                     </p:column>
@@ -51,10 +55,27 @@
                                                     <p:column headerText="Grupo">
                                                         <h:outputText value="#{item.grupo}"/>
                                                     </p:column>
+                                                    <f:facet name="footer">
+                                                        <p:commandButton id="viewButton"   
+                                                                         icon="ui-icon-search" 
+                                                                         value="Ver"
+                                                                         update=":adminSupervisorEditarViewForm" 
+                                                                         oncomplete="PF('adminSupervisorEditarViewDialog').show()"
+                                                                         disabled="#{empty adminSupervisorAgregar.selected}"/>
+                                                        <p:commandButton id="editButton"   
+                                                                         icon="ui-icon-pencil" 
+                                                                         value="Editar" 
+                                                                         update=":adminSupervisorEditarEditForm" 
+                                                                         oncomplete="PF('adminSupervisorEditarEditDialog').show()" 
+                                                                         disabled="#{empty adminSupervisorAgregar.selected}"/>
+                                                    </f:facet>
                                                 </p:dataTable>
                                             </div>
                                         </div>
                                     </h:form>
+                                    
+                                    <ui:include src="adminSupervisorEditarView.xhtml"/>
+                                    <ui:include src="adminSupervisorEditarEdit.xhtml"/>
                                 </div>
                             </div>
                         </div>

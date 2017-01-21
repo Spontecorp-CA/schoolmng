@@ -69,6 +69,7 @@ public class AdminSupervisorAgregar implements Serializable {
     private String grupo;
     private List<String> usuarios;
     private List<String[]> supervisores;
+    private SupervisorData selected;
     private static final Logger LOGGER = Logger.getLogger(AdminSupervisorAgregar.class.getName());
 
     @PostConstruct
@@ -178,6 +179,14 @@ public class AdminSupervisorAgregar implements Serializable {
         return usuarios;
     }
 
+    public SupervisorData getSelected() {
+        return selected;
+    }
+
+    public void setSelected(SupervisorData selected) {
+        this.selected = selected;
+    }
+
     public List<String> getGrupos() {
         List<String> grupos = new ArrayList<>();
         Map<Etapa, List<Curso>> cursosMap = mapearCursos();
@@ -260,6 +269,14 @@ public class AdminSupervisorAgregar implements Serializable {
         } else {
             JsfUtils.messageWarning("Debe seleccionar a un usuario");
         }
+    }
+    
+    public void updateSupervisor(){
+        // lógica de actualización
+    }
+    
+    public void disableSupervisor(){
+        // lógica de deshabilitación
     }
     
     private Object[] findUser(Object candidato){
@@ -400,8 +417,8 @@ public class AdminSupervisorAgregar implements Serializable {
         return supdataList;
     }
     
-    private class SupervisorData{
-        private int id;
+    public class SupervisorData{
+        private Integer id;
         private String nombre;
         private String grupo;
         private StatusSupervisor ss;
@@ -430,11 +447,11 @@ public class AdminSupervisorAgregar implements Serializable {
             }
         }
 
-        public int getId() {
+        public Integer getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(Integer id) {
             this.id = id;
         }
 
@@ -461,7 +478,6 @@ public class AdminSupervisorAgregar implements Serializable {
         public void setSs(StatusSupervisor ss) {
             this.ss = ss;
         }
-
         
     }
 
