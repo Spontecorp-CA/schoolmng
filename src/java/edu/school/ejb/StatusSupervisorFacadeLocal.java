@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.StatusSupervisor;
+import edu.school.entities.Supervisor;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -29,4 +30,6 @@ public interface StatusSupervisorFacadeLocal {
     StatusSupervisor findByGrupo(Object obj);
 
     List<StatusSupervisor> findAllByStatus(int status);
+
+    StatusSupervisor findBySupervisor(Supervisor supervisor);
 }
