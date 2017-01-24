@@ -71,11 +71,18 @@ public class AdminSupervisorAgregar implements Serializable {
     private List<String[]> supervisores;
     private SupervisorData selected;
     private static final Logger LOGGER = Logger.getLogger(AdminSupervisorAgregar.class.getName());
+    private String rifColegio;
 
     @PostConstruct
     public void init() {
         makeUserList();
         makeSupervisores();
+        rifColegio = findRifColegio();
+    }
+    
+    private String findRifColegio(){
+        List<Colegio> colegios = colegioFacade.findAll();
+        return colegios.get(0).getRif();
     }
 
     private List<String> makeUserList() {
@@ -116,7 +123,7 @@ public class AdminSupervisorAgregar implements Serializable {
         supervisores = new ArrayList<>();
         List<StatusSupervisor> ssList = statusSupervisorFacade
                 .findAllByStatus(Constantes.SUPERVISOR_ACTIVO);
-        for(StatusSupervisor ss : ssList){
+        for (StatusSupervisor ss : ssList) {
             String[] datos = new String[2];
             StringBuffer sbnombre = new StringBuffer();
             StringBuffer sbgrupo = new StringBuffer();
@@ -124,16 +131,16 @@ public class AdminSupervisorAgregar implements Serializable {
             DatosPersona dp = datosPersonaFacade.findByCi(user.getCi());
             sbnombre.append(dp.getApellido()).append(", ").append(dp.getNombre());
             datos[0] = sbnombre.toString();
-            if(null != ss.getColegioId()){
+            if (null != ss.getColegioId()) {
                 datos[1] = "Colegio";
-            } else if( null != ss.getEtapaId()){
+            } else if (null != ss.getEtapaId()) {
                 datos[1] = ss.getEtapaId().getNombre();
-            } else if( null != ss.getCursoId()){
+            } else if (null != ss.getCursoId()) {
                 datos[1] = ss.getCursoId().getNombre();
             }
             supervisores.add(datos);
         }
-        
+
     }
 
     public List<String> completeUser(String query) {
@@ -215,7 +222,7 @@ public class AdminSupervisorAgregar implements Serializable {
 
         return grupos;
     }
-    
+
     public void createSuper() {
         if (null != supervisor) {
             if (!supervisor.isEmpty()) {
@@ -235,30 +242,27 @@ public class AdminSupervisorAgregar implements Serializable {
                         if (null != ss) {
                             // aqui va la parte de indicar que va a cambiar el supervisor
                             showSupervisorFound(ss);
-                            changeStatusSupervisor(ss, superv, grado, dp);
-                        } else {
-                            createStatusSupervisor(superv, grado, dp);
+                            changeStatusSupervisor(ss, grado, dp);
                         }
+                        createStatusSupervisor(superv, grado, dp);
                         break;
                     case Constantes.GRUPO_ETAPA:
                         Etapa etapa = etapaFacade.findByNombre(grupo);
                         ss = statusSupervisorFacade.findByGrupo(etapa);
                         if (null != ss) {
                             showSupervisorFound(ss);
-                            changeStatusSupervisor(ss, superv, etapa, dp);
-                        } else {
-                            createStatusSupervisor(superv, etapa, dp);
+                            changeStatusSupervisor(ss, etapa, dp);
                         }
+                        createStatusSupervisor(superv, etapa, dp);
                         break;
                     case Constantes.GRUPO_COLEGIO:
-                        Colegio colegio = colegioFacade.findByRif("J12345678");
+                        Colegio colegio = colegioFacade.findByRif(rifColegio);
                         ss = statusSupervisorFacade.findByGrupo(colegio);
                         if (null != ss) {
                             // el colegio ya tiene un supervisor va a agregar otro
                             showSupervisorFound(ss);
-                        } else {
-                            createStatusSupervisor(superv, colegio, dp);
                         }
+                        createStatusSupervisor(superv, colegio, dp);
                         break;
                 }
                 clearFields();
@@ -270,19 +274,82 @@ public class AdminSupervisorAgregar implements Serializable {
             JsfUtils.messageWarning("Debe seleccionar a un usuario");
         }
     }
-    
-    public void updateSupervisor(){
-        // lógica de actualización
+
+    public void updateSupervisor() {
+        User user = userFacade.findByCi(selected.getId());
+
+        List<Supervisor> supervisorList = supervisorFacade.findByCi(selected.getId());
+        StatusSupervisor ss = null;
+        for (Supervisor spvr : supervisorList) {
+            StatusSupervisor ssTemp = statusSupervisorFacade.findBySupervisor(spvr);
+            if (null != ssTemp) {
+                ss = ssTemp;
+                break;
+            }
+        }
+
+        Supervisor superNew = new Supervisor();
+        superNew.setUserId(user);
+        Object docOrAdmin = findDocenteOrAdministrativo(user.getCi());
+        Object[] subject = findUser(docOrAdmin);
+        DatosPersona dp = (DatosPersona) subject[1];
+
+        if(null != ss.getCursoId()){
+            changeStatusSupervisor(ss, ss.getCursoId(), dp);
+        } else if (null != ss.getEtapaId()){
+            changeStatusSupervisor(ss, ss.getEtapaId(), dp);
+        } else if (null != ss.getColegioId()){
+            changeStatusSupervisor(ss, ss.getColegioId(), dp);
+        }
+        
+        switch (nivel) {
+            case Constantes.GRUPO_GRADO:
+                Curso grado = cursoFacade.findByName(grupo);
+                createStatusSupervisor(superNew, grado, dp);
+                break;
+            case Constantes.GRUPO_ETAPA:
+                Etapa etapa = etapaFacade.findByNombre(grupo);
+                createStatusSupervisor(superNew, etapa, dp);
+                break;
+            case Constantes.GRUPO_COLEGIO:
+                Colegio colegio = colegioFacade.findByRif(rifColegio);
+                createStatusSupervisor(superNew, colegio, dp);
+                break;
+        }
+
+    }
+
+    public void disableSupervisor() {
+        User user = userFacade.findByCi(selected.getId());
+        
+        List<Supervisor> supervisorList = supervisorFacade.findByCi(selected.getId());
+        StatusSupervisor ss = null;
+        for (Supervisor spvr : supervisorList) {
+            StatusSupervisor ssTemp = statusSupervisorFacade.findBySupervisor(spvr);
+            if (null != ssTemp) {
+                ss = ssTemp;
+                break;
+            }
+        }
+        
+        Object docOrAdmin = findDocenteOrAdministrativo(user.getCi());
+        Object[] subject = findUser(docOrAdmin);
+        DatosPersona dp = (DatosPersona) subject[1];
+
+        if (null != ss.getCursoId()) {
+            changeStatusSupervisor(ss, ss.getCursoId(), dp);
+        } else if (null != ss.getEtapaId()) {
+            changeStatusSupervisor(ss, ss.getEtapaId(), dp);
+        } else if (null != ss.getColegioId()) {
+            changeStatusSupervisor(ss, ss.getColegioId(), dp);
+        }
     }
     
-    public void disableSupervisor(){
-        // lógica de deshabilitación
-    }
     
-    private Object[] findUser(Object candidato){
+    private Object[] findUser(Object candidato) {
         DatosPersona dp;
         User user;
-        
+
         if (candidato instanceof Docente) {
             Docente docente = (Docente) candidato;
             dp = docente.getDatosPersonaId();
@@ -297,17 +364,17 @@ public class AdminSupervisorAgregar implements Serializable {
                 new Object[]{dp.getNombre(), dp.getApellido(), grupo});
         return new Object[]{user, dp};
     }
-    
-    private void createStatusSupervisor(Supervisor superv, Object nivel, DatosPersona dp){
+
+    private void createStatusSupervisor(Supervisor superv, Object nivel, DatosPersona dp) {
         supervisorFacade.create(superv);
 
         String nombreNivel;
         StatusSupervisor ss = new StatusSupervisor();
         ss.setSupervisorId(superv);
-        if(nivel instanceof Curso){
-            ss.setCursoId((Curso)nivel);
-            nombreNivel = ((Curso)nivel).getNombre();
-        } else if(nivel instanceof Etapa){
+        if (nivel instanceof Curso) {
+            ss.setCursoId((Curso) nivel);
+            nombreNivel = ((Curso) nivel).getNombre();
+        } else if (nivel instanceof Etapa) {
             ss.setEtapaId((Etapa) nivel);
             nombreNivel = ((Etapa) nivel).getNombre();
         } else {
@@ -322,8 +389,8 @@ public class AdminSupervisorAgregar implements Serializable {
                 new Object[]{dp.getNombre(), dp.getApellido(), nombreNivel});
         JsfUtils.messageSuccess("Supervidor asignado correctamente");
     }
-    
-    private void changeStatusSupervisor(StatusSupervisor ssOld, Supervisor superNew,
+
+    private void changeStatusSupervisor(StatusSupervisor ssOld,
             Object nivel, DatosPersona dp) {
 
         ssOld.setStatus(Constantes.USUARIO_INACTIVO);
@@ -340,10 +407,10 @@ public class AdminSupervisorAgregar implements Serializable {
         LOGGER.log(Level.INFO, "{0} {1} ya no es supervisor de {2}",
                 new Object[]{dp.getNombre(), dp.getApellido(), nombreNivel});
         statusSupervisorFacade.edit(ssOld);
-        createStatusSupervisor(superNew, nivel, dp);
+//        createStatusSupervisor(superNew, nivel, dp);
     }
-    
-    private void showSupervisorFound(StatusSupervisor ss){
+
+    private void showSupervisorFound(StatusSupervisor ss) {
         Supervisor sup = ss.getSupervisorId();
         System.out.println("Encontró a " + sup.getUserId());
     }
@@ -352,7 +419,7 @@ public class AdminSupervisorAgregar implements Serializable {
         supervisor = "";
         nivel = Constantes.GRUPO_GRADO;
     }
-    
+
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         System.out.println("oldValue: " + oldValue);
@@ -374,18 +441,20 @@ public class AdminSupervisorAgregar implements Serializable {
     }
 
     private Object findCandidato(String str) {
-        Object candidato = null;
         int dospuntos = str.lastIndexOf(":");
         String ciStr = str.substring(dospuntos + 1).trim();
         int ci = Integer.parseInt(ciStr);
+        return findDocenteOrAdministrativo(ci);
+    }
 
+    private Object findDocenteOrAdministrativo(int ci) {
+        Object docOrAdmin = null;
         try {
-            candidato = docenteFacade.findByCi(ci);
+            docOrAdmin = docenteFacade.findByCi(ci);
         } catch (DocenteNotFoundException e) {
-            candidato = administrativoFacade.findByCi(ci);
+            docOrAdmin = administrativoFacade.findByCi(ci);
         }
-
-        return candidato;
+        return docOrAdmin;
     }
 
     private List<Seccion> findSeccion(Docente docente) {
@@ -404,43 +473,44 @@ public class AdminSupervisorAgregar implements Serializable {
 
         return cursosMap;
     }
-    
-    public List<SupervisorData> getSupervisoresData(){
+
+    public List<SupervisorData> getSupervisoresData() {
         List<SupervisorData> supdataList = new ArrayList<>();
-        
+
         List<StatusSupervisor> ssList = statusSupervisorFacade
-                        .findAllByStatus(Constantes.SUPERVISOR_ACTIVO);
-        for(StatusSupervisor ss : ssList){
+                .findAllByStatus(Constantes.SUPERVISOR_ACTIVO);
+        for (StatusSupervisor ss : ssList) {
             SupervisorData sd = new SupervisorData(ss);
             supdataList.add(sd);
         }
         return supdataList;
     }
-    
-    public class SupervisorData{
+
+    public class SupervisorData {
+
         private Integer id;
         private String nombre;
         private String grupo;
         private StatusSupervisor ss;
-        
-        SupervisorData(StatusSupervisor ss){
+
+        SupervisorData(StatusSupervisor ss) {
             this.ss = ss;
             convertToSupervisorData();
         }
-        
-        private void convertToSupervisorData(){
+
+        private void convertToSupervisorData() {
             User user = ss.getSupervisorId().getUserId();
-            
+
             DatosPersona dp = datosPersonaFacade.findByCi(user.getCi());
             this.id = dp.getCi();
             StringBuilder sb = new StringBuilder();
             sb.append(dp.getApellido()).append(", ");
             sb.append(dp.getNombre());
             this.nombre = sb.toString();
-            
-            if (null != ss.getCursoId()){
+
+            if (null != ss.getCursoId()) {
                 this.grupo = ss.getCursoId().getNombre();
-            } else if (null != ss.getEtapaId()){
+            } else if (null != ss.getEtapaId()) {
                 this.grupo = ss.getEtapaId().getNombre();
             } else {
                 this.grupo = "Colegio";
@@ -478,7 +548,7 @@ public class AdminSupervisorAgregar implements Serializable {
         public void setSs(StatusSupervisor ss) {
             this.ss = ss;
         }
-        
+
     }
 
 }

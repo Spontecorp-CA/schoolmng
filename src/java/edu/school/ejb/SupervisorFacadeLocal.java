@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Supervisor;
+import edu.school.entities.User;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -24,5 +25,11 @@ public interface SupervisorFacadeLocal {
 
     List<Supervisor> findRange(int[] range);
 
+    List<Supervisor> findByCi(Integer ci);
+    
     int count();
+
+    Supervisor findByUser(User user);
+
+    
 }
