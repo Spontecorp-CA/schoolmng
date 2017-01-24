@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <ui:composition>
+        
+        <p:dialog id="adminSupervisorEditarEditDlg" 
+                  widgetVar="adminSupervisorEditarEditDialog" 
+                  modal="true" 
+                  resizable="false" 
+                  appendTo="@(body)" 
+                  header="Editar"
+                  width="300"
+                  height="250">
+            <h:form id="adminSupervisorEditarEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" 
+                                 rendered="#{adminSupervisorAgregar.selected != null}">
+                        <p:outputLabel value="C.I." for="ci" />
+                        <h:outputText id="ci" value="#{adminSupervisorAgregar.selected.id}"/>
+                        
+                        <p:outputLabel value="Nombre: " for="nombre" />
+                        <h:outputText id="nombre" value="#{adminSupervisorAgregar.selected.nombre}"/>
+                        
+                        <p:outputLabel value="Supervisa a: " for="grpo" />
+                        <h:outputText id="grpo" value="#{adminSupervisorAgregar.selected.grupo}"/>
+                        
+                        <p:outputLabel value="Cambiar a: " for="destinatario"/>
+                        <p:selectOneRadio id="destinatario" 
+                                          value="#{adminSupervisorAgregar.nivel}"
+                                          layout="grid"
+                                          columns="1"
+                                          style="padding: 10px">
+                            <f:selectItem itemLabel=" Grado" itemValue="Grado"/>
+                            <f:selectItem itemLabel=" Etapa" itemValue="Etapa"/>
+                            <f:selectItem itemLabel=" Colegio" itemValue="Colegio"/>
+                            <p:ajax update="grupo" />
+                        </p:selectOneRadio>
+                        
+                        <p:outputLabel value=""/>
+                        <p:selectOneMenu id="grupo"
+                                         value="#{adminSupervisorAgregar.grupo}"
+                                         style="width: 100px;">
+                            <f:selectItems var="grp"
+                                           value="#{adminSupervisorAgregar.grupos}"
+                                           itemLabel="#{grp}"
+                                           itemValue="#{grp}"/>s
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{adminSupervisorAgregar.updateSupervisor()}" 
+                                     value="Guardar" 
+                                     update="display,:form:datalist" 
+                                     oncomplete="handleSubmit(args, 'adminSupervisorEditarEditDialog');"/>
+                    <p:commandButton value="Cancelar" 
+                                     onclick="adminSupervisorEditarEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+        
+    </ui:composition>
+</html>
+

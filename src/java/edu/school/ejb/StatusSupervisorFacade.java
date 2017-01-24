@@ -3,6 +3,7 @@ package edu.school.ejb;
 import edu.school.entities.Curso;
 import edu.school.entities.Etapa;
 import edu.school.entities.StatusSupervisor;
+import edu.school.entities.Supervisor;
 import edu.school.utilities.Constantes;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -10,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 @Stateless
 public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
@@ -67,6 +69,24 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
             
         }
         return ssList;
+    }
+
+    @Override
+    public StatusSupervisor findBySupervisor(Supervisor supervisor) {
+        StatusSupervisor ss = null;
+        Integer status = Constantes.SUPERVISOR_ACTIVO;
+        try {
+            String query = "FROM StatusSupervisor ss "
+                    + "WHERE ss.supervisorId = :supervisor "
+                    + "AND ss.status = :status";
+            TypedQuery<StatusSupervisor> q = getEntityManager()
+                    .createQuery(query, StatusSupervisor.class);
+            q.setParameter("supervisor", supervisor);
+            q.setParameter("status", status);
+            ss = q.getSingleResult();
+        } catch (NoResultException e) {
+        }
+        return ss;
     }
 
     

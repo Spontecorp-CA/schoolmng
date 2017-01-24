@@ -126,6 +126,14 @@
                                                 Configurar Período Lectivo
                                             </h:commandLink>
                                         </li>
+                                        
+                                        <li>
+                                            <h:commandLink action="#{configDashboardController.goConfigMailAccount()}">
+                                                <i class="fa fa-envelope"></i>
+                                                Configurar Cuenta de Envío de Circular
+                                            </h:commandLink>
+                                        </li>
+                                        
                                         <li>
                                             <h:commandLink action="#{configDashboardController.goConfigNiveles()}">
                                                 <i class="fa fa-sort-amount-asc"></i>
@@ -343,6 +351,8 @@
         <h:outputScript library="js" name="nprogress.js"/>
         <!-- Custom Theme Scripts -->
         <h:outputScript library="js" name="custom.min.js"/>
+        <!-- Manejo de los popup en edición -->
+        <h:outputScript library="js" name="jsfcrud.js"/>
 
     </h:body>
 

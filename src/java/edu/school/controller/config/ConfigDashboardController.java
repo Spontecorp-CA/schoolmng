@@ -91,6 +91,10 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         return "adminSupervisorEditar?faces-redirect=true";
     }
     
+    public String goConfigMailAccount(){
+        return "adminMailAccount?faces-redirect=true";
+    }
+    
     public void closeSession() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
     }
