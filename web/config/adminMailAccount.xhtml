@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:p="http://primefaces.org/ui">
+
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
+
+            <ui:define name="pageName">
+                Gestión de Cuentas de Correo
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>
+                                        Creación de cuenta de correo
+                                    </h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <!-- contenido de la forma -->
+                                    <form jsf:id="form" class="form-horizontal form-label-left">
+                                        <div class="col-xs-12 col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                                       for="nombreCta">
+                                                    Nombre de la cuenta:
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <input type="text" id="nombreCta" 
+                                                           required="required" 
+                                                           class="form-control col-md-7 col-xs-12"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                                       for="userCta">
+                                                    Usuario de la cuenta:
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <input type="text" id="userCta" 
+                                                           required="required" 
+                                                           class="form-control col-md-7 col-xs-12"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                                       for="pswCta">
+                                                    Clave de la cuenta:
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <input type="text" id="pswCta" 
+                                                           required="required" 
+                                                           class="form-control col-md-7 col-xs-12"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                                       for="smtpCta">
+                                                    SMTP de la cuenta:
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <input type="text" id="smtpCta" 
+                                                           required="required" 
+                                                           class="form-control col-md-7 col-xs-12"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                                       for="portCta">
+                                                    Puerto de la cuenta:
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <input type="text" id="portCta" 
+                                                           required="required" 
+                                                           class="form-control col-md-7 col-xs-12"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
