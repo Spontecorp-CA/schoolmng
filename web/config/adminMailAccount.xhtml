@@ -34,7 +34,7 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" 
                                                        for="nombreCta">
-                                                    Nombre de la cuenta:
+                                                    Nombre:
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
@@ -46,7 +46,7 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" 
                                                        for="userCta">
-                                                    Usuario de la cuenta:
+                                                    Usuario:
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
@@ -58,19 +58,27 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" 
                                                        for="pswCta">
-                                                    Clave de la cuenta:
+                                                    Clave:
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <input type="text" id="pswCta" 
-                                                           required="required" 
-                                                           class="form-control col-md-7 col-xs-12"/>
+                                                    <p:password id="pswCta" match="pswrep"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" 
+                                                       for="pswrep">
+                                                    Repita la clave:
+                                                    <span class="required">*</span>
+                                                </label>
+                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <p:password id="pswrep" />
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" 
                                                        for="smtpCta">
-                                                    SMTP de la cuenta:
+                                                    SMTP:
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
@@ -82,13 +90,35 @@
                                             <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" 
                                                        for="portCta">
-                                                    Puerto de la cuenta:
+                                                    Puerto:
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
                                                     <input type="text" id="portCta" 
                                                            required="required" 
                                                            class="form-control col-md-7 col-xs-12"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ln_solid"></div>
+                                        <div class="col-xs-12 col-md-12">
+                                            <div class="form-group">
+                                                <div class="col-md-6 col-md-offset-3">
+                                                    <p:commandButton id="ok"
+                                                                     value="Aceptar"
+                                                                     styleClass="btn btn-success"
+                                                                     
+                                                                     update=":form"/>
+                                                    <p:commandButton id="newUser"
+                                                                     value="Nuevo"
+                                                                     styleClass="btn btn-primary"
+                                                                     
+                                                                     update=":form"/>
+                                                    <p:commandButton id="cancel"
+                                                                     value="Cancelar"
+                                                                     styleClass="btn btn-danger"
+                                                                     action="#{adminDashboardController.goUserPage()}"
+                                                                     immediate="true"/>
                                                 </div>
                                             </div>
                                         </div>
