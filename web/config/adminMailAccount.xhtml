@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:jsf="http://xmlns.jcp.org/jsf"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <head>
         <title></title>
@@ -38,9 +40,14 @@
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <input type="text" id="nombreCta" 
-                                                           required="required" 
-                                                           class="form-control col-md-7 col-xs-12"/>
+                                                    <p:inputText id="nombreCta"
+                                                                 required="true"
+                                                                 styleClass="form-control col-md-7 col-xs-12"
+                                                                 value="#{adminMailAccountController.emailAccount.nombre}"
+                                                                 requiredMessage="Debe completar el campo nombre" />
+                                                </div>
+                                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                                    <p:message for="nombreCta" display="text"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -50,9 +57,14 @@
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <input type="text" id="userCta" 
-                                                           required="required" 
-                                                           class="form-control col-md-7 col-xs-12"/>
+                                                    <p:inputText id="userCta"
+                                                                 required="true"
+                                                                 styleClass="form-control col-md-7 col-xs-12"
+                                                                 value="#{adminMailAccountController.emailAccount.user}"
+                                                                 requiredMessage="Debe completar el campo usuario" />
+                                                </div>
+                                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                                    <p:message for="userCta" display="text"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -62,7 +74,11 @@
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <p:password id="pswCta" match="pswrep"/>
+                                                    <p:password id="pswCta" match="pswrep" 
+                                                                required="true"
+                                                                value="#{adminMailAccountController.emailAccount.password}"
+                                                                styleClass="form-control col-md-7 col-xs-12"
+                                                                validatorMessage="Los campos clave deben coincidir"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -72,7 +88,13 @@
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <p:password id="pswrep" />
+                                                    <p:password id="pswrep" 
+                                                                required="true"
+                                                                value="#{adminMailAccountController.emailAccount.password}"
+                                                                styleClass="form-control col-md-7 col-xs-12"/>
+                                                </div>
+                                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                                    <p:message for="pswCta" display="text"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -82,9 +104,14 @@
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <input type="text" id="smtpCta" 
-                                                           required="required" 
-                                                           class="form-control col-md-7 col-xs-12"/>
+                                                    <p:inputText id="smtpCta"
+                                                                 required="true"
+                                                                 styleClass="form-control col-md-7 col-xs-12"
+                                                                 value="#{adminMailAccountController.emailAccount.smtp}"
+                                                                 requiredMessage="Debe completar el campo SMTP" />
+                                                </div>
+                                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                                    <p:message for="smtpCta" display="text"/>
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -94,9 +121,14 @@
                                                     <span class="required">*</span>
                                                 </label>
                                                 <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <input type="text" id="portCta" 
-                                                           required="required" 
-                                                           class="form-control col-md-7 col-xs-12"/>
+                                                    <p:inputText id="portCta"
+                                                                 required="true"
+                                                                 styleClass="form-control col-md-7 col-xs-12"
+                                                                 value="#{adminMailAccountController.emailAccount.puerto}"
+                                                                 requiredMessage="Debe completar el campo puerto" />
+                                                </div>
+                                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                                    <p:message for="portCta" display="text"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -107,12 +139,13 @@
                                                     <p:commandButton id="ok"
                                                                      value="Aceptar"
                                                                      styleClass="btn btn-success"
-                                                                     
-                                                                     update=":form"/>
+                                                                     actionListener="#{adminMailAccountController.saveEmailAccount()}"
+                                                                     update=":form cuentas"/>
                                                     <p:commandButton id="newUser"
                                                                      value="Nuevo"
                                                                      styleClass="btn btn-primary"
-                                                                     
+                                                                     actionListener="#{adminMailAccountController.clearFields()}"
+                                                                     immediate="true"
                                                                      update=":form"/>
                                                     <p:commandButton id="cancel"
                                                                      value="Cancelar"
@@ -121,6 +154,29 @@
                                                                      immediate="true"/>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="col-md-12 col-xs-12">
+                                            <h:dataTable id="cuentas"
+                                                         styleClass="table table-hover"
+                                                         value="#{adminMailAccountController.emailAccounts}"
+                                                         var="cuenta">
+                                                <h:column>
+                                                    <f:facet name="header" >Nombre cuenta</f:facet>
+                                                    <h:outputText value="#{cuenta.nombre}"/>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header" >Usuario</f:facet>
+                                                    <h:outputText value="#{cuenta.user}"/>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header" >SMTP</f:facet>
+                                                    <h:outputText value="#{cuenta.smtp}"/>
+                                                </h:column>
+                                                <h:column>
+                                                    <f:facet name="header" >Puerto</f:facet>
+                                                    <h:outputText value="#{cuenta.puerto}"/>
+                                                </h:column>
+                                            </h:dataTable>
                                         </div>
                                     </form>
                                 </div>
