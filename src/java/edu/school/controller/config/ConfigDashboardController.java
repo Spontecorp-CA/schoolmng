@@ -95,6 +95,10 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         return "adminMailAccount?faces-redirect=true";
     }
     
+    public String goCircularHeaderAndBottom() {
+        return "adminCircularHeaderAndBottom?faces-redirect=true";
+    }
+    
     public void closeSession() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
     }

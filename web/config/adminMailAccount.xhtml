@@ -15,7 +15,7 @@
         <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
 
             <ui:define name="pageName">
-                Gestión de Cuentas de Correo
+                Gestión de Circular
             </ui:define>
 
             <ui:define name="content">
@@ -132,8 +132,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="ln_solid"></div>
+                                        
                                         <div class="col-xs-12 col-md-12">
+                                            <div class="ln_solid"></div>
                                             <div class="form-group">
                                                 <div class="col-md-6 col-md-offset-3">
                                                     <p:commandButton id="ok"
@@ -155,31 +156,36 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12 col-xs-12">
-                                            <h:dataTable id="cuentas"
-                                                         styleClass="table table-hover"
-                                                         value="#{adminMailAccountController.emailAccounts}"
-                                                         var="cuenta">
-                                                <h:column>
-                                                    <f:facet name="header" >Nombre cuenta</f:facet>
-                                                    <h:outputText value="#{cuenta.nombre}"/>
-                                                </h:column>
-                                                <h:column>
-                                                    <f:facet name="header" >Usuario</f:facet>
-                                                    <h:outputText value="#{cuenta.user}"/>
-                                                </h:column>
-                                                <h:column>
-                                                    <f:facet name="header" >SMTP</f:facet>
-                                                    <h:outputText value="#{cuenta.smtp}"/>
-                                                </h:column>
-                                                <h:column>
-                                                    <f:facet name="header" >Puerto</f:facet>
-                                                    <h:outputText value="#{cuenta.puerto}"/>
-                                                </h:column>
-                                            </h:dataTable>
-                                        </div>
                                     </form>
                                 </div>
+                            </div>
+                            <div class="x_panel">
+                                <div class="x_content">
+                                    <div class="col-md-12 col-xs-12">
+                                        <h:dataTable id="cuentas"
+                                                     styleClass="table table-hover"
+                                                     value="#{adminMailAccountController.emailAccounts}"
+                                                     var="cuenta">
+                                            <h:column>
+                                                <f:facet name="header" >Nombre cuenta</f:facet>
+                                                <h:outputText value="#{cuenta.nombre}"/>
+                                            </h:column>
+                                            <h:column>
+                                                <f:facet name="header" >Usuario</f:facet>
+                                                <h:outputText value="#{cuenta.user}"/>
+                                            </h:column>
+                                            <h:column>
+                                                <f:facet name="header" >SMTP</f:facet>
+                                                <h:outputText value="#{cuenta.smtp}"/>
+                                            </h:column>
+                                            <h:column>
+                                                <f:facet name="header" >Puerto</f:facet>
+                                                <h:outputText value="#{cuenta.puerto}"/>
+                                            </h:column>
+                                        </h:dataTable>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>

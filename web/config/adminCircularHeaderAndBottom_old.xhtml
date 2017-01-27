@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <head>
+        <title></title>
+    </head>
+    <body>
+
+        <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
+
+            <ui:define name="pageName">
+                Gestión de Circular
+            </ui:define>
+
+            <ui:define name="content">
+                <div class="container">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#logo" data-toggle="tab">Logo</a></li>
+                        <li><a href="#encabezado" data-toggle="tab">Encabezado</a></li>
+                        <li><a href="#pie" data-toggle="tab">Pie de Página</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="logo">
+                            <h2>
+                                <!-- subtitulo de la página -->
+                                Agregar logo
+                            </h2>
+                        </div>
+                        <div class="tab-pane fade" id="encabezado">
+                            <h2>
+                                <!-- subtitulo de la página -->
+                                Agregar Encabezado
+                            </h2>
+                        </div>
+                        <div class="tab-pane fade" id="pie">
+                            <h2>
+                                <!-- subtitulo de la página -->
+                                Agregar Pie de Página
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

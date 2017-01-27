@@ -8,4 +8,7 @@
       <description>Keep a copy of the generated servlet class' java code.</description>
     </property>
   </jsp-config>
+  <property name="alternatedocroot_1" value="from=/images/* dir=/school">
+    <description>Address to upload/download images</description>
+  </property>
 </glassfish-web-app>

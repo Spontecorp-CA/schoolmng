@@ -107,19 +107,21 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 col-md-12 col-lg-12">
-                            <p:dataTable id="dataTable"
-                                         var="super"
-                                         value="#{adminSupervisorAgregar.supervisores}"
-                                         styleClass="table-striped"
-                                         scrollable="true"
-                                         scrollHeight="150">
-                                <p:column headerText="Supervisor">
-                                    <h:outputText value="#{super[0]}"/>
-                                </p:column>
-                                <p:column headerText="Grupo">
-                                    <h:outputText value="#{super[1]}"/>
-                                </p:column>
-                            </p:dataTable>
+                            <div class="x_panel">                          
+                                <h:dataTable id="dataTable"
+                                             var="super"
+                                             value="#{adminSupervisorAgregar.supervisores}"
+                                             class="table table-striped">
+                                    <h:column>
+                                        <f:facet name="header">Supervisor</f:facet>
+                                        <h:outputText value="#{super[0]}"/>
+                                    </h:column>
+                                    <h:column>
+                                        <f:facet name="header">Grupo</f:facet>
+                                        <h:outputText value="#{super[1]}"/>
+                                    </h:column>
+                                </h:dataTable>
+                            </div>
                         </div>
                     </div>
                 </div>
