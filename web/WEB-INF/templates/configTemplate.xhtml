@@ -105,7 +105,7 @@
                                                 Supervidores
                                                 <span class="fa fa-chevron-down"></span>
                                             </a>
-                                        
+
                                             <ul class="nav child_menu">
                                                 <li>
                                                     <h:commandLink action="#{configDashboardController.goSupervisorAgregar()}">
@@ -121,19 +121,35 @@
                                         </li>
 
                                         <li>
+
                                             <h:commandLink action="#{configDashboardController.goConfigPeriodos()}">
                                                 <i class="fa fa-institution"></i>
                                                 Configurar Período Lectivo
                                             </h:commandLink>
                                         </li>
-                                        
+
                                         <li>
-                                            <h:commandLink action="#{configDashboardController.goConfigMailAccount()}">
+                                            <a>
                                                 <i class="fa fa-envelope"></i>
-                                                Configurar Cuenta de Envío de Circular
-                                            </h:commandLink>
+                                                Configurar Circular
+                                                <span class="fa fa-chevron-down"></span>
+                                            </a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <h:commandLink action="#{configDashboardController.goConfigMailAccount()}">
+                                                        <i class="fa fa-envelope-o"></i>
+                                                        Cuenta de Envío
+                                                    </h:commandLink>
+                                                </li>
+                                                <li>
+                                                    <h:commandLink action="#{configDashboardController.goCircularHeaderAndBottom()}">
+                                                        <i class="fa fa-arrows-v"></i>
+                                                        Encabezado y Pie de Página
+                                                    </h:commandLink>
+                                                </li>
+                                            </ul>
                                         </li>
-                                        
+
                                         <li>
                                             <h:commandLink action="#{configDashboardController.goConfigNiveles()}">
                                                 <i class="fa fa-sort-amount-asc"></i>
@@ -342,7 +358,7 @@
         </div>
 
         <!-- jQuery -->
-        <!--        <h:outputScript library="js" name="jquery.min.js"/>-->
+        <!--<h:outputScript library="js" name="jquery.min.js"/>-->
         <!-- Bootstrap -->
         <h:outputScript library="bootstrap/js" name="bootstrap.min.js"/>
         <!-- FastClick -->

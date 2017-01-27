@@ -12,6 +12,10 @@
         <param-name>upload.location</param-name>
         <param-value>c:/uploads/</param-value>
     </context-param>
+    <context-param>
+        <param-name>images.location</param-name>
+        <param-value>c:/school/images/</param-value>
+    </context-param>
     
     <context-param>
         <param-name>primefaces.UPLOADER</param-name>
