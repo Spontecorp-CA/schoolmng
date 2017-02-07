@@ -56,6 +56,8 @@ public class Colegio implements Serializable {
     private Collection<Etapa> etapaCollection;
     @OneToMany(mappedBy = "colegioId")
     private Collection<StatusSupervisor> statusSupervisorCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "colegioId")
+    private Collection<Comunicacion> comunicacionCollection;
 
     public Colegio() {
     }
@@ -112,6 +114,15 @@ public class Colegio implements Serializable {
 
     public void setStatusSupervisorCollection(Collection<StatusSupervisor> statusSupervisorCollection) {
         this.statusSupervisorCollection = statusSupervisorCollection;
+    }
+
+    @XmlTransient
+    public Collection<Comunicacion> getComunicacionCollection() {
+        return comunicacionCollection;
+    }
+
+    public void setComunicacionCollection(Collection<Comunicacion> comunicacionCollection) {
+        this.comunicacionCollection = comunicacionCollection;
     }
 
     @Override

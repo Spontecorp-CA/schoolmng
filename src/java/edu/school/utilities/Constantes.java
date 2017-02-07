@@ -31,6 +31,14 @@ public class Constantes {
     public static final int PERIODO_ACTIVO = 1;
     public static final int PERIODO_INACTIVO = 0;
     
+    public static final int PLANTILLA_CIRCULAR_ACTIVA = 1;
+    public static final int PLANTILLA_CIRCULAR_INACTIVA = 0;
+    
+    public static final int PLANTILLA_DIRECCION = 0;
+    public static final int PLANTILLA_ETAPA = 1;
+    public static final int PLANTILLA_GRADO = 2;
+    public static final int PLANTILLA_SECCION = 3;
+    
     public static final String STATUS_PAGO_PENDIENTE = "Pendiente";
     public static final String STATUS_PAGO_PAGADOTIEMPO = "Pagado en tiempo";
     public static final String STATUS_PAGO_PAGADOATRASO = "Pagado en atraso";

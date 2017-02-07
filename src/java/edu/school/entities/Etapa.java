@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package edu.school.entities;
 
 import java.io.Serializable;
@@ -44,11 +49,11 @@ public class Etapa implements Serializable, Comparable<Etapa> {
     private String nombre;
     @Column(name = "prefijo")
     private Integer prefijo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "etapaId")
-    private Collection<Curso> cursoCollection;
     @JoinColumn(name = "colegio_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Colegio colegioId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "etapaId")
+    private Collection<Curso> cursoCollection;
     @OneToMany(mappedBy = "etapaId")
     private Collection<StatusSupervisor> statusSupervisorCollection;
 
@@ -83,6 +88,14 @@ public class Etapa implements Serializable, Comparable<Etapa> {
         this.prefijo = prefijo;
     }
 
+    public Colegio getColegioId() {
+        return colegioId;
+    }
+
+    public void setColegioId(Colegio colegioId) {
+        this.colegioId = colegioId;
+    }
+
     @XmlTransient
     public Collection<Curso> getCursoCollection() {
         return cursoCollection;
@@ -90,14 +103,6 @@ public class Etapa implements Serializable, Comparable<Etapa> {
 
     public void setCursoCollection(Collection<Curso> cursoCollection) {
         this.cursoCollection = cursoCollection;
-    }
-
-    public Colegio getColegioId() {
-        return colegioId;
-    }
-
-    public void setColegioId(Colegio colegioId) {
-        this.colegioId = colegioId;
     }
 
     @XmlTransient
@@ -133,7 +138,7 @@ public class Etapa implements Serializable, Comparable<Etapa> {
     public String toString() {
         return "edu.school.entities.Etapa[ id=" + id + " ]";
     }
-
+    
     @Override
     public int compareTo(Etapa etp) {
         return (this.getPrefijo().compareTo(etp.getPrefijo()));

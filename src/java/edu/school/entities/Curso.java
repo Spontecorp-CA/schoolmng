@@ -8,6 +8,7 @@ package edu.school.entities;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,6 +46,8 @@ public class Curso implements Serializable {
     @Size(max = 45)
     @Column(name = "nombre")
     private String nombre;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cursoId")
+    private Collection<Seccion> seccionCollection;
     @JoinColumn(name = "etapa_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Etapa etapaId;
@@ -72,6 +75,15 @@ public class Curso implements Serializable {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    @XmlTransient
+    public Collection<Seccion> getSeccionCollection() {
+        return seccionCollection;
+    }
+
+    public void setSeccionCollection(Collection<Seccion> seccionCollection) {
+        this.seccionCollection = seccionCollection;
     }
 
     public Etapa getEtapaId() {
