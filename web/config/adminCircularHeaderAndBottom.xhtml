@@ -17,7 +17,7 @@
                 <div class="container">
                     <p:tabView>
                         <p:tab title="Agregar Logo">
-                            <h:form enctype="multipart/form-data">
+                            <h:form id="logoForm" enctype="multipart/form-data">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="inputFile">Cargar Logo: </label>
@@ -29,23 +29,61 @@
                                                           value="#{adminCircularHeaderAndBottomController.file}"/>
                                         </div>
                                     </div>
-                                    <p:commandButton value="Guardar" ajax="false"
+                                    <p:commandButton value="Cargar" ajax="false"
                                                      actionListener="#{adminCircularHeaderAndBottomController.upload()}"
-                                                     styleClass="btn btn-default"/>
+                                                     styleClass="btn btn-default"
+                                                     update="imagen"/>
                                 </div>
                                 <div class="col-md-6">
-                                    <h:graphicImage value="/images/#{adminCircularHeaderAndBottomController.image}"
+                                    <h:graphicImage id="imagen"
+                                                    url="#{adminCircularHeaderAndBottomController.image}"
                                                     width="80"/>
                                 </div>
                             </h:form>
                         </p:tab>
                         <p:tab title="Agregar Encabezado">
-                            Contenido para agregar Encabezado
+                            <div class="x_panel">
+                                <h:form id="headForm">
+                                    <div class="x_content">
+                                        <p:editor id="editorHead" value="#{adminCircularHeaderAndBottomController.encabezado}" 
+                                                  controls="bold italic underline strikethrough 
+                                                  subscript superscript font size style color 
+                                                  highlight bullets numbering alignleft center 
+                                                  alignright justify rule image link unlink 
+                                                  cut copy paste"
+                                                  widgetVar="editorHeadWidget" 
+                                                  style="width: 60%; margin-left: 20%"/>
+                                    </div>
+                                    
+                                    <p:commandButton value="Guardar" ajax="false"
+                                                     actionListener="#{adminCircularHeaderAndBottomController.saveHeading()}"
+                                                     styleClass="btn btn-default"/>
+                                </h:form>
+                            </div>
                         </p:tab>
                         <p:tab title="Agregar Pie de Página">
-                            Contenido para agregar Pie de Página
+                            <div class="x_panel">
+                                <h:form id="footForm">
+                                    <div class="x_content">
+                                        <p:editor id="editorFoot" value="#{adminCircularHeaderAndBottomController.pie}" 
+                                                  controls="bold italic underline strikethrough 
+                                                  subscript superscript font size style color 
+                                                  highlight bullets numbering alignleft center 
+                                                  alignright justify rule image link unlink 
+                                                  cut copy paste"
+                                                  widgetVar="editorFootWidget" 
+                                                  style="width: 60%; margin-left: 20%"/>
+                                    </div>
+                                    
+                                    <p:commandButton value="Guardar" ajax="false"
+                                                     actionListener="#{adminCircularHeaderAndBottomController.saveFooter()}"
+                                                     styleClass="btn btn-default"/>
+                                </h:form>
+                                
+                            </div>
                         </p:tab>
                     </p:tabView>
+                    <p:messages id="mensajes" showSummary="true" autoUpdate="true" closable="true"/>
                 </div>
             </ui:define>
 

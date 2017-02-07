@@ -42,6 +42,8 @@ public class Supervisor implements Serializable {
     @Column(name = "id")
     private Integer id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "supervisorId")
+    private Collection<Autorizacion> autorizacionCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "supervisorId")
     private Collection<StatusSupervisor> statusSupervisorCollection;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
@@ -60,6 +62,15 @@ public class Supervisor implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @XmlTransient
+    public Collection<Autorizacion> getAutorizacionCollection() {
+        return autorizacionCollection;
+    }
+
+    public void setAutorizacionCollection(Collection<Autorizacion> autorizacionCollection) {
+        this.autorizacionCollection = autorizacionCollection;
     }
 
     @XmlTransient

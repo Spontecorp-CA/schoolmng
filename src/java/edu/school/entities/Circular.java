@@ -83,6 +83,9 @@ public class Circular implements Serializable {
     @JoinColumn(name = "email_account_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private EmailAccount emailAccountId;
+    @JoinColumn(name = "plantilla_circular_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private PlantillaCircular plantillaCircularId;
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private User userId;
@@ -180,6 +183,14 @@ public class Circular implements Serializable {
 
     public void setEmailAccountId(EmailAccount emailAccountId) {
         this.emailAccountId = emailAccountId;
+    }
+
+    public PlantillaCircular getPlantillaCircularId() {
+        return plantillaCircularId;
+    }
+
+    public void setPlantillaCircularId(PlantillaCircular plantillaCircularId) {
+        this.plantillaCircularId = plantillaCircularId;
     }
 
     public User getUserId() {
