@@ -66,7 +66,10 @@ public class AdminCircularHeaderAndBottomController implements Serializable{
     }
     
     public String getImage() {
-        return "/images/" + getImageNameFromDB();
+        if(image == null){
+            image = "default.png";
+        }
+        return "/images/" + image;
     }
 
     public void setImage(String image){
@@ -96,12 +99,8 @@ public class AdminCircularHeaderAndBottomController implements Serializable{
                 Files.copy(input, new File(path.toUri().getPath(),
                                     file.getFileName()).toPath(),
                         StandardCopyOption.REPLACE_EXISTING);
+                image = file.getFileName();
                 
-                if (savePlantillaCircular()) {
-                    JsfUtils.messageSuccess("Logo creado con éxito");
-                } else {
-                    JsfUtils.messageSuccess("Logo actualizado con éxito");
-                }
             } catch (IOException e) {
                 Logger.getLogger(AdminCircularHeaderAndBottomController.class.getName())
                         .log(Level.SEVERE, "Dió error al cargar el archivo ", e);
@@ -109,27 +108,9 @@ public class AdminCircularHeaderAndBottomController implements Serializable{
         }
     }
     
-    public void saveHeading(){
-        if(savePlantillaCircular()){
-            JsfUtils.messageSuccess("Encabezado actualizado con éxito");
-        } else {
-            JsfUtils.messageSuccess("Dió error al actualizar el encabezado");
-        }
-    }
-    
-    public void saveFooter(){
-        if (savePlantillaCircular()) {
-            JsfUtils.messageSuccess("Pie de página actualizado con éxito");
-        } else {
-            JsfUtils.messageSuccess("Dió error al actualizar el pié de página");
-        }
-    }
-    
-    private boolean savePlantillaCircular(){
+    public void savePlantillaCircular(){
         Optional<PlantillaCircular> optional = Optional.ofNullable(plantillaCircularFacade
                             .findByStatus(Constantes.PLANTILLA_CIRCULAR_ACTIVA));
-        boolean salvado = true;
-        
       
         if(optional.isPresent()){
             plantillaCircular = optional.get();
@@ -137,18 +118,22 @@ public class AdminCircularHeaderAndBottomController implements Serializable{
             System.out.println("encontró la plantilla id " + plantillaCircular.getId());
             plantillaCircular.setStatus(Constantes.PLANTILLA_CIRCULAR_INACTIVA);
             plantillaCircularFacade.edit(plantillaCircular);
-            salvado = false;
         }
             plantillaCircular = new PlantillaCircular();
-            System.out.println("va a crear una nueva..");
             plantillaCircular.setStatus(Constantes.PLANTILLA_CIRCULAR_ACTIVA);
-            plantillaCircular.setLogo(file.getFileName());
+            plantillaCircular.setLogo(image);
             plantillaCircular.setHeader(encabezado);
             plantillaCircular.setFooter(pie);
             
             plantillaCircularFacade.create(plantillaCircular);
         
-        return salvado;
+        JsfUtils.messageSuccess("Plantilla de Circular actualizada con éxito");
+    }
+    
+    public void clearFields() {
+        image = "default.png";
+        encabezado = "";
+        pie = "";
     }
     
     private String getImageNameFromDB(){
@@ -170,6 +155,9 @@ public class AdminCircularHeaderAndBottomController implements Serializable{
             setImage(plantillaCircular.getLogo());
             setEncabezado(plantillaCircular.getHeader());
             setPie(plantillaCircular.getFooter());
+        } else {
+            clearFields();
         }
     }
+    
 }
