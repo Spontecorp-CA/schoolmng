@@ -155,6 +155,9 @@ public class AdminSupervisorAgregar implements Serializable {
     }
 
     public List<String[]> getSupervisores() {
+        if(supervisores == null){
+            makeSupervisores();
+        }
         return supervisores;
     }
 
@@ -417,6 +420,7 @@ public class AdminSupervisorAgregar implements Serializable {
 
     public void clearFields() {
         supervisor = "";
+        supervisores = null;
         nivel = Constantes.GRUPO_GRADO;
     }
 

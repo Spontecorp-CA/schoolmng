@@ -73,6 +73,10 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     private SeccionHasAlumnoFacadeLocal seccionHasAlumnoFacade;
     @EJB
     private SeccionHasDocenteFacadeLocal seccionHasDocenteFacade;
+    
+    private static final String ADMIN = "Administrativo";
+    private static final String DOCENTE = "Docente";
+    private static final String REPRE = "Representante";
 
     @Override
     public void verifyDataInicial() {
@@ -234,8 +238,8 @@ public class DataPruebaController implements DataPruebaControllerLocal {
 
         // asigna los roles a los representantes
         for (int cedula = 5678900; cedula < 5678914; cedula++) {
-            User doc = userFacade.findByCi(cedula);
-            uhr = asignarRol(doc, "Representante");
+            User rep = userFacade.findByCi(cedula);
+            uhr = asignarRol(rep, "Representante");
             uhrList.add(uhr);
         }
 
@@ -252,13 +256,13 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         Rol rol = rolFacade.find(rolName);
         String escritorio = "";
         switch (rolName) {
-            case "Administrativo":
+            case ADMIN:
                 escritorio = Constantes.ESCRITORIO_ADMIN;
                 break;
-            case "Docente":
+            case DOCENTE:
                 escritorio = Constantes.ESCRITORIO_DOCENTE;
                 break;
-            case "Representante":
+            case REPRE:
                 escritorio = Constantes.ESCRITORIO_REPRESENTANTE;
                 break;
         }
@@ -272,18 +276,18 @@ public class DataPruebaController implements DataPruebaControllerLocal {
 
     private void loadPersonal() {
         User user = userFacade.findByCi(1234567);
-        createPersonal(user, "Admin");
+        createPersonal(user, ADMIN);
 
         // se agregan los docentes
         for (int cedula = 4567890; cedula < 4567897; cedula++) {
             user = userFacade.findByCi(cedula);
-            createPersonal(user, "Docente");
+            createPersonal(user, DOCENTE);
         }
 
         // se agregan los representantes
         for (int cedula = 5678900; cedula < 5678914; cedula++) {
             user = userFacade.findByCi(cedula);
-            createPersonal(user, "Representante");
+            createPersonal(user, REPRE);
         }
 
         // se agregan los alumnos
@@ -293,6 +297,17 @@ public class DataPruebaController implements DataPruebaControllerLocal {
 
             //Alumno alumno = alumnoFacade.findxDatosPersona(dp);
         }
+        
+        List<Administrativo> admins = administrativoFacade.findAll();
+        List<Docente> docentes = docenteFacade.findAll();
+        List<Representante> repres = representanteFacade.findAll();
+        List<Alumno> alumnos = alumnoFacade.findAll();
+        
+        System.out.println("Se crearon :" +
+                admins.size() + " administrativos, " +
+                docentes.size() + " docentes, " +
+                repres.size() + " representantes y " +
+                alumnos.size() + " alumnos.");
     }
 
     private User createUser(Long id, Integer ci, String usuario, String psw) {
@@ -348,19 +363,19 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     private void createPersonal(User user, String tipo) {
         DatosPersona dp = datosPersonaFacade.findByCi(user.getCi());
         switch (tipo) {
-            case "Admin":
+            case ADMIN:
                 Administrativo admin = new Administrativo();
                 admin.setDatosPersonaId(dp);
                 admin.setUserId(user);
                 administrativoFacade.create(admin);
                 break;
-            case "Docente":
+            case DOCENTE:
                 Docente docente = new Docente();
                 docente.setUserId(user);
                 docente.setDatosPersonaId(dp);
                 docenteFacade.create(docente);
                 break;
-            case "Representante":
+            case REPRE:
                 Representante repre = new Representante();
                 repre.setUserId(user);
                 repre.setDatosPersonaId(dp);

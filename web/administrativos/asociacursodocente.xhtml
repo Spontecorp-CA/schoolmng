@@ -68,11 +68,11 @@
 
                                     <div class="row">
                                         <p:pickList id="pickList"
-                                                    value="#{asociaCursoDocenteController.cursos}"
+                                                    value="#{asociaCursoDocenteController.secciones}"
                                                     var="cur"
-                                                    itemLabel="#{cur.nombre}-#{cur.seccion}"
+                                                    itemLabel="#{cur.cursoId.nombre}-#{cur.seccion}"
                                                     itemValue="#{cur}"
-                                                    converter="edu.school.entities.converters.CursoConverter"/>
+                                                    converter="edu.school.entities.converters.SeccionConverter"/>
                                     </div>
 
                                     <div class="ln_solid"></div>

@@ -43,6 +43,8 @@ public class SupervisorFacade extends AbstractFacade<Supervisor>
             TypedQuery<Supervisor> q = getEntityManager().createQuery(criteria);
             supervisor = q.getSingleResult();
         } catch (NoResultException e) {
+            Logger.getLogger(SupervisorFacade.class.getName())
+                    .log(Level.WARNING, "Ha ocurrido un error {0}", e);
         }
         return supervisor;
     }
@@ -58,6 +60,24 @@ public class SupervisorFacade extends AbstractFacade<Supervisor>
         } catch (Exception e) {
             Logger.getLogger(SupervisorFacade.class.getName())
                     .log(Level.SEVERE, "Ha ocurrido un error {0}", e);
+        }
+        return supervisores;
+    }
+
+    @Override
+    public List<Supervisor> findAllByUser(User user) {
+        List<Supervisor> supervisores = null;
+        try {
+            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Supervisor> criteria = cb.createQuery(Supervisor.class);
+            Root<Supervisor> superv = criteria.from(Supervisor.class);
+            criteria.select(superv)
+                    .where(cb.equal(superv.get("userId"), user));
+            TypedQuery<Supervisor> q = getEntityManager().createQuery(criteria);
+            supervisores = q.getResultList();
+        } catch (NoResultException e) {
+            Logger.getLogger(SupervisorFacade.class.getName())
+                    .log(Level.WARNING, "Ha ocurrido un error {0}", e);
         }
         return supervisores;
     }
