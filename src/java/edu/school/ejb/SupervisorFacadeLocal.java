@@ -31,5 +31,7 @@ public interface SupervisorFacadeLocal {
 
     Supervisor findByUser(User user);
 
+    List<Supervisor> findAllByUser(User user);
+
     
 }

@@ -43,11 +43,11 @@ public class AsociaCursoDocenteController implements Serializable {
         return docentes;
     }
 
-    public DualListModel<Seccion> getCursos() {
+    public DualListModel<Seccion> getSecciones() {
         return secciones;
     }
 
-    public void setCursos(DualListModel<Seccion> secciones) {
+    public void setSecciones(DualListModel<Seccion> secciones) {
         this.secciones = secciones;
     }
 
