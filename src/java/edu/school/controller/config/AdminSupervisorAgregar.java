@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -205,12 +206,10 @@ public class AdminSupervisorAgregar implements Serializable {
             case Constantes.GRUPO_GRADO:
                 for (Map.Entry<Etapa, List<Curso>> mapa : cursosMap.entrySet()) {
                     List<Curso> cursos = mapa.getValue();
-                    cursos.sort((Curso c1, Curso c2)
-                            -> c1.getNombre().compareTo(c2.getNombre()));
+                    cursos.stream().sorted((Curso c1, Curso c2) 
+                            -> c1.getNombre().compareTo(c2.getNombre()))
+                            .forEach(cur -> grupos.add(cur.getNombre()));
 
-                    for (Curso curso : cursos) {
-                        grupos.add(curso.getNombre());
-                    }
                 }
                 break;
             case Constantes.GRUPO_ETAPA:

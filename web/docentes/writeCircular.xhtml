@@ -56,17 +56,30 @@
                                 <h:form id="form1"  
                                         class="form-horizontal form-label-left">
                                     <p:growl id="messages" showDetail="true"/>
-                                    
+
                                     <div class="form-group col-md-9 col-sm-9 col-xs-12">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="grupo">
                                             Grupo:
                                         </label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <p:selectOneRadio id="grupo" value="#{writeMailController.grupo}">
-                                                <f:selectItems var="group" value="#{writeMailController.grupos}"
-                                                               itemLabel="#{group}"
-                                                               itemValue="#{group}"/>
-                                            </p:selectOneRadio>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="form-group col-md-9 col-sm-9 col-xs-12">
+                                                <p:selectOneRadio id="grupo" value="#{writeMailController.grupo}">
+                                                    <f:selectItems var="group" value="#{writeMailController.grupos}"
+                                                                   itemLabel="#{group}"
+                                                                   itemValue="#{group}"/>
+                                                    <p:ajax update="seccionList"/>
+                                                </p:selectOneRadio>
+                                            </div>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <p:selectOneMenu id="seccionList"
+                                                                 value="#{writeMailController.seccion}"
+                                                                 style="width: 120px;">
+                                                    <f:selectItems value="#{writeMailController.secciones}"
+                                                                   var="seccion"
+                                                                   itemLabel="#{seccion.codigo}"
+                                                                   itemValue="#{seccion}"/>
+                                                </p:selectOneMenu>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -109,7 +122,7 @@
                                         <div class="col-md-6 col-md-offset-3">
                                             <p:commandButton id="ok"
                                                              value="Enviar"
-                                                             action="#{writeMailController.sendMail()}"
+                                                             action="#{writeMailController.checkSeccion()}"
                                                              styleClass="btn btn-success"
                                                              update="form1:messages">
                                                 <p:ajax update="form2:file"/>

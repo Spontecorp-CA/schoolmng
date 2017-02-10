@@ -27,5 +27,7 @@ public interface PeriodoFacadeLocal {
     List<Periodo> findRange(int[] range);
 
     int count();
+
+    Periodo findByStatus(final int status);
     
 }

@@ -7,6 +7,8 @@ package edu.school.ejb;
 
 import edu.school.entities.Periodo;
 import edu.school.utilities.Constantes;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -41,6 +43,21 @@ public class PeriodoFacade extends AbstractFacade<Periodo> implements PeriodoFac
             q.setParameter("nombre", nombre);
             periodo = (Periodo)q.getSingleResult();
         } catch (NoResultException e) {
+            Logger.getLogger(PeriodoFacade.class.getName()).log(Level.WARNING, e.getMessage());
+        }
+        return periodo;
+    }
+
+    @Override
+    public Periodo findByStatus(final int status) {
+        Periodo periodo = null;
+        try {
+            String query = "FROM Periodo p WHERE p.status = :status";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("status", status);
+            periodo = (Periodo) q.getSingleResult();
+        } catch (NoResultException e) {
+            Logger.getLogger(PeriodoFacade.class.getName()).log(Level.WARNING, e.getMessage());
         }
         return periodo;
     }
