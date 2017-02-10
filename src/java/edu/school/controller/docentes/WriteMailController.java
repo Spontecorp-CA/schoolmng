@@ -1,14 +1,24 @@
 package edu.school.controller.docentes;
 
 import edu.school.controller.ejb.MailControllerLocal;
+import edu.school.ejb.DocenteFacadeLocal;
 import edu.school.ejb.EmailAccountFacadeLocal;
+import edu.school.ejb.PeriodoFacadeLocal;
+import edu.school.ejb.SeccionFacadeLocal;
+import edu.school.ejb.SeccionHasDocenteFacadeLocal;
 import edu.school.ejb.StatusSupervisorFacadeLocal;
 import edu.school.ejb.SupervisorFacadeLocal;
+import edu.school.entities.Curso;
+import edu.school.entities.Docente;
 import edu.school.entities.EmailAccount;
 import edu.school.entities.Mail;
+import edu.school.entities.Periodo;
+import edu.school.entities.Seccion;
 import edu.school.entities.StatusSupervisor;
 import edu.school.entities.Supervisor;
 import edu.school.entities.User;
+import edu.school.excepciones.DocenteNotFoundException;
+import edu.school.utilities.Constantes;
 import edu.school.utilities.JsfUtils;
 import java.io.File;
 import java.io.IOException;
@@ -20,11 +30,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -36,15 +47,6 @@ import org.apache.commons.io.FileUtils;
 @Named
 @ViewScoped
 public class WriteMailController implements Serializable {
-
-    private String para;
-    private String subject;
-    private String message;
-    private Part file;
-    private String directory;
-    private String fileLabel;
-    private String grupo;
-    private List<String> grupos;
 
     @Inject
     private EmailAccount emailAccount;
@@ -61,6 +63,27 @@ public class WriteMailController implements Serializable {
     private SupervisorFacadeLocal supervisorFacade;
     @EJB
     private StatusSupervisorFacadeLocal statusSupervisorFacade;
+    @EJB
+    private DocenteFacadeLocal docenteFacade;
+    @EJB
+    private SeccionHasDocenteFacadeLocal seccionHasDocenteFacade;
+    @EJB
+    private SeccionFacadeLocal seccionFacade;
+    @EJB
+    private PeriodoFacadeLocal periodoFacade;
+
+    private String para;
+    private String subject;
+    private String message;
+    private Part file;
+    private String directory;
+    private String fileLabel;
+    private String grupo;
+    private List<String> grupos;
+    private List<Seccion> secciones;
+    private Seccion seccion;
+    private Curso grado;
+    private List<Curso> grados;
 
     public WriteMailController() {
     }
@@ -84,6 +107,7 @@ public class WriteMailController implements Serializable {
 
         fileLabel = "  No ha seleccionado archivo";
         grupos = makeGrupos();
+        secciones = new ArrayList<>();
     }
 
     private List<String> makeGrupos() {
@@ -113,13 +137,13 @@ public class WriteMailController implements Serializable {
         List<String> groups = new ArrayList<>();
         switch (nivel) {
             case 0:
-                groups.add("Colegio");
+                groups.add(Constantes.GRUPO_COLEGIO);
             case 1:
-                groups.add("Etapa");
+                groups.add(Constantes.GRUPO_ETAPA);
             case 2:
-                groups.add("Grado");
+                groups.add(Constantes.GRUPO_GRADO);
             default:
-                groups.add("Sección");
+                groups.add(Constantes.GRUPO_SECCION);
                 break;
         }
         return groups;
@@ -177,6 +201,51 @@ public class WriteMailController implements Serializable {
         this.fileLabel = fileLabel;
     }
 
+    public List<Seccion> getSecciones() {
+        if (grupo != null) {
+            switch (grupo) {
+                case Constantes.GRUPO_COLEGIO:
+                    break;
+                case Constantes.GRUPO_ETAPA:
+                    break;
+                case Constantes.GRUPO_GRADO:
+                    break;
+                case Constantes.GRUPO_SECCION:
+                    checkSeccion();
+                    break;
+            }
+        }
+        return secciones;
+    }
+
+    public void setSecciones(List<Seccion> secciones) {
+        this.secciones = secciones;
+    }
+
+    public Seccion getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(Seccion seccion) {
+        this.seccion = seccion;
+    }
+ 
+    public Curso getGrado() {
+        return grado;
+    }
+
+    public void setGrado(Curso grado) {
+        this.grado = grado;
+    }
+
+    public List<Curso> getGrados() {
+        return grados;
+    }
+
+    public void setGrados(List<Curso> grados) {
+        this.grados = grados;
+    }
+
     public void sendMail() {
         emailAccount = emailAccountFacade.find(1); // modificar esto de acuerdo a la cuenta que se tenga acceso
         mail.setUser(emailAccount.getUser());
@@ -232,6 +301,35 @@ public class WriteMailController implements Serializable {
         this.setMessage(null);
         this.file = null;
         this.fileLabel = null;
+    }
+
+    public void checkSeccion() {
+        // con el usuario se obtiene el docente
+        User user = docenteDashboardController.getUser();
+        Periodo periodo = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
+        try {
+            Docente docente = docenteFacade.findByCi(user.getCi());
+
+            System.out.println("El docente que envía la circular es " + docente.getDatosPersonaId().getNombre());
+            
+            // con el docente se obtiene que sección, grado o etapa está
+            Optional<List<Seccion>> optSeccionList = Optional.ofNullable(seccionHasDocenteFacade.findAll(docente));
+
+            List<Seccion> seccionList;
+            if (optSeccionList.isPresent()) {
+                seccionList = optSeccionList.get();
+                secciones = seccionList.stream()
+                        .filter(sec -> sec.getPeriodoId().equals(periodo))
+                        .collect(Collectors.toList());
+
+            } else {
+                System.out.println("El docente no tiene sección asignada");
+            }
+
+            // con el curso(grado) y/o etapa se obtiene el supervisor
+        } catch (DocenteNotFoundException ex) {
+            Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
