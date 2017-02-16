@@ -20,7 +20,7 @@ public interface PeriodoFacadeLocal {
 
     Periodo find(Object id);
     
-    Periodo find(String nombre);
+    Periodo findByNombre(String nombre);
 
     List<Periodo> findAll();
 

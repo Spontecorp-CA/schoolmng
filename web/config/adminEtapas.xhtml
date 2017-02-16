@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
+
+            <ui:define name="pageName">
+                Administración de Etapas
+            </ui:define>
+
+            <ui:define name="content">
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!-- subtitulo de la página -->
+                                    Creación de Etapa
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+                                <!-- contenido de la página -->
+                                <form jsf:id="formFields" class="form-horizontal form-label-left">
+                                    <span class="section">Información de la Etapa</span>
+                                    <div class="form-horizontal col-md-12 col-sm-12">
+                                        <div class="item form-group col-md-6 col-sm-6">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombre">
+                                                Nombre de la Etapa: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-9 col-sm-9">
+                                                <p:inputText id="nombre" 
+                                                             value="#{adminEtapaController.nombre}"
+                                                             styleClass="form-control col-md-7 col-xs-12" 
+                                                             pt:placeholder="Agregue el nombre" 
+                                                             required="true"
+                                                             requiredMessage="Debe colocar el nombre"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="item form-group col-md-6 col-sm-6">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="prefijo">
+                                                Prefijo de la Etapa: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-9 col-sm-9">
+                                                <p:inputText id="prefijo" 
+                                                             value="#{adminEtapaController.prefijo}"
+                                                             styleClass="form-control col-md-7 col-xs-12" 
+                                                             pt:placeholder="Agregue el prefijo" 
+                                                             required="true"
+                                                             requiredMessage="Debe colocar el prefijo"/>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <p:commandButton id="ok"
+                                                             value="Aceptar"
+                                                             styleClass="btn btn-success"
+                                                             actionListener="#{adminEtapaController.createEtapa()}"
+                                                             update=":formFields :tableForm:etapasTable"/>
+                                            <p:commandButton id="newEtapa"
+                                                             value="Nuevo"
+                                                             styleClass="btn btn-primary"
+                                                             actionListener="#{adminEtapaController.clearFields()}"
+                                                             immediate="true">
+                                                <p:ajax update="formFields"/>
+                                            </p:commandButton>
+                                            <p:commandButton id="cancel"
+                                                             value="Cancelar"
+                                                             styleClass="btn btn-danger"
+                                                             immediate="true"
+                                                             action="#{adminEtapaController.cancelAction()}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <p:messages autoUpdate="true" showDetail="true"
+                                                closable="true"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class = "col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!--subtitulo de la página--> 
+                                    Lista de Etapas definidas
+                                </h2>
+                                <div class="clearfix"></div>
+                                <h:form id="tableForm">
+                                    <div class="x_content">
+                                        <h:dataTable id="etapasTable"
+                                                     value="#{adminEtapaController.etapas}"
+                                                     var="item"
+                                                     styleClass="table table-hover"
+                                                     style="width: 50%">
+                                            
+
+                                            <h:column>
+                                                <f:facet name="header">
+                                                    Etapa 
+                                                </f:facet>
+                                                <h:outputText value="#{item.nombre}"/>
+                                            </h:column>
+                                            
+                                            <h:column>
+                                                <f:facet name="header">
+                                                    Prefijo 
+                                                </f:facet>
+                                                <h:outputText value="#{item.prefijo}"/>
+                                            </h:column>
+
+                                        </h:dataTable>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

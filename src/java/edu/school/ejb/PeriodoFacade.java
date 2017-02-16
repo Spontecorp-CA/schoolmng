@@ -35,7 +35,7 @@ public class PeriodoFacade extends AbstractFacade<Periodo> implements PeriodoFac
     }
 
     @Override
-    public Periodo find(String nombre) {
+    public Periodo findByNombre(String nombre) {
         Periodo periodo = null;
         try {
             String query = "FROM Periodo p WHERE p.nombre = :nombre";
