@@ -6,6 +6,8 @@ import edu.school.entities.StatusSupervisor;
 import edu.school.entities.Supervisor;
 import edu.school.utilities.Constantes;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -85,9 +87,11 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
             q.setParameter("status", status);
             ss = q.getSingleResult();
         } catch (NoResultException e) {
+            Logger.getLogger(StatusSupervisorFacade.class.getName())
+                    .log(Level.WARNING, e.getMessage());
         }
         return ss;
-    }
+    }   
 
     
 }

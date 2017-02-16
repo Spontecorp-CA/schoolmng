@@ -2,8 +2,10 @@ package edu.school.controller.config;
 
 import edu.school.ejb.PeriodoFacadeLocal;
 import edu.school.entities.Periodo;
+import edu.school.utilities.Constantes;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -47,7 +49,21 @@ public class AdminPeriodoController implements Serializable {
     }
 
     public void crearPeriodo() {
-        if (periodoFacade.find(nombre) == null) {
+        
+        Optional<Periodo> optPeriodo = Optional.ofNullable(periodoFacade.findByNombre(nombre));
+        
+        if(optPeriodo.isPresent()){
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Periodo ya existe",
+                            "El nombre del Periodo ya existe, trate con otro nombre"));
+        } else {
+            optPeriodo = Optional.ofNullable(periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO));
+            if(optPeriodo.isPresent()){
+                Periodo periodoOld = optPeriodo.get();
+                periodoOld.setStatus(Constantes.PERIODO_INACTIVO);
+                periodoFacade.edit(periodoOld);
+            }
             periodo = new Periodo();
             periodo.setNombre(nombre);
 
@@ -57,12 +73,8 @@ public class AdminPeriodoController implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_INFO,
                             "Periodo creado con éxito",
                             "Periodo creado con éxito"));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Periodo ya existe",
-                            "El nombre del Periodo ya existe, trate con otro nombre"));
         }
+        
     }
     
     public List<Periodo> getPeriodos(){

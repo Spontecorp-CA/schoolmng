@@ -56,7 +56,7 @@ public class Seccion implements Serializable {
     @ManyToOne(optional = false)
     private Curso cursoId;
     @JoinColumn(name = "periodo_id", referencedColumnName = "id")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Periodo periodoId;
 
     public Seccion() {

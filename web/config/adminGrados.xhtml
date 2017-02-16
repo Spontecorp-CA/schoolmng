@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
+
+            <ui:define name="pageName">
+                Administración de Grados
+            </ui:define>
+
+            <ui:define name="content">
+
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!-- subtitulo de la página -->
+                                    Creación de Grado
+                                </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+                                <!-- contenido de la página -->
+
+                                <form jsf:id="form" class="form-horizontal form-label-left">
+                                    <span class="section">Información del Grado</span>
+                                    <div class="item form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombre">
+                                            Nombre del Grado: <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <p:inputText id="nombre" 
+                                                         value="#{adminPeriodoController.nombre}"
+                                                         styleClass="form-control col-md-7 col-xs-12" 
+                                                         pt:placeholder="Agregue el nombre" 
+                                                         required="true"
+                                                         requiredMessage="Debe colocar el nombre"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-md-offset-3">
+                                            <p:commandButton id="ok"
+                                                             value="Aceptar"
+                                                             styleClass="btn btn-success"
+                                                             actionListener="#{adminPeriodoController.crearPeriodo()}"
+                                                             update="tableForm"/>
+                                            <p:commandButton id="newUser"
+                                                             value="Nuevo"
+                                                             styleClass="btn btn-primary"
+                                                             actionListener="#{adminPeriodoController.clearFields()}">
+                                                <p:ajax update="form"/>
+                                            </p:commandButton>
+                                            <p:commandButton id="cancel"
+                                                             value="Cancelar"
+                                                             styleClass="btn btn-danger"
+                                                             immediate="true"
+                                                             action="#{adminPeriodoController.cancelAction()}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+                                    <p:messages autoUpdate="true" showDetail="true"
+                                                closable="true"/>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class = "col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    <!--subtitulo de la página--> 
+                                    Lista de Grados
+                                </h2>
+                                <div class="clearfix"></div>
+                                <h:form id="tableForm">
+                                    <div class="x_content">
+                                        <h:dataTable id="periodosTable"
+                                                     value="#{adminGradoController.grados}"
+                                                     var="item"
+                                                     styleClass="table table-hover"
+                                                     style="width: 50%">
+                                            
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    Grado
+                                                </f:facet>
+
+                                                <h:outputText value="#{item.nombre}"/>
+                                            </p:column>
+                                            
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    Etapa
+                                                </f:facet>
+
+                                                <h:outputText value="#{item.etapaId.nombre}"/>
+                                            </p:column>
+
+                                        </h:dataTable>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+
+        </ui:composition>
+    </body>
+</html>

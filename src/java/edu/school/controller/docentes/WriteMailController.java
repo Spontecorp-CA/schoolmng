@@ -116,18 +116,30 @@ public class WriteMailController implements Serializable {
         List<Supervisor> supervisores = supervisorFacade.findAllByUser(user);
         if (!supervisores.isEmpty()) {
             for (Supervisor superv : supervisores) {
-                StatusSupervisor statusSup = statusSupervisorFacade.findBySupervisor(superv);
-                if (statusSup.getColegioId() != null) {
-                    nivel = 0;
-                    break;
-                }
-                if (statusSup.getEtapaId() != null) {
-                    nivel = 1;
-                    break;
-                }
-                if (statusSup.getCursoId() != null) {
-                    nivel = 2;
-                    break;
+                Optional<StatusSupervisor> optStatSup
+                        = Optional.ofNullable(statusSupervisorFacade.findBySupervisor(superv));
+
+                if (optStatSup.isPresent()) {
+
+                    StatusSupervisor statusSup = optStatSup.get();
+                    System.out.println("Trajo al supervisor " + statusSup
+                            .getSupervisorId().getUserId().getCi());
+
+                    if (null != statusSup.getColegioId()) {
+                        nivel = 0;
+                        break;
+                    }
+                    if (null != statusSup.getEtapaId()) {
+                        nivel = 1;
+                        break;
+                    }
+                    if (null != statusSup.getCursoId()) {
+                        nivel = 2;
+                        break;
+                    }
+                } else {
+                    System.out.println("El usuario " + user.getUsr() + 
+                            " no es supervisor");
                 }
             }
         } else {
@@ -229,7 +241,7 @@ public class WriteMailController implements Serializable {
     public void setSeccion(Seccion seccion) {
         this.seccion = seccion;
     }
- 
+
     public Curso getGrado() {
         return grado;
     }
@@ -311,7 +323,7 @@ public class WriteMailController implements Serializable {
             Docente docente = docenteFacade.findByCi(user.getCi());
 
             System.out.println("El docente que envía la circular es " + docente.getDatosPersonaId().getNombre());
-            
+
             // con el docente se obtiene que sección, grado o etapa está
             Optional<List<Seccion>> optSeccionList = Optional.ofNullable(seccionHasDocenteFacade.findAll(docente));
 
