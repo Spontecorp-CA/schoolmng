@@ -136,7 +136,7 @@ public class Etapa implements Serializable, Comparable<Etapa> {
 
     @Override
     public String toString() {
-        return "edu.school.entities.Etapa[ id=" + id + " ]";
+        return String.valueOf(id);
     }
     
     @Override
