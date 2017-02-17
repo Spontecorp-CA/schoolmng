@@ -119,26 +119,39 @@
                                                 </li>
                                             </ul>
                                         </li>
-
+                                        
                                         <li>
-                                            <h:commandLink action="#{configDashboardController.goConfigPeriodos()}">
+                                            <a>
                                                 <i class="fa fa-institution"></i>
-                                                Configurar Período Lectivo
-                                            </h:commandLink>
-                                        </li>
-                                        
-                                        <li>
-                                            <h:commandLink action="#{configDashboardController.goConfigEtapas()}">
-                                                <i class="fa fa-sort-amount-asc"></i>
-                                                Configurar Etapa
-                                            </h:commandLink>
-                                        </li>
-                                        
-                                        <li>
-                                            <h:commandLink action="#{configDashboardController.goConfigGrados()}">
-                                                <i class="fa fa-adjust"></i>
-                                                Configurar Grados
-                                            </h:commandLink>
+                                                Colegio
+                                                <span class="fa fa-chevron-down"></span>
+                                            </a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <h:commandLink action="#{configDashboardController.goConfigPeriodos()}">
+                                                        <i class="fa fa-calendar"></i>
+                                                        Período Lectivo
+                                                    </h:commandLink>
+                                                </li>
+                                                <li>
+                                                    <h:commandLink action="#{configDashboardController.goConfigEtapas()}">
+                                                        <i class="fa fa-sitemap"></i>
+                                                        Etapas
+                                                    </h:commandLink>
+                                                </li>
+                                                <li>
+                                                    <h:commandLink action="#{configDashboardController.goConfigGrados()}">
+                                                        <i class="fa fa-adjust"></i>
+                                                        Grados
+                                                    </h:commandLink>
+                                                </li>
+                                                <li>
+                                                    <h:commandLink action="#{configDashboardController.goConfigSecciones()}">
+                                                        <i class="fa fa-pie-chart"></i>
+                                                        Secciones
+                                                    </h:commandLink>
+                                                </li>
+                                            </ul>
                                         </li>
 
                                         <li>
@@ -161,15 +174,6 @@
                                                     </h:commandLink>
                                                 </li>
                                             </ul>
-                                        </li>
-
-                                        
-
-                                        <li>
-                                            <h:commandLink action="#{configDashboardController.goConfigCursos()}">
-                                                <i class="fa fa-building-o"></i>
-                                                Configurar Cursos
-                                            </h:commandLink>
                                         </li>
 
                                         <li>
