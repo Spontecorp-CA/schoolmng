@@ -15,7 +15,7 @@
         <ui:composition template="./../WEB-INF/templates/configTemplate.xhtml">
 
             <ui:define name="pageName">
-                Administración de Grados
+                Administración de Secciones
             </ui:define>
 
             <ui:define name="content">
@@ -26,7 +26,7 @@
                             <div class="x_title">
                                 <h2>
                                     <!-- subtitulo de la página -->
-                                    Creación de Grado
+                                    Creación de Sección
                                 </h2>
                                 <div class="clearfix"></div>
                             </div>
@@ -35,35 +35,52 @@
                                 <!-- contenido de la página -->
 
                                 <form jsf:id="form" class="form-horizontal form-label-left">
-                                    <span class="section">Información del Grado</span>
+                                    <span class="section">Información de la Sección</span>
                                     <div class="form-inline col-md-12 col-sm-12">
-                                        <div class="form-group col-md-6 col-sm-6">
+                                        <div class="form-group col-md-4 col-sm-4">
                                             <label class="control-label col-md-4 col-sm-4" for="nombre">
-                                                Nombre del Grado: <span class="required">*</span>
+                                                Sección: <span class="required">*</span>
                                             </label>
                                             <div class="col-md-8 col-sm-8">
                                                 <p:inputText id="nombre" 
-                                                             value="#{adminGradoController.nombre}"
-                                                             styleClass="form-control col-md-8" 
-                                                             pt:placeholder="Agregue el nombre" 
+                                                             value="#{adminSeccionController.seccion}"
+                                                             styleClass="form-control col-md-8"
+                                                             style="width: 20%"
                                                              required="true"
-                                                             requiredMessage="Debe colocar el nombre"/>
+                                                             requiredMessage="Debe colocar la sección"/>
                                             </div>
                                         </div>
-                                        <div class="form-group col-md-6 col-sm-6">
-                                            <label class="control-label col-md-4 col-sm-4" for="etapaSOM">
-                                                Etapa: <span class="required">*</span>
+                                        <div class="form-group col-md-4 col-sm-4">
+                                            <label class="control-label col-md-4 col-sm-4" for="gradoSOM">
+                                                Grado: <span class="required">*</span>
                                             </label>
                                             <div class="col-md-8 col-sm-8">
-                                                <p:selectOneMenu id="etapaSOM" 
-                                                                 value="#{adminGradoController.etapa}"
+                                                <p:selectOneMenu id="gradoSOM" 
+                                                                 value="#{adminSeccionController.curso}"
                                                                  style="width: 70%"
                                                                  class="dropdown dropdown-toggle"
-                                                                 converter="edu.school.entities.converters.EtapaConverter">
-                                                    <f:selectItems var="etp"
-                                                                   value="#{adminGradoController.etapas}"
-                                                                   itemLabel="#{etp.nombre}"
-                                                                   itemValue="#{etp}"/>
+                                                                 converter="edu.school.entities.converters.CursoConverter">
+                                                    <f:selectItems var="grd"
+                                                                   value="#{adminSeccionController.cursos}"
+                                                                   itemLabel="#{grd.nombre}"
+                                                                   itemValue="#{grd}"/>
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-4 col-sm-4">
+                                            <label class="control-label col-md-4 col-sm-4" for="peridoSOM">
+                                                Periodo: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <p:selectOneMenu id="periodoSOM" 
+                                                                 value="#{adminSeccionController.periodo}"
+                                                                 style="width: 70%"
+                                                                 class="dropdown dropdown-toggle"
+                                                                 converter="edu.school.entities.converters.PeriodoConverter">
+                                                    <f:selectItems var="grd"
+                                                                   value="#{adminSeccionController.periodos}"
+                                                                   itemLabel="#{grd.nombre}"
+                                                                   itemValue="#{grd}"/>
                                                 </p:selectOneMenu>
                                             </div>
                                         </div>
@@ -76,12 +93,12 @@
                                             <p:commandButton id="ok"
                                                              value="Aceptar"
                                                              styleClass="btn btn-success"
-                                                             actionListener="#{adminGradoController.createGrado()}"
-                                                             update=":tableForm:gradosTable"/>
+                                                             actionListener="#{adminSeccionController.createSeccion()}"
+                                                             update=":tableForm:seccionesTable"/>
                                             <p:commandButton id="newUser"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary"
-                                                             actionListener="#{adminGradoController.clearFields()}"
+                                                             actionListener="#{adminSeccionController.clearFields()}"
                                                              immediate="true">
                                                 <p:ajax update="form"/>
                                             </p:commandButton>
@@ -89,7 +106,7 @@
                                                              value="Cancelar"
                                                              styleClass="btn btn-danger"
                                                              immediate="true"
-                                                             action="#{adminGradoController.cancelAction()}"/>
+                                                             action="#{adminSeccionController.cancelAction()}"/>
                                         </div>
                                     </div>
 
@@ -106,31 +123,31 @@
                             <div class="x_title">
                                 <h2>
                                     <!--subtitulo de la página--> 
-                                    Lista de Grados
+                                    Lista de Secciones
                                 </h2>
                                 <div class="clearfix"></div>
                                 <h:form id="tableForm">
                                     <div class="x_content">
-                                        <h:dataTable id="gradosTable"
-                                                     value="#{adminGradoController.grados}"
+                                        <h:dataTable id="seccionesTable"
+                                                     value="#{adminSeccionController.secciones}"
                                                      var="item"
                                                      styleClass="table table-hover"
                                                      style="width: 50%">
+                                            
+                                            <p:column>
+                                                <f:facet name="header">
+                                                    Sección
+                                                </f:facet>
 
+                                                <h:outputText value="#{item.nombre}"/>
+                                            </p:column>
+                                            
                                             <p:column>
                                                 <f:facet name="header">
                                                     Grado
                                                 </f:facet>
 
-                                                <h:outputText value="#{item.nombre}"/>
-                                            </p:column>
-
-                                            <p:column>
-                                                <f:facet name="header">
-                                                    Etapa
-                                                </f:facet>
-
-                                                <h:outputText value="#{item.etapaId.nombre}"/>
+                                                <h:outputText value="#{item.cursoId.nombre}"/>
                                             </p:column>
 
                                         </h:dataTable>

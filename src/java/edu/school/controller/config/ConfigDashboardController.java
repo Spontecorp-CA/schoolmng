@@ -79,8 +79,8 @@ public class ConfigDashboardController extends DashboardFacade implements Serial
         return "adminEtapas?faces-redirect=true";
     }
     
-    public String goConfigCursos() {
-        return "adminCursos?faces-redirect=true";
+    public String goConfigSecciones() {
+        return "adminSecciones?faces-redirect=true";
     }
     
     public String goConfigStatusPago() {
