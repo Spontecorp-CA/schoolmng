@@ -36,32 +36,53 @@
 
                                 <form jsf:id="form" class="form-horizontal form-label-left">
                                     <span class="section">Información del Grado</span>
-                                    <div class="item form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombre">
-                                            Nombre del Grado: <span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <p:inputText id="nombre" 
-                                                         value="#{adminPeriodoController.nombre}"
-                                                         styleClass="form-control col-md-7 col-xs-12" 
-                                                         pt:placeholder="Agregue el nombre" 
-                                                         required="true"
-                                                         requiredMessage="Debe colocar el nombre"/>
+                                    <div class="form-inline col-md-12 col-sm-12">
+                                        <div class="form-group col-md-6 col-sm-6">
+                                            <label class="control-label col-md-4 col-sm-4" for="nombre">
+                                                Nombre del Grado: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <p:inputText id="nombre" 
+                                                             value="#{adminGradoController.nombre}"
+                                                             styleClass="form-control col-md-8" 
+                                                             pt:placeholder="Agregue el nombre" 
+                                                             required="true"
+                                                             requiredMessage="Debe colocar el nombre"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6 col-sm-6">
+                                            <label class="control-label col-md-4 col-sm-4" for="etapa">
+                                                Etapa: <span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-8 col-sm-8">
+                                                <p:selectOneMenu id="etapaSOM" 
+                                                                 value="#{adminGradoController.etapa}"
+                                                                 style="width: 70%"
+                                                                 class="dropdown dropdown-toggle"
+                                                                 converter="edu.school.entities.converters.EtapaConverter">
+                                                    <f:selectItems var="etp"
+                                                                   value="#{adminGradoController.etapas}"
+                                                                   itemLabel="#{etp.nombre}"
+                                                                   itemValue="#{etp}"/>
+                                                </p:selectOneMenu>
+                                            </div>
                                         </div>
                                     </div>
-
+                                    <br/>
                                     <div class="ln_solid"></div>
+
                                     <div class="form-group">
-                                        <div class="col-md-6 col-md-offset-3">
+                                        <div class="col-md-12 col-md-offset-4">
                                             <p:commandButton id="ok"
                                                              value="Aceptar"
                                                              styleClass="btn btn-success"
-                                                             actionListener="#{adminPeriodoController.crearPeriodo()}"
-                                                             update="tableForm"/>
+                                                             actionListener="#{adminGradoController.createGrado()}"
+                                                             update=":tableForm:gradosTable"/>
                                             <p:commandButton id="newUser"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary"
-                                                             actionListener="#{adminPeriodoController.clearFields()}">
+                                                             actionListener="#{adminGradoController.clearFields()}"
+                                                             immediate="true">
                                                 <p:ajax update="form"/>
                                             </p:commandButton>
                                             <p:commandButton id="cancel"
@@ -90,12 +111,12 @@
                                 <div class="clearfix"></div>
                                 <h:form id="tableForm">
                                     <div class="x_content">
-                                        <h:dataTable id="periodosTable"
+                                        <h:dataTable id="gradosTable"
                                                      value="#{adminGradoController.grados}"
                                                      var="item"
                                                      styleClass="table table-hover"
                                                      style="width: 50%">
-                                            
+
                                             <p:column>
                                                 <f:facet name="header">
                                                     Grado
@@ -103,7 +124,7 @@
 
                                                 <h:outputText value="#{item.nombre}"/>
                                             </p:column>
-                                            
+
                                             <p:column>
                                                 <f:facet name="header">
                                                     Etapa
