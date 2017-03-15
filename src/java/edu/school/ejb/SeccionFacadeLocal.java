@@ -37,5 +37,7 @@ public interface SeccionFacadeLocal {
     List<Seccion> findRange(int[] range);
 
     int count();
+
+    List<Seccion> findAllOrderedByCurso(final Periodo periodo);
     
 }

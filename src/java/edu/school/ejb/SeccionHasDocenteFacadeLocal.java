@@ -24,9 +24,9 @@ public interface SeccionHasDocenteFacadeLocal {
 
     List<SeccionHasDocente> findAll();
     
-    List<SeccionHasDocente> findAll(Seccion curso);
+    List<SeccionHasDocente> findAllBySeccion(Seccion curso);
     
-    List<Seccion> findAll(Docente docente);
+    List<Seccion> findAllByDocente(Docente docente);
 
     List<SeccionHasDocente> findRange(int[] range);
 

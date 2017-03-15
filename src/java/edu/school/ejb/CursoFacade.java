@@ -58,6 +58,20 @@ public class CursoFacade extends AbstractFacade<Curso> implements CursoFacadeLoc
         }
         return cursos;
     }
+
+    @Override
+    public List<Curso> findAllOrderedByEtapa() {
+        List<Curso> cursos = null;
+        try {
+            String query = "From Curso c JOIN c.etapaId e"
+                    + " ORDER BY e.prefijo, c.nombre";
+            Query q = getEntityManager().createQuery(query);
+            cursos = q.getResultList();
+        } catch (NoResultException e) {
+            LOGGER.log(Level.WARNING, "No se han encontrado cursos");
+        }
+        return cursos;
+    }
     
     
 }

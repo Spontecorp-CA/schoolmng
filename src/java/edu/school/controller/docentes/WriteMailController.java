@@ -20,6 +20,8 @@ import edu.school.entities.User;
 import edu.school.excepciones.DocenteNotFoundException;
 import edu.school.utilities.Constantes;
 import edu.school.utilities.JsfUtils;
+import edu.school.utilities.LogFiler;
+import edu.school.utilities.LogFilerLocal;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +31,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -84,6 +87,8 @@ public class WriteMailController implements Serializable {
     private Seccion seccion;
     private Curso grado;
     private List<Curso> grados;
+    
+    private static final LogFiler LOGGER = LogFiler.getInstance();
 
     public WriteMailController() {
     }
@@ -102,7 +107,8 @@ public class WriteMailController implements Serializable {
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.logger.log(Level.SEVERE, null, ex);
         }
 
         fileLabel = "  No ha seleccionado archivo";
@@ -122,28 +128,28 @@ public class WriteMailController implements Serializable {
                 if (optStatSup.isPresent()) {
 
                     StatusSupervisor statusSup = optStatSup.get();
-                    System.out.println("Trajo al supervisor " + statusSup
-                            .getSupervisorId().getUserId().getCi());
+                    LOGGER.logger.log(Level.INFO, "Trajo al supervisor {0}", 
+                            statusSup.getSupervisorId().getUserId().getCi());
 
                     if (null != statusSup.getColegioId()) {
-                        nivel = 0;
+                        nivel = 0;  // nivel colegio
                         break;
                     }
                     if (null != statusSup.getEtapaId()) {
-                        nivel = 1;
+                        nivel = 1; // nivel etapa
                         break;
                     }
                     if (null != statusSup.getCursoId()) {
-                        nivel = 2;
+                        nivel = 2; // nivel curso
                         break;
                     }
                 } else {
-                    System.out.println("El usuario " + user.getUsr() + 
-                            " no es supervisor");
+                    LOGGER.logger.log(Level.INFO,"El usuario {0} no es supervisor", user.getUsr());
+                    nivel = 4; // nivel sección
                 }
             }
         } else {
-            nivel = 4;
+            nivel = 4; // nivel sección
         }
 
         List<String> groups = new ArrayList<>();
@@ -322,10 +328,11 @@ public class WriteMailController implements Serializable {
         try {
             Docente docente = docenteFacade.findByCi(user.getCi());
 
-            System.out.println("El docente que envía la circular es " + docente.getDatosPersonaId().getNombre());
+            LOGGER.logger.log(Level.INFO, "El docente que envía la circular es {0}", 
+                    docente.getDatosPersonaId().getNombre());
 
             // con el docente se obtiene que sección, grado o etapa está
-            Optional<List<Seccion>> optSeccionList = Optional.ofNullable(seccionHasDocenteFacade.findAll(docente));
+            Optional<List<Seccion>> optSeccionList = Optional.ofNullable(seccionHasDocenteFacade.findAllByDocente(docente));
 
             List<Seccion> seccionList;
             if (optSeccionList.isPresent()) {

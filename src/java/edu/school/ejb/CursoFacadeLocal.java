@@ -31,4 +31,6 @@ public interface CursoFacadeLocal {
 
     List<Curso> findAllByEtapa(Etapa etapa);
 
+    List<Curso> findAllOrderedByEtapa();
+
 }

@@ -29,5 +29,7 @@ public interface PeriodoFacadeLocal {
     int count();
 
     Periodo findByStatus(final int status);
+
+    List<Periodo> findAllOrderStatus();
     
 }
