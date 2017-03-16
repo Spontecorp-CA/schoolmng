@@ -7,7 +7,6 @@ import edu.school.utilities.Constantes;
 import edu.school.utilities.LogFiler;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -101,8 +100,9 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
     public List<Seccion> findAllByPeriodoAndCurso(Periodo periodo, Curso curso) {
         List<Seccion> secciones = null;
         try {
-            String query = "FROM Seccion c WHERE c.periodoId = :periodo "
-                    + "AND c.cursoId = :curso";
+            String query = "FROM Seccion s WHERE s.periodoId = :periodo "
+                    + "AND s.cursoId = :curso "
+                    + "ORDER BY s.seccion";
             Query q = getEntityManager().createQuery(query);
             q.setParameter("periodo", periodo);
             q.setParameter("curso", curso);
