@@ -98,10 +98,10 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
     }
 
     @Override
-    public List<Seccion> findAll(Periodo periodo, Curso curso) {
+    public List<Seccion> findAllByPeriodoAndCurso(Periodo periodo, Curso curso) {
         List<Seccion> secciones = null;
         try {
-            String query = "FROM Seccion c WHERE c.periodoInt = :periodo "
+            String query = "FROM Seccion c WHERE c.periodoId = :periodo "
                     + "AND c.cursoId = :curso";
             Query q = getEntityManager().createQuery(query);
             q.setParameter("periodo", periodo);

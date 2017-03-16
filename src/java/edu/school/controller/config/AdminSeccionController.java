@@ -77,16 +77,24 @@ public class AdminSeccionController implements Serializable {
     public List<Seccion> getSecciones() {
         Optional<Curso> optCurso = Optional.ofNullable(curso);
         if(optCurso.isPresent()){
-            System.out.println("El curso seleccionado es " + curso.getNombre());
-        } else {
+            curso = optCurso.get();
             Optional<Periodo> optPeriodo = Optional.ofNullable(periodo);
-            if(optPeriodo.isPresent()){
-                secciones = seccionFacade.findAllOrderedByCurso(optPeriodo.get());
-            } else {
-                System.out.println("el período es nulo");
-                secciones = new ArrayList<>();
+            if (optPeriodo.isPresent()) {
+                secciones = seccionFacade.findAllByPeriodoAndCurso(periodo, curso);
             }
+        } else {
+             secciones = seccionFacade.findAllOrderedByCurso(periodo);
         }
+//        if(null != curso){
+//            if(null != periodo){
+//                secciones = seccionFacade.findAllByPeriodoAndCurso(periodo, curso);
+//            } else {
+//                System.out.println("El período es null");
+//            }
+//        } else {
+//            System.out.println("El curso está nulo");
+//        }
+//        
         return secciones;
     }
 

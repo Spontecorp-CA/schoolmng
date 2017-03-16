@@ -30,7 +30,7 @@ public interface SeccionFacadeLocal {
     
     List<Seccion> findAll(Curso curso);
     
-    List<Seccion> findAll(Periodo periodo, Curso curso);
+    List<Seccion> findAllByPeriodoAndCurso(Periodo periodo, Curso curso);
     
     List<Seccion> findAllOrdered();
 
