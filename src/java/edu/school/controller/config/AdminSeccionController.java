@@ -85,16 +85,6 @@ public class AdminSeccionController implements Serializable {
         } else {
              secciones = seccionFacade.findAllOrderedByCurso(periodo);
         }
-//        if(null != curso){
-//            if(null != periodo){
-//                secciones = seccionFacade.findAllByPeriodoAndCurso(periodo, curso);
-//            } else {
-//                System.out.println("El período es null");
-//            }
-//        } else {
-//            System.out.println("El curso está nulo");
-//        }
-//        
         return secciones;
     }
 
@@ -102,10 +92,71 @@ public class AdminSeccionController implements Serializable {
         this.secciones = secciones;
     }
     
-    public void createSeccion(){}
+    public void createSeccion(){
+        Seccion seccionObj = new Seccion();
+        seccionObj.setPeriodoId(periodo);
+        seccionObj.setCursoId(curso);
+        seccionObj.setSeccion(seccion);
+
+        String grado = curso.getNombre();
+        Integer prefijo = curso.getEtapaId().getPrefijo();
+        String codigo = makeCodigo(prefijo, grado);
+        seccionObj.setCodigo(codigo);
+        
+        seccionFacade.create(seccionObj);
+        clearFields();
+    }
+    
+    private String makeCodigo(Integer prefijo, String grado){
+        StringBuilder sb = new StringBuilder();
+        sb.append(prefijo);
+        String nivel2 = "";
+        switch(grado){
+            case "Maternal": 
+                nivel2 = "M";
+                break;
+            case "Prescolar 1":
+            case "1er grado":
+            case "4to año":
+                nivel2 = "1";
+                break;
+            case "Prescolar 2":
+            case "2do grado":
+            case "5to año":
+                nivel2 = "2";
+                break;
+            case "Prescolar 3":
+            case "3er grado":
+                nivel2 = "3";
+                break;
+            case "4to grado":
+                nivel2 = "4";
+                break;
+            case "5to grado":
+                nivel2 = "5";
+                break;
+            case "6to grado":
+                nivel2 = "6";
+                break;
+            case "7mo grado":
+                nivel2 = "7";
+                break;
+            case "8vo grado":
+                nivel2 = "8";
+                break;
+            case "9no grado":
+                nivel2 = "9";
+                break;
+        }
+        sb.append(nivel2);
+        sb.append(seccion);
+        
+        return sb.toString();
+    }
     
     public void clearFields(){
         seccion = "";
+        curso = null;
     }
     
     public String cancelAction(){

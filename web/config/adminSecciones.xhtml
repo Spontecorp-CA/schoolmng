@@ -46,7 +46,9 @@
                                                                  value="#{adminSeccionController.periodo}"
                                                                  style="width: 70%"
                                                                  class="dropdown dropdown-toggle"
-                                                                 converter="edu.school.entities.converters.PeriodoConverter">
+                                                                 converter="edu.school.entities.converters.PeriodoConverter"
+                                                                 required="true"
+                                                                 requiredMessage="Debe seleccionar un período">
                                                     <p:ajax update=":tableForm:seccionesTable"/>
                                                     <f:selectItems var="prd"
                                                                    value="#{adminSeccionController.periodos}"
@@ -64,7 +66,9 @@
                                                                  value="#{adminSeccionController.curso}"
                                                                  style="width: 70%"
                                                                  class="dropdown dropdown-toggle"
-                                                                 converter="edu.school.entities.converters.CursoConverter">
+                                                                 converter="edu.school.entities.converters.CursoConverter"
+                                                                 required="true"
+                                                                 requiredMessage="Debe seleccionar un grado">
                                                     <f:selectItem itemLabel="---" noSelectionOption="true"/>
                                                     <f:selectItems var="grd"
                                                             value="#{adminSeccionController.cursos}"
