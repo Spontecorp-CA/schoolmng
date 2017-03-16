@@ -4,6 +4,7 @@ import edu.school.entities.Seccion;
 import edu.school.entities.Curso;
 import edu.school.entities.Periodo;
 import edu.school.utilities.Constantes;
+import edu.school.utilities.LogFiler;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +20,8 @@ import javax.persistence.Query;
  */
 @Stateless
 public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFacadeLocal {
+    
+    private static final LogFiler LOGGER = LogFiler.getInstance();
 
     @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
@@ -44,6 +47,9 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
             q.setParameter("periodo", periodo);
             curso = (Seccion) q.getSingleResult();
         } catch (NoResultException e) {
+            LOGGER.logger.log(Level.WARNING, "No encontró una sección con código"
+                    + " {0}, nombre {1} y período {2}", 
+                    new Object[]{codigo, nombre, periodo.getNombre()});
         }
         return curso;
     }
@@ -57,8 +63,7 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
             q.setParameter("codigo", codigo);
             curso = (Seccion) q.getSingleResult();
         } catch (NoResultException e) {
-            Logger.getLogger(SeccionFacade.class.getName())
-                    .log(Level.WARNING, "No se encontró un curso con código {0}",
+            LOGGER.logger.log(Level.WARNING, "No se encontró un curso con código {0}",
                             codigo);
         }
         return curso;
@@ -71,7 +76,8 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
             String query = "FROM Seccion c ORDER BY c.periodoInt, c.cursoId";
             Query q = getEntityManager().createQuery(query);
             cursos = q.getResultList();
-        } catch (Exception e) {
+        } catch (NoResultException e) {
+            LOGGER.logger.log(Level.WARNING, "No encontró secciones configuradas");
         }
         return cursos;
     }
@@ -84,26 +90,49 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
             Query q = getEntityManager().createQuery(query);
             q.setParameter("curso", curso);
             cursos = q.getResultList();
-        } catch (Exception e) {
-            System.err.println("Error en SeccionFacade metodo findAll(Curso curso): " 
-                    + e.getMessage());
+        } catch (NoResultException e) {
+            LOGGER.logger.log(Level.WARNING,"No encontró secciones del curso {0}", 
+                    curso.getNombre());
         }
         return cursos;
     }
 
     @Override
-    public List<Seccion> findAll(Periodo periodo, Curso curso) {
-        List<Seccion> cursos = null;
+    public List<Seccion> findAllByPeriodoAndCurso(Periodo periodo, Curso curso) {
+        List<Seccion> secciones = null;
         try {
-            String query = "FROM Seccion c WHERE c.periodoInt = :periodo "
+            String query = "FROM Seccion c WHERE c.periodoId = :periodo "
                     + "AND c.cursoId = :curso";
             Query q = getEntityManager().createQuery(query);
             q.setParameter("periodo", periodo);
             q.setParameter("curso", curso);
-            cursos = q.getResultList();
-        } catch (Exception e) {
+            secciones = q.getResultList();
+        } catch (NoResultException e) {
+            LOGGER.logger.log(Level.WARNING, "No encontró secciones del período"
+                    + " {0} y curso {1}",
+                    new Object[]{periodo.getNombre(), curso.getNombre()});
         }
-        return cursos;
+        return secciones;
     }
 
+    @Override
+    public List<Seccion> findAllOrderedByCurso(final Periodo periodo) {
+        List<Seccion> secciones = null;
+        try {
+            String query = "FROM Seccion s"
+                    + "	JOIN s.cursoId c"
+                    + " JOIN c.etapaId e"
+                    + " WHERE s.periodoId = :periodo"
+                    + " ORDER BY e.prefijo, c.nombre, s.seccion";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("periodo", periodo);
+            secciones = q.getResultList();
+        } catch (NoResultException e) {
+            LOGGER.logger.log(Level.WARNING, "No encontró secciones del período"
+                    + " {0}.",periodo.getNombre());
+        }
+        return secciones;
+    }
+
+    
 }

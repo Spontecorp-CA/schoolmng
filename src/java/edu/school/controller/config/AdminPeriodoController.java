@@ -66,6 +66,7 @@ public class AdminPeriodoController implements Serializable {
             }
             periodo = new Periodo();
             periodo.setNombre(nombre);
+            periodo.setStatus(Constantes.PERIODO_ACTIVO);
 
             periodoFacade.create(periodo);
 

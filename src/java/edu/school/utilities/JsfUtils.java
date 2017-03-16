@@ -1,7 +1,9 @@
 package edu.school.utilities;
 
+import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 public class JsfUtils {
     
@@ -27,5 +29,17 @@ public class JsfUtils {
                         FacesMessage.SEVERITY_ERROR,
                         "Operación con errores",
                         message));
+    }
+    
+    public static SelectItem[] getSelectItems(List<?> list) {
+        int size = list.size() + 1;
+        SelectItem[] items = new SelectItem[size];
+        items[0] = new SelectItem("", "---");
+        int i = 1;
+        for (Object obj : list) {
+            items[i] = new SelectItem(obj, obj.toString());
+            i++;
+        }
+        return items;
     }
 }

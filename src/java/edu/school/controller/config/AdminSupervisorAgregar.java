@@ -461,7 +461,7 @@ public class AdminSupervisorAgregar implements Serializable {
     }
 
     private List<Seccion> findSeccion(Docente docente) {
-        return seccionHasDocenteFacade.findAll(docente);
+        return seccionHasDocenteFacade.findAllByDocente(docente);
     }
 
     private Map<Etapa, List<Curso>> mapearCursos() {

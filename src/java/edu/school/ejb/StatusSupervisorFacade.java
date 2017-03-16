@@ -5,6 +5,7 @@ import edu.school.entities.Etapa;
 import edu.school.entities.StatusSupervisor;
 import edu.school.entities.Supervisor;
 import edu.school.utilities.Constantes;
+import edu.school.utilities.LogFiler;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,8 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
         implements StatusSupervisorFacadeLocal {
+    
+    private static final LogFiler LOGGER = LogFiler.getInstance();
 
     @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
@@ -54,7 +57,7 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
             q.setParameter("status", status);
             ss = (StatusSupervisor) q.getSingleResult();
         } catch (NoResultException e) {
-            System.out.println("No encontró resultado");
+            LOGGER.logger.log(Level.WARNING,"No encontró Curso o Etapa", e);
         }
         return ss;
     }
@@ -87,8 +90,8 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
             q.setParameter("status", status);
             ss = q.getSingleResult();
         } catch (NoResultException e) {
-            Logger.getLogger(StatusSupervisorFacade.class.getName())
-                    .log(Level.WARNING, e.getMessage());
+            LOGGER.logger.log(Level.WARNING, "No encontró supervisor {0} activo, error: {1}",
+                    new Object[]{supervisor.getUserId().getId(), e});
         }
         return ss;
     }   

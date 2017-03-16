@@ -9,8 +9,10 @@ import edu.school.entities.Seccion;
 import edu.school.entities.SeccionHasDocente;
 import edu.school.entities.Docente;
 import edu.school.utilities.Constantes;
+import edu.school.utilities.LogFiler;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -22,7 +24,10 @@ import javax.persistence.Query;
  * @author jgcastillo
  */
 @Stateless
-public class SeccionHasDocenteFacade extends AbstractFacade<SeccionHasDocente> implements SeccionHasDocenteFacadeLocal {
+public class SeccionHasDocenteFacade extends AbstractFacade<SeccionHasDocente> 
+        implements SeccionHasDocenteFacadeLocal {
+    
+    private static final LogFiler LOGGER = LogFiler.getInstance();
 
     @PersistenceContext(unitName = Constantes.PERSISTANCE_UNIT)
     private EntityManager em;
@@ -37,7 +42,7 @@ public class SeccionHasDocenteFacade extends AbstractFacade<SeccionHasDocente> i
     }
 
     @Override
-    public List<SeccionHasDocente> findAll(Seccion seccion) {
+    public List<SeccionHasDocente> findAllBySeccion(Seccion seccion) {
         List<SeccionHasDocente> lista = null;
         try {
             String query = "FROM SeccionHasDocente chd WHERE chd.cursoId = :seccion";
@@ -50,7 +55,7 @@ public class SeccionHasDocenteFacade extends AbstractFacade<SeccionHasDocente> i
     }
     
     @Override
-    public List<Seccion> findAll(Docente docente) {
+    public List<Seccion> findAllByDocente(Docente docente) {
         List<Seccion> lista = null;
         try {
             String query = "FROM SeccionHasDocente chd WHERE chd.docenteId = :docente";
@@ -62,6 +67,9 @@ public class SeccionHasDocenteFacade extends AbstractFacade<SeccionHasDocente> i
                 lista.add(chd.getSeccionId());
             }
         } catch (NoResultException e) {
+            LOGGER.logger.log(Level.WARNING, "No encontró secciones para el docente {0}",
+                    (docente.getDatosPersonaId().getNombre() + 
+                            " " + docente.getDatosPersonaId().getApellido()));
         }
         return lista;
     }

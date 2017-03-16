@@ -20,7 +20,7 @@ public class CursoConverter implements Converter{
             return null;
         }
         try {
-            return cursoFacade.find(Integer.parseInt(value));
+            return cursoFacade.findByName(value);
         } catch (NumberFormatException e) {
             return null;
         }
