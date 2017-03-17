@@ -66,9 +66,7 @@
                                                                  value="#{adminSeccionController.curso}"
                                                                  style="width: 70%"
                                                                  class="dropdown dropdown-toggle"
-                                                                 converter="edu.school.entities.converters.CursoConverter"
-                                                                 required="true"
-                                                                 requiredMessage="Debe seleccionar un grado">
+                                                                 converter="edu.school.entities.converters.CursoConverter">
                                                     <f:selectItem itemLabel="---" noSelectionOption="true"/>
                                                     <f:selectItems var="grd"
                                                             value="#{adminSeccionController.cursos}"
@@ -88,7 +86,10 @@
                                                              styleClass="form-control col-md-8"
                                                              style="width: 20%"
                                                              required="true"
-                                                             requiredMessage="Debe colocar la sección"/>
+                                                             requiredMessage="Debe colocar la sección"
+                                                             validatorMessage="Sólo puede ingresar letras o números">
+                                                    <f:validateRegex pattern="^[a-zA-Z0-9]+$" />
+                                                </p:inputText>
                                             </div>
                                         </div>
 
@@ -102,7 +103,7 @@
                                                              value="Aceptar"
                                                              styleClass="btn btn-success"
                                                              actionListener="#{adminSeccionController.createSeccion()}"
-                                                             update=":tableForm:seccionesTable"/>
+                                                             update=":tableForm:seccionesTable :form:nombre"/>
                                             <p:commandButton id="newUser"
                                                              value="Nuevo"
                                                              styleClass="btn btn-primary"
@@ -119,7 +120,7 @@
                                     </div>
 
                                     <div class="clearfix"></div>
-                                    <p:messages autoUpdate="true" showDetail="true"
+                                    <p:messages autoUpdate="true" showDetail="true" 
                                                 closable="true"/>
                                 </form>
                             </div>

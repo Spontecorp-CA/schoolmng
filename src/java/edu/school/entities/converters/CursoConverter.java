@@ -21,7 +21,7 @@ public class CursoConverter implements Converter{
         }
         try {
             return cursoFacade.findByName(value);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return null;
         }
     }

@@ -39,5 +39,8 @@ public interface SeccionFacadeLocal {
     int count();
 
     List<Seccion> findAllOrderedByCurso(final Periodo periodo);
+
+    Seccion findByPeriodoAndCursoAndSeccion(final Periodo periodo, 
+            final Curso curso, final String seccionNombre);
     
 }

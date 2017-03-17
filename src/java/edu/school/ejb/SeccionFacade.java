@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -36,7 +37,7 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
 
     @Override
     public Seccion find(String codigo, String nombre, Periodo periodo) {
-        Seccion curso = null;
+        Seccion seccion = null;
         try {
             String query = "FROM Seccion c WHERE c.codigo = :codigo AND "
                     + "c.nombre = :nombre AND c.periodoInt = :periodo";
@@ -44,13 +45,34 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
             q.setParameter("codigo", codigo);
             q.setParameter("nombre", nombre);
             q.setParameter("periodo", periodo);
-            curso = (Seccion) q.getSingleResult();
+            seccion = (Seccion) q.getSingleResult();
         } catch (NoResultException e) {
             LOGGER.logger.log(Level.WARNING, "No encontró una sección con código"
                     + " {0}, nombre {1} y período {2}", 
                     new Object[]{codigo, nombre, periodo.getNombre()});
         }
-        return curso;
+        return seccion;
+    }
+
+    @Override
+    public Seccion findByPeriodoAndCursoAndSeccion(final Periodo periodo, 
+            final Curso curso, final String seccionNombre) {
+        Seccion seccion = null;
+        try {
+            String query = "FROM Seccion s WHERE s.periodoId = :periodo AND "
+                    + "s.cursoId = :curso AND s.seccion = :seccionNombre";
+            TypedQuery<Seccion> q = getEntityManager().createQuery(query, Seccion.class);
+            q.setParameter("periodo", periodo);
+            q.setParameter("curso", curso);
+            q.setParameter("seccionNombre", seccionNombre);
+            seccion = q.getSingleResult();
+        } catch (NoResultException e) {
+            LOGGER.logger.log(Level.WARNING, "No encontró una sección del periodo"
+                    + " {0}, del curso {1} y sección {2}",
+                    new Object[]{periodo.getNombre(), curso.getNombre(), 
+                                seccionNombre});
+        }
+        return seccion;
     }
 
     @Override
@@ -62,7 +84,7 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
             q.setParameter("codigo", codigo);
             curso = (Seccion) q.getSingleResult();
         } catch (NoResultException e) {
-            LOGGER.logger.log(Level.WARNING, "No se encontró un curso con código {0}",
+            LOGGER.logger.log(Level.WARNING, "No se encontró una seccion con código {0}",
                             codigo);
         }
         return curso;
