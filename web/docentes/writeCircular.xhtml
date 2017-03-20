@@ -73,10 +73,10 @@
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <p:selectOneMenu id="seccionList"
                                                                  value="#{writeMailController.seccion}"
-                                                                 style="width: 120px;">
+                                                                 style="width: 180px;">
                                                     <f:selectItems value="#{writeMailController.secciones}"
                                                                    var="seccion"
-                                                                   itemLabel="#{seccion.codigo}"
+                                                                   itemLabel="#{seccion.cursoId.nombre}-#{seccion.seccion}"
                                                                    itemValue="#{seccion}"/>
                                                 </p:selectOneMenu>
                                             </div>

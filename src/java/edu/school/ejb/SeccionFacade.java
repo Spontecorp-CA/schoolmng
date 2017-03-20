@@ -2,6 +2,7 @@ package edu.school.ejb;
 
 import edu.school.entities.Seccion;
 import edu.school.entities.Curso;
+import edu.school.entities.Docente;
 import edu.school.entities.Periodo;
 import edu.school.utilities.Constantes;
 import edu.school.utilities.LogFiler;
@@ -156,5 +157,4 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
         return secciones;
     }
 
-    
 }

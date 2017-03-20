@@ -90,8 +90,8 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
             q.setParameter("status", status);
             ss = q.getSingleResult();
         } catch (NoResultException e) {
-            LOGGER.logger.log(Level.WARNING, "No encontró supervisor {0} activo, error: {1}",
-                    new Object[]{supervisor.getUserId().getId(), e});
+            LOGGER.logger.log(Level.WARNING, "No encontró al supervisor {0} en estatus ACTIVO, error: {1}",
+                    new Object[]{supervisor.getUserId().getUsr(), e});
         }
         return ss;
     }   

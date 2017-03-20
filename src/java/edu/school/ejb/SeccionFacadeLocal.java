@@ -2,6 +2,7 @@ package edu.school.ejb;
 
 import edu.school.entities.Seccion;
 import edu.school.entities.Curso;
+import edu.school.entities.Docente;
 import edu.school.entities.Periodo;
 import java.util.Collection;
 import java.util.List;
@@ -42,5 +43,5 @@ public interface SeccionFacadeLocal {
 
     Seccion findByPeriodoAndCursoAndSeccion(final Periodo periodo, 
             final Curso curso, final String seccionNombre);
-    
+
 }
