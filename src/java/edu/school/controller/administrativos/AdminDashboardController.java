@@ -42,31 +42,31 @@ public class AdminDashboardController extends DashboardFacade implements Seriali
     }
     
     public String goCargaRepresentantes() {
-        return "cargarepresentante";
+        return "cargarepresentante?faces-redirect=true";
     }
 
     public String goListaRepresentantes() {
-        return "listarepresentantes";
+        return "listarepresentantes?faces-redirect=true";
     }
     
     public String goCargaMaterias() {
-        return "cargamateria";
+        return "cargamateria?faces-redirect=true";
     }
     
     public String goCargaDocentes() {
-        return "cargadocente";
+        return "cargadocente?faces-redirect=true";
     }
     
     public String goListaDocentes() {
-        return "listadocentes";
+        return "listadocentes?faces-redirect=true";
     }
     
     public String goAsociarMateriaDocente() {
-        return "asociamateriadocente";
+        return "asociamateriadocente?faces-redirect=true";
     }
     
     public String goAsociarCursoDocente() {
-        return "asociacursodocente";
+        return "asociacursodocente?faces-redirect=true";
     }
     
     public String goDefineSupervisorDocente() {
@@ -74,18 +74,18 @@ public class AdminDashboardController extends DashboardFacade implements Seriali
     }
     
     public String goAsignaPagosNivel() {
-        return "asignapagosnivel";
+        return "asignapagosnivel?faces-redirect=true";
     }
     
     public String goAsignaPagosCurso() {
-        return "asignapagoscurso";
+        return "asignapagoscurso?faces-redirect=true";
     }
     
     public String goAsignaPagosAlumno() {
-        return "asignapagosalumno";
+        return "asignapagosalumno?faces-redirect=true";
     }
     
     public String goEmailsCreate(){
-        return "emailscreate";
+        return "emailscreate?faces-redirect=true";
     }
 }

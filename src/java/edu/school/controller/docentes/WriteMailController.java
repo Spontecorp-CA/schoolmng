@@ -21,7 +21,6 @@ import edu.school.excepciones.DocenteNotFoundException;
 import edu.school.utilities.Constantes;
 import edu.school.utilities.JsfUtils;
 import edu.school.utilities.LogFiler;
-import edu.school.utilities.LogFilerLocal;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +30,6 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -325,8 +323,9 @@ public class WriteMailController implements Serializable {
         // con el usuario se obtiene el docente
         User user = docenteDashboardController.getUser();
         Periodo periodo = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
+        Docente docente = null;
         try {
-            Docente docente = docenteFacade.findByCi(user.getCi());
+            docente = docenteFacade.findByCi(user.getCi());
 
             LOGGER.logger.log(Level.INFO, "El docente que envía la circular es {0}", 
                     docente.getDatosPersonaId().getNombre());
@@ -347,7 +346,9 @@ public class WriteMailController implements Serializable {
 
             // con el curso(grado) y/o etapa se obtiene el supervisor
         } catch (DocenteNotFoundException ex) {
-            Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.logger.log(Level.FINE, "Al buscar al docente con c.i.{0} dió error: {1}",
+                    new Object[]{docente.getUserId().getCi(), ex});
         }
     }
 
