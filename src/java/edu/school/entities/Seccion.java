@@ -146,7 +146,7 @@ public class Seccion implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.Seccion[ id=" + id + " ]";
+        return String.valueOf(id);
     }
     
 }

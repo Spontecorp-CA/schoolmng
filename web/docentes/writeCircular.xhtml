@@ -34,12 +34,13 @@
                                                     <h:outputLabel for="file" 
                                                                    styleClass="fa fa-paperclip"
                                                                    style="font-size: 26px;">
-                                                        <span class="btn btn-primary">Incluir Archivo
+                                                        <!--<span>-->
+                                                            <!--<label>Archivo</label>-->
                                                             <h:inputFile id="file" value="#{writeMailController.file}"
                                                                          style="display: none">
                                                                 <f:ajax listener="#{writeMailController.uploadedFile()}"/>
                                                             </h:inputFile>
-                                                        </span>
+                                                        <!--</span>-->
                                                     </h:outputLabel>
                                                 </div>
                                                 <div class="col-md-6">

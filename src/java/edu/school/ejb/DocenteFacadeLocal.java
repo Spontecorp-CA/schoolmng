@@ -1,6 +1,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Docente;
+import edu.school.entities.Periodo;
 import edu.school.excepciones.DocenteNotFoundException;
 import java.util.Collection;
 import java.util.List;
@@ -28,5 +29,7 @@ public interface DocenteFacadeLocal {
     int count();
 
     Docente findByCi(int ci) throws DocenteNotFoundException;
+
+    List<Docente> findAllByPeriodoWSeccionAssigned(Periodo periodo);
     
 }

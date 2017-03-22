@@ -1,8 +1,8 @@
 package edu.school.controller.administrativos;
 
 import edu.school.ejb.DocenteFacadeLocal;
+import edu.school.ejb.PeriodoFacadeLocal;
 import edu.school.entities.Docente;
-import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,8 @@ import edu.school.ejb.SeccionFacadeLocal;
 import edu.school.entities.Periodo;
 import edu.school.entities.Seccion;
 import edu.school.entities.SeccionHasDocente;
+import edu.school.utilities.Constantes;
+import edu.school.utilities.JsfUtils;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import org.primefaces.event.SelectEvent;
@@ -28,22 +30,27 @@ public class AsociaCursoDocenteController implements Serializable {
     private SeccionFacadeLocal seccionFacade;
     @EJB
     private SeccionHasDocenteFacadeLocal shdFacade;
+    @EJB
+    private PeriodoFacadeLocal periodoFacade;
 
     private List<Docente> docentes;
     private DualListModel<Seccion> secciones;
     private List<Seccion> seccionesSelected;
     private List<Seccion> seccionesAvailable;
+    private List<Seccion> seccionesByDocente;
+    private List<Periodo> periodos;
+    
     private Docente docenteSelected;
+    private Periodo periodoSelected;
 
     @PostConstruct
     public void init(){
-        //makeDualList();
+        makeDualList();
+        periodoSelected = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
+        docentes = makeDocenteList();
     } 
     
     public List<Docente> getDocentes() {
-        if (docentes == null) {
-            docentes = makeDocenteList();
-        }
         return docentes;
     }
 
@@ -74,6 +81,28 @@ public class AsociaCursoDocenteController implements Serializable {
         this.seccionesAvailable = seccionesAvailable;
     }
 
+    public List<Periodo> getPeriodos() {
+        if(periodos == null){
+            periodos = periodoFacade.findAllOrderStatus();
+        }
+        return periodos;
+    }
+
+    public void setPeriodos(List<Periodo> periodos) {
+        this.periodos = periodos;
+    }
+
+    public Periodo getPeriodoSelected() {
+        if(periodoSelected == null){
+            periodoSelected = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
+        }
+        return periodoSelected;
+    }
+
+    public void setPeriodoSelected(Periodo periodoSelected) {
+        this.periodoSelected = periodoSelected;
+    }
+
     public Docente getDocenteSelected() {
         return docenteSelected;
     }
@@ -83,11 +112,11 @@ public class AsociaCursoDocenteController implements Serializable {
     }
 
     public void saveSelection() {
-        List<Seccion> seccionesSelected = secciones.getTarget();
+        List<Seccion> seccionesSel = secciones.getTarget();
         List<SeccionHasDocente> chdList = new ArrayList<>();
 
-        if (!seccionesSelected.isEmpty()) {
-            seccionesSelected.stream().forEach(cur -> {
+        if (!seccionesSel.isEmpty()) {
+            seccionesSel.stream().forEach(cur -> {
                 SeccionHasDocente chd = new SeccionHasDocente();
                 chd.setDocenteId(docenteSelected);
                 chd.setSeccionId(cur);
@@ -102,6 +131,7 @@ public class AsociaCursoDocenteController implements Serializable {
             chdList.stream().forEach(chd -> {
                 shdFacade.create(chd);
             });
+            seccionesSel.clear();
             clearFields();
             JsfUtils.messageSuccess("Asignados el(los) curso(s) con éxito");
         } else {
@@ -111,7 +141,11 @@ public class AsociaCursoDocenteController implements Serializable {
     }
 
     private List<Docente> makeDocenteList() {
-        return docenteFacade.findAll();
+        if(periodoSelected.getStatus() == Constantes.PERIODO_ACTIVO){
+            return docenteFacade.findAll();
+        } else {
+            return docenteFacade.findAllByPeriodoWSeccionAssigned(periodoSelected);
+        }
     }
 
     private List<Seccion> makeSeccionList() {
@@ -121,6 +155,7 @@ public class AsociaCursoDocenteController implements Serializable {
     public void clearFields() {
         docenteSelected = null;
         makeDualList();
+        getSeccionesByDocente();
     }
 
     private void makeDualList() {
@@ -128,20 +163,21 @@ public class AsociaCursoDocenteController implements Serializable {
         List<Seccion> seccionesTarget = new ArrayList();
         secciones = new DualListModel<>(seccionesSourge, seccionesTarget);
     }
-
+    
     public List<Seccion> getSeccionesByDocente() {
-        return shdFacade.findAllByDocente(docenteSelected);
+        if(docenteSelected == null){
+            seccionesByDocente = new ArrayList<>();
+        } else {
+            seccionesByDocente = shdFacade.findAllByDocente(docenteSelected);
+        }
+        return seccionesByDocente;
     }
 
     public void onRowSelect(SelectEvent event) {
         docenteSelected = ((Docente) event.getObject());
     }
     
-    public void fillSeccionesSelected(){
-        seccionesSelected.stream().forEach(sec -> {
-            System.out.println(sec.getCursoId().getNombre() + "-"
-                + sec.getSeccion());
-        });
-        
+    public void onValueChange(){
+        docentes = makeDocenteList();
     }
 }
