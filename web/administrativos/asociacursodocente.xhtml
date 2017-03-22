@@ -32,55 +32,23 @@
 
                             <!-- contenido de la página -->
                             <div class="x_content">
-                                <form jsf:id="form" class="form-horizontal form-label-left">
+                                <h:form id="form" class="form-horizontal form-label-left">
                                     <div class="row">
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="form-group">
-                                                <h:outputLabel for="docenteSelected" 
-                                                               value="Docente seleccionado: "/>
-                                                <h3><span class="label label-info">
-                                                        <h:outputText id="docenteSelected" 
-                                                                      value=" #{asociaCursoDocenteController
-                                                                                .docenteSelected.datosPersonaId.apellido}
-                                                                      , #{asociaCursoDocenteController
-                                                                          .docenteSelected.datosPersonaId.nombre}"/>
-                                                    </span></h3>
-                                            </div>    
-                                        </div>
-                                        <div class="col-md-3 col-sm-6">
-                                            <div class="form-group">
-                                                <h:outputLabel for="seccionesCombobox" 
-                                                               value="Secciones: "/>
-                                                <p:selectManyMenu id="seccionesCombobox" 
-                                                                  value="#{asociaCursoDocenteController.seccionesSelected}"
-                                                                  showCheckbox="true"
-                                                                  converter="edu.school.entities.converters.SeccionConverter">
-                                                    <f:selectItems value="#{asociaCursoDocenteController.seccionesAvailable}"
-                                                                   var="secs"
-                                                                   itemValue="#{secs}"
-                                                                   itemLabel=" #{secs.cursoId.nombre}-#{secs.seccion}"/>
-                                                </p:selectManyMenu>
-                                            </div>    
-                                        </div>
-                                        <div class="col-md-6 col-sm-12">
-                                            <div class="form-group">
-                                                <p:commandButton value="Asignar" 
-                                                                 update=":form:seccionesSeleted" 
-                                                                 icon="ui-icon-check"
-                                                                 actionListener="#{asociaCursoDocenteController
-                                                                                   .fillSeccionesSelected()}"/>
-                                                <p:dataList id ="seccionesSeleted"
-                                                            value="#{asociaCursoDocenteController.seccionesSelected}"
-                                                            var="seccion"
-                                                            type="ordered"
-                                                            style="width: 50%">
-                                                    <f:facet name="header">Secciones seleccionadas</f:facet>
-                                                    #{seccion.cursoId.nombre} - #{seccion.seccion}
-                                                </p:dataList>
-                                            </div>
+                                        <div class="form-group">
+                                            <h:outputLabel value="Período: " for="periodoCB"/>
+                                            <p:selectOneMenu id="periodoCB" 
+                                                             value="#{asociaCursoDocenteController.periodoSelected}"
+                                                             converter="edu.school.entities.converters.PeriodoConverter">
+                                                <f:selectItems var="per"
+                                                               value="#{asociaCursoDocenteController.periodos}"
+                                                               itemLabel="#{per.nombre}"
+                                                               itemValue="#{per}"/>
+                                                <p:ajax update=":form:docentesTable" 
+                                                        listener="#{asociaCursoDocenteController.onValueChange}"/>
+                                            </p:selectOneMenu>
                                         </div>
                                     </div>
-
+                                    
                                     <div class="row">
                                         <div class="col-md-6 col-sm-12">
                                             <p:dataTable id="docentesTable"
@@ -93,8 +61,8 @@
                                                          selection="#{asociaCursoDocenteController.docenteSelected}"
                                                          rowKey="#{doc.id}">
                                                 <p:ajax event="rowSelect" 
-                                                        listener="#{asociaCursoDocenteController.onRowSelect}" 
-                                                        update=":form:seccionData :form:docenteSelected" />
+                                                        listener="#{asociaCursoDocenteController.onRowSelect}"
+                                                        update=":form:seccionData"/>
                                                 <p:column>
                                                     <f:facet name="header">
                                                         Apellido
@@ -126,14 +94,14 @@
                                         </div>
                                     </div>
 
-                                    <!--                                    <div class="row">
-                                                                            <p:pickList id="pickList"
-                                                                                        value="#{asociaCursoDocenteController.secciones}"
-                                                                                        var="cur"
-                                                                                        itemLabel="#{cur.cursoId.nombre}-#{cur.seccion}"
-                                                                                        itemValue="#{cur}"
-                                                                                        converter="edu.school.entities.converters.SeccionConverter"/>
-                                                                        </div>-->
+                                    <div class="row">
+                                        <p:pickList id="pickList"
+                                                    value="#{asociaCursoDocenteController.secciones}"
+                                                    var="cur"
+                                                    itemLabel="#{cur.cursoId.nombre}-#{cur.seccion}"
+                                                    itemValue="#{cur}"
+                                                    converter="edu.school.entities.converters.SeccionConverter"/>
+                                    </div>
 
                                     <div class="ln_solid"></div>
                                     <div class="form-group">
@@ -141,7 +109,8 @@
                                             <p:commandButton id="ok"
                                                              value="Aceptar"
                                                              actionListener="#{asociaCursoDocenteController.saveSelection()}"
-                                                             styleClass="btn btn-success">
+                                                             styleClass="btn btn-success"
+                                                             update="@form" ajax="true">
                                             </p:commandButton>
                                             <p:commandButton id="newUser"
                                                              actionListener="#{asociaCursoDocenteController.clearFields()}"
@@ -160,7 +129,7 @@
                                     <div class="clearfix"></div>
                                     <p:messages autoUpdate="true" showDetail="true"
                                                 closable="true"/>
-                                </form>
+                                </h:form>
                             </div>
                         </div>
                     </div>
