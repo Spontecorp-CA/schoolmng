@@ -85,7 +85,7 @@ public class WriteMailController implements Serializable {
     private Seccion seccion;
     private Curso grado;
     private List<Curso> grados;
-    
+
     private static final LogFiler LOGGER = LogFiler.getInstance();
 
     public WriteMailController() {
@@ -106,63 +106,12 @@ public class WriteMailController implements Serializable {
 
         } catch (IOException ex) {
             //Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
-            LOGGER.logger.log(Level.SEVERE, null, ex);
+            LOGGER.logger.log(Level.SEVERE, "Error definiendo la dirección temporal: ", ex.getMessage());
         }
 
         fileLabel = "  No ha seleccionado archivo";
         grupos = makeGrupos();
         secciones = new ArrayList<>();
-    }
-
-    private List<String> makeGrupos() {
-        int nivel = 0;
-        User user = docenteDashboardController.getUser();
-        List<Supervisor> supervisores = supervisorFacade.findAllByUser(user);
-        if (!supervisores.isEmpty()) {
-            for (Supervisor superv : supervisores) {
-                Optional<StatusSupervisor> optStatSup
-                        = Optional.ofNullable(statusSupervisorFacade.findBySupervisor(superv));
-
-                if (optStatSup.isPresent()) {
-
-                    StatusSupervisor statusSup = optStatSup.get();
-                    LOGGER.logger.log(Level.INFO, "Trajo al supervisor {0}", 
-                            statusSup.getSupervisorId().getUserId().getCi());
-
-                    if (null != statusSup.getColegioId()) {
-                        nivel = 0;  // nivel colegio
-                        break;
-                    }
-                    if (null != statusSup.getEtapaId()) {
-                        nivel = 1; // nivel etapa
-                        break;
-                    }
-                    if (null != statusSup.getCursoId()) {
-                        nivel = 2; // nivel curso
-                        break;
-                    }
-                } else {
-                    LOGGER.logger.log(Level.INFO,"El usuario {0} no es supervisor", user.getUsr());
-                    nivel = 4; // nivel sección
-                }
-            }
-        } else {
-            nivel = 4; // nivel sección
-        }
-
-        List<String> groups = new ArrayList<>();
-        switch (nivel) {
-            case 0:
-                groups.add(Constantes.GRUPO_COLEGIO);
-            case 1:
-                groups.add(Constantes.GRUPO_ETAPA);
-            case 2:
-                groups.add(Constantes.GRUPO_GRADO);
-            default:
-                groups.add(Constantes.GRUPO_SECCION);
-                break;
-        }
-        return groups;
     }
 
     public String getGrupo() {
@@ -262,6 +211,55 @@ public class WriteMailController implements Serializable {
         this.grados = grados;
     }
 
+    private List<String> makeGrupos() {
+        int nivel = 0;
+        User user = docenteDashboardController.getUser();
+        List<Supervisor> supervisores = supervisorFacade.findAllByUser(user);
+        if (!supervisores.isEmpty()) {
+            for (Supervisor superv : supervisores) {
+                Optional<StatusSupervisor> optStatSup
+                        = Optional.ofNullable(statusSupervisorFacade.findBySupervisor(superv));
+
+                if (optStatSup.isPresent()) {
+
+                    StatusSupervisor statusSup = optStatSup.get();
+
+                    if (null != statusSup.getColegioId()) {
+                        nivel = 0;  // nivel colegio
+                        break;
+                    }
+                    if (null != statusSup.getEtapaId()) {
+                        nivel = 1; // nivel etapa
+                        break;
+                    }
+                    if (null != statusSup.getCursoId()) {
+                        nivel = 2; // nivel curso
+                        break;
+                    }
+                } else {
+                    LOGGER.logger.log(Level.INFO, "El usuario {0} no es supervisor", user.getUsr());
+                    nivel = 4; // nivel sección
+                }
+            }
+        } else {
+            nivel = 4; // nivel sección
+        }
+
+        List<String> groups = new ArrayList<>();
+        switch (nivel) {
+            case 0:
+                groups.add(Constantes.GRUPO_COLEGIO);
+            case 1:
+                groups.add(Constantes.GRUPO_ETAPA);
+            case 2:
+                groups.add(Constantes.GRUPO_GRADO);
+            default:
+                groups.add(Constantes.GRUPO_SECCION);
+                break;
+        }
+        return groups;
+    }
+
     public void sendMail() {
         emailAccount = emailAccountFacade.find(1); // modificar esto de acuerdo a la cuenta que se tenga acceso
         mail.setUser(emailAccount.getUser());
@@ -327,7 +325,7 @@ public class WriteMailController implements Serializable {
         try {
             docente = docenteFacade.findByCi(user.getCi());
 
-            LOGGER.logger.log(Level.INFO, "El docente que envía la circular es {0}", 
+            LOGGER.logger.log(Level.INFO, "El docente que envía la circular es {0}",
                     docente.getDatosPersonaId().getNombre());
 
             // con el docente se obtiene que sección, grado o etapa está
@@ -341,7 +339,7 @@ public class WriteMailController implements Serializable {
                         .collect(Collectors.toList());
 
             } else {
-                System.out.println("El docente no tiene sección asignada");
+                LOGGER.logger.log(Level.WARNING, "El docente no tiene sección asignada");
             }
 
             // con el curso(grado) y/o etapa se obtiene el supervisor
@@ -352,4 +350,23 @@ public class WriteMailController implements Serializable {
         }
     }
 
+    public void checkSupervisorChain(){
+        switch(grupo){
+            case Constantes.GRUPO_COLEGIO:
+                System.out.println("No necesita permiso, envía de una vez");
+                break;
+            case Constantes.GRUPO_ETAPA:
+                System.out.println("Envía al supervisor de colegio para su posterior envío");
+                break;
+            case Constantes.GRUPO_GRADO:
+                System.out.println("Envía al supervidor de etapa para su revisión y reenvío al "
+                        + "supervisor e colegio");
+                break;
+            default:
+                System.out.println("Si es supervisor de grado, envía al de etapa "
+                        + "para su revisión y posterior envío");
+                System.out.println("Si no es supervisor, identifica al supervisor de "
+                        + "grado para su revisión y posterior envío");
+        }
+    }
 }
