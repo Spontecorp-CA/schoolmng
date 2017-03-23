@@ -22,14 +22,15 @@ public class LogFiler{
             Handler fileHandler = new FileHandler("escuelalog%u%g.log", 1024 * 1024, 3, true);
             Formatter formatter = new SchoolFormatter();
 
-            consoleHandler.setLevel(Level.ALL);
+            consoleHandler.setFormatter(formatter);
+            consoleHandler.setLevel(Level.FINE);
             fileHandler.setFormatter(formatter);
-            fileHandler.setLevel(Level.ALL);
+            fileHandler.setLevel(Level.FINE);
 
             logger.addHandler(consoleHandler);
             logger.addHandler(fileHandler);
         } catch (IOException | SecurityException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, "Error al crear el log handler: ", ex.getMessage());
         }
     }
 
