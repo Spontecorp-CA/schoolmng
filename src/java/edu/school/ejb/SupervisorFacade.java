@@ -39,7 +39,7 @@ public class SupervisorFacade extends AbstractFacade<Supervisor>
             CriteriaQuery<Supervisor> criteria = cb.createQuery(Supervisor.class);
             Root<Supervisor> superv = criteria.from(Supervisor.class);
             criteria.select(superv)
-                    .where(cb.equal(superv.get("user"), user));
+                    .where(cb.equal(superv.get("userId"), user));
             TypedQuery<Supervisor> q = getEntityManager().createQuery(criteria);
             supervisor = q.getSingleResult();
         } catch (NoResultException e) {

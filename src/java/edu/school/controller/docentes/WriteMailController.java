@@ -1,5 +1,6 @@
 package edu.school.controller.docentes;
 
+import edu.school.controller.ejb.CircularControllerLocal;
 import edu.school.controller.ejb.MailControllerLocal;
 import edu.school.ejb.DocenteFacadeLocal;
 import edu.school.ejb.EmailAccountFacadeLocal;
@@ -72,6 +73,8 @@ public class WriteMailController implements Serializable {
     private SeccionFacadeLocal seccionFacade;
     @EJB
     private PeriodoFacadeLocal periodoFacade;
+    @EJB
+    private CircularControllerLocal circularController;
 
     private String para;
     private String subject;
@@ -79,7 +82,7 @@ public class WriteMailController implements Serializable {
     private Part file;
     private String directory;
     private String fileLabel;
-    private String grupo;
+    private String grupoAEnviar;
     private List<String> grupos;
     private List<Seccion> secciones;
     private Seccion seccion;
@@ -115,11 +118,11 @@ public class WriteMailController implements Serializable {
     }
 
     public String getGrupo() {
-        return grupo;
+        return grupoAEnviar;
     }
 
     public void setGrupo(String grupo) {
-        this.grupo = grupo;
+        this.grupoAEnviar = grupo;
     }
 
     public List<String> getGrupos() {
@@ -167,8 +170,8 @@ public class WriteMailController implements Serializable {
     }
 
     public List<Seccion> getSecciones() {
-        if (grupo != null) {
-            switch (grupo) {
+        if (grupoAEnviar != null) {
+            switch (grupoAEnviar) {
                 case Constantes.GRUPO_COLEGIO:
                     break;
                 case Constantes.GRUPO_ETAPA:
@@ -351,22 +354,24 @@ public class WriteMailController implements Serializable {
     }
 
     public void checkSupervisorChain(){
-        switch(grupo){
-            case Constantes.GRUPO_COLEGIO:
-                System.out.println("No necesita permiso, envía de una vez");
-                break;
-            case Constantes.GRUPO_ETAPA:
-                System.out.println("Envía al supervisor de colegio para su posterior envío");
-                break;
-            case Constantes.GRUPO_GRADO:
-                System.out.println("Envía al supervidor de etapa para su revisión y reenvío al "
-                        + "supervisor e colegio");
-                break;
-            default:
-                System.out.println("Si es supervisor de grado, envía al de etapa "
-                        + "para su revisión y posterior envío");
-                System.out.println("Si no es supervisor, identifica al supervisor de "
-                        + "grado para su revisión y posterior envío");
-        }
+//        switch(grupoAEnviar){
+//            case Constantes.GRUPO_COLEGIO:
+//                System.out.println("No necesita permiso, envía de una vez");
+//                break;
+//            case Constantes.GRUPO_ETAPA:
+//                System.out.println("Envía al supervisor de colegio para su posterior envío");
+//                break;
+//            case Constantes.GRUPO_GRADO:
+//                System.out.println("Envía al supervidor de etapa para su revisión y reenvío al "
+//                        + "supervisor e colegio");
+//                break;
+//            default:
+//                System.out.println("Si es supervisor de grado, envía al de etapa "
+//                        + "para su revisión y posterior envío");
+//                System.out.println("Si no es supervisor, identifica al supervisor de "
+//                        + "grado para su revisión y posterior envío");
+//        }
+        User user = docenteDashboardController.getUser();
+        circularController.checkEnvio(grupoAEnviar, user);
     }
 }
