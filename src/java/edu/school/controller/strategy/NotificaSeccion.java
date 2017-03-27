@@ -1,14 +1,22 @@
 package edu.school.controller.strategy;
 
+import edu.school.ejb.SupervisorFacadeLocal;
+import edu.school.entities.Supervisor;
 import edu.school.entities.User;
+import java.util.Optional;
+import javax.ejb.EJB;
 
 /**
  *
  * @author jgcastillo
  */
-public class NotificaSeccion implements NotificacionIntrf{
+@Notificacion(Notificaciones.SECCION)
+public class NotificaSeccion implements NotificacionService{
 
-    private final User user;
+    private User user;
+
+    public NotificaSeccion() {
+    }
 
     public NotificaSeccion(User user) {
         this.user = user;
