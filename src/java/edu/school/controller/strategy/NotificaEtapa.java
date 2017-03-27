@@ -6,9 +6,13 @@ import edu.school.entities.User;
  *
  * @author jgcastillo
  */
-public class NotificaEtapa implements NotificacionIntrf{
+@Notificacion(Notificaciones.ETAPA)
+public class NotificaEtapa implements NotificacionService{
 
-    private final User user;
+    private User user;
+
+    public NotificaEtapa() {
+    }
 
     public NotificaEtapa(User user) {
         this.user = user;

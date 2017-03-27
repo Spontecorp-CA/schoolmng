@@ -4,13 +4,9 @@ import edu.school.controller.strategy.NotificaColegio;
 import edu.school.controller.strategy.NotificaEtapa;
 import edu.school.controller.strategy.NotificaGrado;
 import edu.school.controller.strategy.NotificaSeccion;
-import edu.school.controller.strategy.NotificacionIntrf;
+import edu.school.controller.strategy.Notificacion;
 import edu.school.ejb.StatusSupervisorFacadeLocal;
 import edu.school.ejb.SupervisorFacadeLocal;
-import edu.school.entities.Colegio;
-import edu.school.entities.Curso;
-import edu.school.entities.Etapa;
-import edu.school.entities.StatusSupervisor;
 import edu.school.entities.Supervisor;
 import edu.school.entities.User;
 import edu.school.utilities.Constantes;
@@ -19,6 +15,12 @@ import java.util.Map;
 import java.util.Optional;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import edu.school.controller.strategy.NotificacionService;
+import static edu.school.controller.strategy.Notificaciones.COLEGIO;
+import static edu.school.controller.strategy.Notificaciones.ETAPA;
+import static edu.school.controller.strategy.Notificaciones.GRADO;
+import static edu.school.controller.strategy.Notificaciones.SECCION;
+import javax.inject.Inject;
 
 @Stateless
 public class CircularControler implements CircularControllerLocal {
@@ -27,22 +29,46 @@ public class CircularControler implements CircularControllerLocal {
     private SupervisorFacadeLocal supervisorFacade;
     @EJB
     private StatusSupervisorFacadeLocal statusSupervisorFacade;
-
+    @Inject
+    @Notificacion(COLEGIO)
+    private NotificacionService notificacionColegio;
+    @Inject
+    @Notificacion(ETAPA)
+    private NotificacionService notificacionEtapa;
+    @Inject
+    @Notificacion(GRADO)
+    private NotificacionService notificacionGrado;
+    @Inject
+    @Notificacion(SECCION)
+    private NotificacionService notificacionSeccion;
+    
     @Override
     public void checkEnvio(final String grupoAEnviar, final User user) {
-
-        Optional<Supervisor> optSupervisor = Optional.ofNullable(supervisorFacade.findByUser(user));
-        Map<String, NotificacionIntrf> notificacionMap = new HashMap<>();
+        Map<String, NotificacionService> notificacionMap = new HashMap<>();
         
         notificacionMap.put(Constantes.GRUPO_COLEGIO, new NotificaColegio(user));
         notificacionMap.put(Constantes.GRUPO_ETAPA, new NotificaEtapa(user));
         notificacionMap.put(Constantes.GRUPO_GRADO, new NotificaGrado(user));
         notificacionMap.put(Constantes.GRUPO_SECCION, new NotificaSeccion(user));
         
-        NotificacionIntrf notificacion = notificacionMap.get(grupoAEnviar);
+        NotificacionService notificacion = notificacionMap.get(grupoAEnviar);
         
-        if(!notificacion.isSupervisor(user)){
-            notificacion.notifica();
+        // ¿el que envía (user) es supervisor del grupo?
+        // si
+            // es supervisor del colegio?
+            // si, envía la circular
+            // no, envía al supervisor inmediato superior
+        
+        // no es, envia al supervisor del grupo
+            // supervisor del grupo aprueba?
+            // si, envía al supervisor inmediato superior
+            // no, notifica al emisor
+        
+        
+        if(isSupervisor(grupoAEnviar, user)){
+            // identifica que nivel de supervisor
+        } else {
+            // envía a su supervisor
         }
         
 //        if (!optSupervisor.isPresent()) {
@@ -107,6 +133,12 @@ public class CircularControler implements CircularControllerLocal {
 //
 //        }
 
+    }
+    
+    private boolean isSupervisor(String grupo, User user){
+        Optional<Supervisor> optSupervisor = Optional.ofNullable(supervisorFacade.findByUser(user));
+        
+        return optSupervisor.isPresent();
     }
 
 }
