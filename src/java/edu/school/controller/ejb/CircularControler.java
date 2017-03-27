@@ -20,7 +20,12 @@ import static edu.school.controller.strategy.Notificaciones.COLEGIO;
 import static edu.school.controller.strategy.Notificaciones.ETAPA;
 import static edu.school.controller.strategy.Notificaciones.GRADO;
 import static edu.school.controller.strategy.Notificaciones.SECCION;
+import edu.school.ejb.EmailAccountFacadeLocal;
+import edu.school.entities.EmailAccount;
+import edu.school.entities.Mail;
+import edu.school.utilities.JsfUtils;
 import javax.inject.Inject;
+import javax.servlet.http.Part;
 
 @Stateless
 public class CircularControler implements CircularControllerLocal {
@@ -29,6 +34,11 @@ public class CircularControler implements CircularControllerLocal {
     private SupervisorFacadeLocal supervisorFacade;
     @EJB
     private StatusSupervisorFacadeLocal statusSupervisorFacade;
+    @EJB
+    private EmailAccountFacadeLocal emailAccountFacade;
+    @Inject
+    private Mail mail;
+    
     @Inject
     @Notificacion(COLEGIO)
     private NotificacionService notificacionColegio;
@@ -41,6 +51,7 @@ public class CircularControler implements CircularControllerLocal {
     @Inject
     @Notificacion(SECCION)
     private NotificacionService notificacionSeccion;
+    
     
     @Override
     public void checkEnvio(final String grupoAEnviar, final User user) {
@@ -65,11 +76,6 @@ public class CircularControler implements CircularControllerLocal {
             // no, notifica al emisor
         
         
-        if(isSupervisor(grupoAEnviar, user)){
-            // identifica que nivel de supervisor
-        } else {
-            // envía a su supervisor
-        }
         
 //        if (!optSupervisor.isPresent()) {
 //            System.out.printf("El usuario %s no es supervisor ", user.getUsr());
@@ -135,10 +141,49 @@ public class CircularControler implements CircularControllerLocal {
 
     }
     
-    private boolean isSupervisor(String grupo, User user){
+    @Override
+    public boolean isSupervisor(final User user){
         Optional<Supervisor> optSupervisor = Optional.ofNullable(supervisorFacade.findByUser(user));
-        
         return optSupervisor.isPresent();
     }
 
+    @Override
+    public boolean isColegioSupervisor(final User user) {
+        
+        return false;
+    }
+
+    @Override
+    public Mail prepareMail(final String grupo, final String para, final String subject, 
+            final String message, final Part file, final String directory) {
+        
+        // modificar esto de acuerdo a la cuenta que se tenga acceso
+        EmailAccount emailAccount = emailAccountFacade.find(1); 
+        
+        mail.setUser(emailAccount.getUser());
+        mail.setPassword(emailAccount.getPassword());
+        String mensaje = " ";
+        
+        if (null != message) {
+            mensaje = message;
+        }
+        
+        mail.setMessage(mensaje);
+        mail.setSubject(subject);
+        mail.setRecipient(para);
+        
+        // falta colocar los email's de cada miembro del grupo,
+        // para ello hay que identificar el grupo, y sus integrantes
+        // y agregarlos al correo.
+
+        String filePath = directory + file.getSubmittedFileName();
+
+        mail.setFilePath(filePath);
+        mail.setFileName(file.getSubmittedFileName());
+        
+        return mail;
+
+    }
+
+    
 }
