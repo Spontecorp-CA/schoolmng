@@ -264,34 +264,34 @@ public class WriteMailController implements Serializable {
     }
 
     public void sendMail() {
-        emailAccount = emailAccountFacade.find(1); // modificar esto de acuerdo a la cuenta que se tenga acceso
-        mail.setUser(emailAccount.getUser());
-        mail.setPassword(emailAccount.getPassword());
-        if (message == null || message.isEmpty()) {
-            message = " ";
-        }
-        mail.setMessage(message);
-        mail.setSubject(subject);
-        mail.setRecipient(para);
-
-        String filePath = directory + file.getSubmittedFileName();
-
-        mail.setFilePath(filePath);
-        mail.setFileName(file.getSubmittedFileName());
-
-        if (mailController.sendMail(emailAccount, mail)) {
-            JsfUtils.messageSuccess("Correo enviado con éxito");
-            this.clearFields();
-            Path path = Paths.get(filePath);
-            try {
-                Files.deleteIfExists(path);
-            } catch (IOException ex) {
-                Logger.getLogger(WriteMailController.class.getName())
-                        .log(Level.SEVERE, "No pudo borrar el temporal", ex);
-            }
-        } else {
-            JsfUtils.messageError("Ha ocurrido un problema el correo no se ha podido enviar");
-        }
+//        emailAccount = emailAccountFacade.find(1); // modificar esto de acuerdo a la cuenta que se tenga acceso
+//        mail.setUser(emailAccount.getUser());
+//        mail.setPassword(emailAccount.getPassword());
+//        if (message == null || message.isEmpty()) {
+//            message = " ";
+//        }
+//        mail.setMessage(message);
+//        mail.setSubject(subject);
+//        mail.setRecipient(para);
+//
+//        String filePath = directory + file.getSubmittedFileName();
+//
+//        mail.setFilePath(filePath);
+//        mail.setFileName(file.getSubmittedFileName());
+//
+//        if (mailController.prepareMail(emailAccount, mail)) {
+//            JsfUtils.messageSuccess("Correo enviado con éxito");
+//            this.clearFields();
+//            Path path = Paths.get(filePath);
+//            try {
+//                Files.deleteIfExists(path);
+//            } catch (IOException ex) {
+//                Logger.getLogger(WriteMailController.class.getName())
+//                        .log(Level.SEVERE, "No pudo borrar el temporal", ex);
+//            }
+//        } else {
+//            JsfUtils.messageError("Ha ocurrido un problema el correo no se ha podido enviar");
+//        }
 
     }
 
@@ -372,6 +372,44 @@ public class WriteMailController implements Serializable {
 //                        + "grado para su revisión y posterior envío");
 //        }
         User user = docenteDashboardController.getUser();
-        circularController.checkEnvio(grupoAEnviar, user);
+        boolean isSupervisor = circularController.isSupervisor(user);
+        boolean isSupervisorColegio = circularController.isSupervisor(user);
+        
+
+        if(isSupervisor){
+            // debe chequear si es supervisor del colegio envía la circular
+            if(isSupervisorColegio){
+                // prepara el email a enviar
+                mail = circularController.prepareMail(grupoAEnviar, para, subject, message,
+                        file, directory);
+                // si está correctamente preparado lo envía
+                if(null != mail){
+                    String filePath = directory + file.getSubmittedFileName();
+
+                    // lo envía y muestra los mensajes si fue exitoso o no
+                    if (mailController.sendMail(emailAccount, mail)) {
+                        JsfUtils.messageSuccess("Correo enviado con éxito");
+                        this.clearFields();
+
+                        Path path = Paths.get(filePath);
+                        try {
+                            Files.deleteIfExists(path);
+                        } catch (IOException ex) {
+                            Logger.getLogger(WriteMailController.class.getName())
+                                    .log(Level.SEVERE, "No pudo borrar el temporal", ex);
+                        }
+                    } else {
+                        JsfUtils.messageError("Ha ocurrido un problema el correo no se ha podido enviar");
+                    }
+                } else { // problemas preparando el mail
+                    JsfUtils.messageError("No se ha podido preparar el correo a enviar");
+                }
+            } else {
+                // envía al supervisor inmediato
+            }
+        } else {
+            // debe buscar su supervisor inmediato para enviarle la circular
+        }
+        
     }
 }
