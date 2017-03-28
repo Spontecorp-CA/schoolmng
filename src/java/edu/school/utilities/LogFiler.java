@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 
 public class LogFiler{
 
-    public final Logger logger = Logger.getLogger(LogFiler.class.getName());
+    public static final Logger logger = Logger.getLogger(LogFiler.class.getName());
     private static LogFiler instance = null;
     
-    public LogFiler() {
+    private LogFiler() {
         try {
             Handler consoleHandler = new ConsoleHandler();
             Handler fileHandler = new FileHandler("escuelalog%u%g.log", 1024 * 1024, 3, true);

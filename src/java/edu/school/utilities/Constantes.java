@@ -4,7 +4,7 @@ package edu.school.utilities;
  *
  * @author jgcastillo
  */
-public class Constantes {
+public final class Constantes {
     
     public static final String PERSISTANCE_UNIT = "schoolmngPU";
     
@@ -53,4 +53,6 @@ public class Constantes {
     public static final String GRUPO_GRADO = "Grado";
     public static final String GRUPO_ETAPA = "Etapa";
     public static final String GRUPO_COLEGIO = "Colegio";
+    
+    private Constantes(){}
 }
