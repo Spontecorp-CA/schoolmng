@@ -3,7 +3,9 @@ package edu.school.utilities;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Utilities {
+public final class Utilities {
+    
+    private Utilities(){}
     
     public static String getSecurePassword(String passwordToHash) {
         String generatedPassword = null;

@@ -373,15 +373,14 @@ public class WriteMailController implements Serializable {
 //        }
         User user = docenteDashboardController.getUser();
         boolean isSupervisor = circularController.isSupervisor(user);
-        boolean isSupervisorColegio = circularController.isSupervisor(user);
-        
+        boolean isSupervisorColegio = circularController.isColegioSupervisor(user);
 
         if(isSupervisor){
             // debe chequear si es supervisor del colegio envía la circular
             if(isSupervisorColegio){
                 // prepara el email a enviar
-                mail = circularController.prepareMail(grupoAEnviar, para, subject, message,
-                        file, directory);
+                mail = circularController.prepareMail(grupoAEnviar, null, para, 
+                        subject, message, file, directory);
                 // si está correctamente preparado lo envía
                 if(null != mail){
                     String filePath = directory + file.getSubmittedFileName();

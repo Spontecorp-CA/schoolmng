@@ -1,7 +1,13 @@
 package edu.school.controller.ejb;
 
+import edu.school.entities.Circular;
+import edu.school.entities.Curso;
+import edu.school.entities.Etapa;
 import edu.school.entities.Mail;
+import edu.school.entities.Recipiente;
+import edu.school.entities.Seccion;
 import edu.school.entities.User;
+import java.util.List;
 import javax.ejb.Local;
 import javax.servlet.http.Part;
 
@@ -18,8 +24,25 @@ public interface CircularControllerLocal {
     void checkEnvio(final String grupoAEnviar, final User user);
 
     boolean isColegioSupervisor(final User user);
+    
+    boolean isEtapaSupervisor(final User user, final Etapa etapa);
+    
+    boolean isGradoSupervisor(final User user, final Curso grado);
+    
+    List<Recipiente> mailListColegio();
+    
+    List<Recipiente> mailListEtapa(Etapa etapa);
+    
+    List<Recipiente> mailListGrado(Curso grado);
+    
+    List<Recipiente> mailListSeccion(Seccion seccion);
 
-    Mail prepareMail(final String grupo, final String para, final String subject, 
-            final String message, final Part file, final String directory);
+    Mail prepareMail(final String grupo, final String nombreGrupo, 
+            final String para, final String subject, final String message, 
+            final Part file, final String directory);
+    
+    Circular makeCircular(final String grupo, final String nombreGrupo,
+            final String para, final String subject, final String message,
+            final Part file, final String directory);
     
 }

@@ -7,6 +7,7 @@ package edu.school.entities;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +22,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,6 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Circular.findAll", query = "SELECT c FROM Circular c")
     , @NamedQuery(name = "Circular.findById", query = "SELECT c FROM Circular c WHERE c.id = :id")
+    , @NamedQuery(name = "Circular.findByFecha", query = "SELECT c FROM Circular c WHERE c.fecha = :fecha")
     , @NamedQuery(name = "Circular.findByAsunto", query = "SELECT c FROM Circular c WHERE c.asunto = :asunto")
     , @NamedQuery(name = "Circular.findByDestinatario", query = "SELECT c FROM Circular c WHERE c.destinatario = :destinatario")
     , @NamedQuery(name = "Circular.findByGrupoDestino", query = "SELECT c FROM Circular c WHERE c.grupoDestino = :grupoDestino")
@@ -50,6 +54,11 @@ public class Circular implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "fecha")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 150)
@@ -79,7 +88,7 @@ public class Circular implements Serializable {
     @Column(name = "filename")
     private String filename;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "circularId")
-    private Collection<Autorizacion> autorizacionCollection;
+    private Collection<Recipiente> recipienteCollection;
     @JoinColumn(name = "email_account_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private EmailAccount emailAccountId;
@@ -97,8 +106,9 @@ public class Circular implements Serializable {
         this.id = id;
     }
 
-    public Circular(Integer id, String asunto, String message, String codigoCircular) {
+    public Circular(Integer id, Date fecha, String asunto, String message, String codigoCircular) {
         this.id = id;
+        this.fecha = fecha;
         this.asunto = asunto;
         this.message = message;
         this.codigoCircular = codigoCircular;
@@ -110,6 +120,14 @@ public class Circular implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
     public String getAsunto() {
@@ -169,12 +187,12 @@ public class Circular implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Autorizacion> getAutorizacionCollection() {
-        return autorizacionCollection;
+    public Collection<Recipiente> getRecipienteCollection() {
+        return recipienteCollection;
     }
 
-    public void setAutorizacionCollection(Collection<Autorizacion> autorizacionCollection) {
-        this.autorizacionCollection = autorizacionCollection;
+    public void setRecipienteCollection(Collection<Recipiente> recipienteCollection) {
+        this.recipienteCollection = recipienteCollection;
     }
 
     public EmailAccount getEmailAccountId() {
