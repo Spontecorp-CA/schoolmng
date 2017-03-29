@@ -6,10 +6,8 @@
 package edu.school.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,14 +18,12 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,6 +39,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Circular.findByAsunto", query = "SELECT c FROM Circular c WHERE c.asunto = :asunto")
     , @NamedQuery(name = "Circular.findByDestinatario", query = "SELECT c FROM Circular c WHERE c.destinatario = :destinatario")
     , @NamedQuery(name = "Circular.findByGrupoDestino", query = "SELECT c FROM Circular c WHERE c.grupoDestino = :grupoDestino")
+    , @NamedQuery(name = "Circular.findBySubgrupoNombre", query = "SELECT c FROM Circular c WHERE c.subgrupoNombre = :subgrupoNombre")
     , @NamedQuery(name = "Circular.findByCodigoCircular", query = "SELECT c FROM Circular c WHERE c.codigoCircular = :codigoCircular")
     , @NamedQuery(name = "Circular.findByFilepath", query = "SELECT c FROM Circular c WHERE c.filepath = :filepath")
     , @NamedQuery(name = "Circular.findByFilename", query = "SELECT c FROM Circular c WHERE c.filename = :filename")})
@@ -76,6 +73,9 @@ public class Circular implements Serializable {
     @Size(max = 20)
     @Column(name = "grupo_destino")
     private String grupoDestino;
+    @Size(max = 45)
+    @Column(name = "subgrupo_nombre")
+    private String subgrupoNombre;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -87,8 +87,6 @@ public class Circular implements Serializable {
     @Size(max = 80)
     @Column(name = "filename")
     private String filename;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "circularId")
-    private Collection<Recipiente> recipienteCollection;
     @JoinColumn(name = "email_account_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private EmailAccount emailAccountId;
@@ -162,6 +160,14 @@ public class Circular implements Serializable {
         this.grupoDestino = grupoDestino;
     }
 
+    public String getSubgrupoNombre() {
+        return subgrupoNombre;
+    }
+
+    public void setSubgrupoNombre(String subgrupoNombre) {
+        this.subgrupoNombre = subgrupoNombre;
+    }
+
     public String getCodigoCircular() {
         return codigoCircular;
     }
@@ -184,15 +190,6 @@ public class Circular implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
-    }
-
-    @XmlTransient
-    public Collection<Recipiente> getRecipienteCollection() {
-        return recipienteCollection;
-    }
-
-    public void setRecipienteCollection(Collection<Recipiente> recipienteCollection) {
-        this.recipienteCollection = recipienteCollection;
     }
 
     public EmailAccount getEmailAccountId() {

@@ -28,7 +28,6 @@ import edu.school.ejb.EmailAccountFacadeLocal;
 import edu.school.ejb.EtapaFacadeLocal;
 import edu.school.ejb.PeriodoFacadeLocal;
 import edu.school.ejb.PlantillaCircularFacadeLocal;
-import edu.school.ejb.RecipienteFacadeLocal;
 import edu.school.ejb.SeccionFacadeLocal;
 import edu.school.ejb.SeccionHasAlumnoFacadeLocal;
 import edu.school.entities.Alumno;
@@ -40,18 +39,31 @@ import edu.school.entities.Etapa;
 import edu.school.entities.Mail;
 import edu.school.entities.Periodo;
 import edu.school.entities.PlantillaCircular;
-import edu.school.entities.Recipiente;
 import edu.school.entities.Representante;
 import edu.school.entities.Seccion;
 import edu.school.entities.SeccionHasAlumno;
 import edu.school.entities.StatusSupervisor;
+import edu.school.utilities.JsfUtils;
+import edu.school.utilities.LogFiler;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.inject.Inject;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.Part;
 
 @Stateless
@@ -80,14 +92,12 @@ public class CircularControler implements CircularControllerLocal {
     @EJB
     private PlantillaCircularFacadeLocal plantillaCircularFacade;
     @EJB
-    private RecipienteFacadeLocal recipienteFacade;
-    @EJB
     private CircularFacadeLocal circularFacade;
     @Inject
     private Mail mail;
 //    @Inject
 //    private Circular circular;
-    
+
     @Inject
     @Notificacion(COLEGIO)
     private NotificacionService notificacionColegio;
@@ -101,97 +111,32 @@ public class CircularControler implements CircularControllerLocal {
     @Notificacion(SECCION)
     private NotificacionService notificacionSeccion;
     
-    
+    private static final LogFiler LOGGER = LogFiler.getInstance();
+
     @Override
     public void checkEnvio(final String grupoAEnviar, final User user) {
         Map<String, NotificacionService> notificacionMap = new HashMap<>();
-        
+
         notificacionMap.put(Constantes.GRUPO_COLEGIO, new NotificaColegio(user));
         notificacionMap.put(Constantes.GRUPO_ETAPA, new NotificaEtapa(user));
         notificacionMap.put(Constantes.GRUPO_GRADO, new NotificaGrado(user));
         notificacionMap.put(Constantes.GRUPO_SECCION, new NotificaSeccion(user));
-        
+
         NotificacionService notificacion = notificacionMap.get(grupoAEnviar);
-        
+
         // ¿el que envía (user) es supervisor del grupo?
         // si
-            // es supervisor del colegio?
-            // si, envía la circular
-            // no, envía al supervisor inmediato superior
-        
+        // es supervisor del colegio?
+        // si, envía la circular
+        // no, envía al supervisor inmediato superior
         // no es, envia al supervisor del grupo
-            // supervisor del grupo aprueba?
-            // si, envía al supervisor inmediato superior
-            // no, notifica al emisor
-        
-        
-        
-//        if (!optSupervisor.isPresent()) {
-//            System.out.printf("El usuario %s no es supervisor ", user.getUsr());
-//
-//        } else {
-//            Supervisor supervisor = optSupervisor.get();
-//            Optional<StatusSupervisor> optStatusSupervisorActual = Optional
-//                    .ofNullable(statusSupervisorFacade
-//                            .findBySupervisor(supervisor));
-//
-//            if (optStatusSupervisorActual.isPresent()) {
-//                StatusSupervisor ssActual = optStatusSupervisorActual.get();
-//                switch (grupoAEnviar) {
-//                    case Constantes.GRUPO_COLEGIO:
-//                        Optional<Colegio> optCol = Optional.ofNullable(ssActual.getColegioId());
-//                        if (optCol.isPresent()) {
-//                            Colegio col = optCol.get();
-//                            System.out.println("No necesita permiso, envía de una vez, "
-//                                    + "es supervisor de " + col.getNombre());
-//                        } else {
-//                            System.out.println("No puede enviar circulares al colegio");
-//                        }
-//                        break;
-//                    case Constantes.GRUPO_ETAPA:
-//                        Optional<Etapa> optEtapa = Optional.ofNullable(ssActual.getEtapaId());
-//                        if (optEtapa.isPresent()) {
-//                            Etapa etapa = optEtapa.get();
-//                            System.out.println("Envía al supervisor de colegio para "
-//                                    + "su posterior envío, es supervisor de la etapa "
-//                                    + etapa.getNombre());
-//                        } else {
-//                            System.out.println("No puede enviar circulares a la etapa");
-//                        }
-//                        break;
-//                    case Constantes.GRUPO_GRADO:
-//                        Optional<Curso> optGrado = Optional.ofNullable(ssActual.getCursoId());
-//                        if (optGrado.isPresent()) {
-//                            Curso grado = optGrado.get();
-//                            System.out.println("Envía al supervidor de etapa para su revisión y reenvío al "
-//                                    + "supervisor e colegio, es supervisor del grado "
-//                                    + grado.getNombre());
-//                        } else {
-//                            System.out.println("No puede enviar cirsulares al grado");
-//                        }
-//                        break;
-//                    default:
-//                        optGrado = Optional.ofNullable(ssActual.getCursoId());
-//                        if (optGrado.isPresent()) {
-//                            Curso grado = optGrado.get();
-//                            System.out.println("Si es supervisor de grado, envía al de etapa "
-//                                    + "para su revisión y posterior envío, es supervisor del grado "
-//                                    + grado.getNombre());
-//                        } else {
-//                            System.out.println("Si no es supervisor, identifica al supervisor de "
-//                                    + "grado para su revisión y posterior envío");
-//                        }
-//                }
-//            } else {
-//                System.out.printf("El usuario %s actualmente no es supervisor", user.getUsr());
-//            }
-//
-//        }
-
+        // supervisor del grupo aprueba?
+        // si, envía al supervisor inmediato superior
+        // no, notifica al emisor
     }
-    
+
     @Override
-    public boolean isSupervisor(final User user){
+    public boolean isSupervisor(final User user) {
         Optional<Supervisor> optSupervisor = Optional.ofNullable(supervisorFacade.findByUser(user));
         return optSupervisor.isPresent();
     }
@@ -202,99 +147,99 @@ public class CircularControler implements CircularControllerLocal {
         Supervisor supervisor = supervisorFacade.findByUser(user);
         Optional<StatusSupervisor> optSttSprv = Optional.ofNullable(
                 statusSupervisorFacade.findBySupervisor(supervisor));
-        
-        if(optSttSprv.isPresent()){
+
+        if (optSttSprv.isPresent()) {
             StatusSupervisor sttSprv = optSttSprv.get();
-            if(null != sttSprv.getColegioId()){
+            if (null != sttSprv.getColegioId()) {
                 isColegioSprv = true;
             }
-        } 
-        
+        }
+
         return isColegioSprv;
     }
-    
+
     @Override
-    public boolean isEtapaSupervisor(final User user, final Etapa etapa){
+    public boolean isEtapaSupervisor(final User user, final Etapa etapa) {
         return false;
     }
 
     @Override
-    public boolean isGradoSupervisor(final User user, final Curso grado){
+    public boolean isGradoSupervisor(final User user, final Curso grado) {
         return false;
     }
 
     @Override
-    public List<Recipiente> mailListColegio() {
+    public List<String> mailListColegio() {
         List<Seccion> secciones = getCurrentSecciones();
         return getEmailFromSecciones(secciones);
     }
 
     @Override
-    public List<Recipiente> mailListEtapa(Etapa etapa) {
+    public List<String> mailListEtapa(Etapa etapa) {
         List<Seccion> secciones = getCurrentSeccionsByEtapa(etapa);
         return getEmailFromSecciones(secciones);
     }
 
     @Override
-    public List<Recipiente> mailListGrado(Curso grado) {
+    public List<String> mailListGrado(Curso grado) {
         List<Seccion> secciones = getCurrentSeccionsByGrado(grado);
         return getEmailFromSecciones(secciones);
     }
 
     @Override
-    public List<Recipiente> mailListSeccion(Seccion seccion) {
-        List<Recipiente> recipientes = new ArrayList<>();
+    public List<String> mailListSeccion(Seccion seccion) {
+        List<String> recipientes = new ArrayList<>();
         List<Representante> representantes = getCurrentRepresentantes(seccion);
         representantes.stream()
                 .map((repr) -> repr.getDatosPersonaId())
                 .forEachOrdered((dp) -> {
-                    recipientes.add(new Recipiente(dp.getEmail(), circular));
+                    recipientes.add(dp.getEmail());
                 });
         return recipientes;
     }
 
     @Override
-    public Mail prepareMail(final String grupo, final String nombreGrupo, 
-            final String para, final String subject, final String message, 
+    public Mail prepareMail(final String grupo, final String nombreGrupo,
+            final String para, final String subject, final String message,
             final Part file, final String directory) {
-        
+
         // modificar esto de acuerdo a la cuenta que se tenga acceso
-        EmailAccount emailAccount = emailAccountFacade.find(1); 
-        
+        EmailAccount emailAccount = emailAccountFacade.find(1);
+
         mail.setUser(emailAccount.getUser());
         mail.setPassword(emailAccount.getPassword());
         String mensaje = " ";
-        
+
         if (null != message) {
             mensaje = message;
         }
-        
+
         mail.setMessage(mensaje);
         mail.setSubject(subject);
         mail.setRecipient(para);
-        
+
         // falta colocar los email's de cada miembro del grupo,
         // para ello hay que identificar el grupo, y sus integrantes
         // y agregarlos al correo.
-
         String filePath = directory + file.getSubmittedFileName();
 
         mail.setFilePath(filePath);
         mail.setFileName(file.getSubmittedFileName());
-        
+
         return mail;
 
     }
-    
-    @Override 
+
+    @Override
     public Circular makeCircular(final String grupo, final String nombreGrupo,
             final String para, final String subject, final String message,
-            final Part file, final String directory){
-        
+            final Part file, final String directory) {
+
         EmailAccount emailAccount = emailAccountFacade.find(1);
         Circular circular = new Circular();
-        
+
         circular.setGrupoDestino(grupo);
+        circular.setSubgrupoNombre(nombreGrupo);
         circular.setAsunto(subject);
         circular.setFecha(new Date());
         circular.setCodigoCircular(generateCodigoCircular(grupo, nombreGrupo));
@@ -302,22 +247,18 @@ public class CircularControler implements CircularControllerLocal {
         circular.setMessage(message);
         circular.setPlantillaCircularId(getPlantillaCircular());
         circular.setEmailAccountId(emailAccount);
-        
+
         String filePath = directory + file.getSubmittedFileName();
         circular.setFilepath(filePath);
         circular.setFilename(file.getSubmittedFileName());
-        
+
         circularFacade.create(circular);
-        //circular = circularFacade
-        
-        recipienteFacade.batchCreate(getRecipientes(grupo, nombreGrupo));
-        
         return circular;
     }
-    
-    private Object getGrupoObjetivo(String grupo, String nombreGrupo){
+
+    private Object getGrupoObjetivo(String grupo, String nombreGrupo) {
         Object grupoObjetivo = null;
-        switch(grupo){
+        switch (grupo) {
             case Constantes.GRUPO_COLEGIO:
                 Colegio colegio = colegioFacade.find(1);
                 grupoObjetivo = colegio;
@@ -326,7 +267,7 @@ public class CircularControler implements CircularControllerLocal {
                 Etapa etapa = etapaFacade.findByNombre(nombreGrupo);
                 grupoObjetivo = etapa;
                 break;
-            case Constantes.GRUPO_GRADO:    
+            case Constantes.GRUPO_GRADO:
                 Curso curso = cursoFacade.findByName(nombreGrupo);
                 grupoObjetivo = curso;
                 break;
@@ -335,36 +276,36 @@ public class CircularControler implements CircularControllerLocal {
                 grupoObjetivo = seccion;
                 break;
         }
-        
+
         return grupoObjetivo;
     }
-    
-    private String generateCodigoCircular(String grupo, String subgrupo){
+
+    private String generateCodigoCircular(String grupo, String subgrupo) {
         StringBuilder sb = new StringBuilder();
         DateFormat df = new SimpleDateFormat("yyyyMMHHmm");
         Object grupoObjetivo = getGrupoObjetivo(grupo, subgrupo);
-        
+
         String nombreGrupo = "COL";
-        if(grupoObjetivo instanceof Colegio){
+        if (grupoObjetivo instanceof Colegio) {
             nombreGrupo = "COL";
-        } else if(grupoObjetivo instanceof Etapa){
-            nombreGrupo = ((Etapa)grupoObjetivo).getNombre();
-        } else if(grupoObjetivo instanceof Curso){
-            nombreGrupo = ((Curso)grupoObjetivo).getNombre();
-        } else if(grupoObjetivo instanceof Seccion){
-            nombreGrupo = ((Seccion)grupoObjetivo).getCodigo();
+        } else if (grupoObjetivo instanceof Etapa) {
+            nombreGrupo = ((Etapa) grupoObjetivo).getNombre();
+        } else if (grupoObjetivo instanceof Curso) {
+            nombreGrupo = ((Curso) grupoObjetivo).getNombre();
+        } else if (grupoObjetivo instanceof Seccion) {
+            nombreGrupo = ((Seccion) grupoObjetivo).getCodigo();
         }
-        
+
         sb.append(grupo).append(nombreGrupo).append(df.format(new Date()));
         return sb.toString().toUpperCase();
     }
-    
-    private List<Recipiente> getRecipientes(final String grupo, 
-            final String nombreGrupo){
-        List<Recipiente> recipientes = new ArrayList<>();
-        
+
+    private List<String> getRecipientes(final String grupo,
+            final String nombreGrupo) {
+        List<String> recipientes = new ArrayList<>();
+
         Object grupoObjetivo = getGrupoObjetivo(grupo, nombreGrupo);
-        
+
         if (grupoObjetivo instanceof Colegio) {
             recipientes = mailListColegio();
         } else if (grupoObjetivo instanceof Etapa) {
@@ -374,67 +315,67 @@ public class CircularControler implements CircularControllerLocal {
         } else if (grupoObjetivo instanceof Seccion) {
             recipientes = mailListSeccion((Seccion) grupoObjetivo);
         }
-        
+
         return recipientes;
     }
-    
-    private PlantillaCircular getPlantillaCircular(){
+
+    private PlantillaCircular getPlantillaCircular() {
         return plantillaCircularFacade.findByStatus(Constantes.PLANTILLA_CIRCULAR_ACTIVA);
     }
 
-    private Periodo getCurrentPeriod(){
+    private Periodo getCurrentPeriod() {
         return periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
     }
-    
-    private List<Seccion> getCurrentSecciones(){
+
+    private List<Seccion> getCurrentSecciones() {
         Periodo periodo = getCurrentPeriod();
         return seccionFacade.findAllOrderedByCurso(periodo);
     }
-    
-    private List<Seccion> getCurrentSeccionsByGrado(final Curso grado){
+
+    private List<Seccion> getCurrentSeccionsByGrado(final Curso grado) {
         List<Seccion> secciones = getCurrentSecciones();
         return secciones.stream()
                 .filter(sec -> sec.getCursoId().equals(grado))
                 .collect(Collectors.toList());
     }
-    
-    private List<Seccion> getCurrentSeccionsByEtapa(final Etapa etapa){
+
+    private List<Seccion> getCurrentSeccionsByEtapa(final Etapa etapa) {
         List<Curso> cursos = cursoFacade.findAllByEtapa(etapa);
         final List<Seccion> secciones = new ArrayList<>();
         cursos.stream()
                 .map((grado) -> getCurrentSeccionsByGrado(grado))
-                        .forEachOrdered((seccionesEnCurso) -> {
-                            secciones.addAll(seccionesEnCurso);
-                        });
+                .forEachOrdered((seccionesEnCurso) -> {
+                    secciones.addAll(seccionesEnCurso);
+                });
         return secciones;
     }
-    
-    private List<Alumno> getCurrentAlumnosEnSeccion(Seccion seccion){
+
+    private List<Alumno> getCurrentAlumnosEnSeccion(Seccion seccion) {
         List<SeccionHasAlumno> alumnosList = seccionHasAlumnoFacade.findAll(seccion);
         List<Alumno> alumnos = new ArrayList<>();
         alumnosList.forEach((sha) -> {
             alumnos.add(sha.getAlumnoId());
         });
-        
+
         return alumnos;
     }
-    
-    private List<Representante> getCurrentRepresentantes(Seccion seccion){
+
+    private List<Representante> getCurrentRepresentantes(Seccion seccion) {
         List<Alumno> alumnos = getCurrentAlumnosEnSeccion(seccion);
         List<Representante> representantes = new ArrayList<>();
         alumnos.stream()
                 .map((alumno) -> alumnoHasRepresentanteFacade.findAll(alumno))
-                        .forEachOrdered((almHasRepList) -> {
-                            almHasRepList.forEach((almHasRep) -> {
-                                representantes.add(almHasRep.getRepresentanteId());
-                            });
-                        });
+                .forEachOrdered((almHasRepList) -> {
+                    almHasRepList.forEach((almHasRep) -> {
+                        representantes.add(almHasRep.getRepresentanteId());
+                    });
+                });
         return representantes;
     }
-    
-    private List<Recipiente> getEmailFromSecciones(List<Seccion> secciones){
+
+    private List<String> getEmailFromSecciones(List<Seccion> secciones) {
         List<Representante> representantes = new ArrayList<>();
-        List<Recipiente> recipientes = new ArrayList<>();
+        List<String> recipientes = new ArrayList<>();
         secciones.stream()
                 .map((seccion) -> getCurrentRepresentantes(seccion))
                 .forEachOrdered((representantesEnSeccion) -> {
@@ -443,9 +384,84 @@ public class CircularControler implements CircularControllerLocal {
         representantes.stream()
                 .map((repr) -> repr.getDatosPersonaId())
                 .forEachOrdered((dp) -> {
-                    recipientes.add(new Recipiente(dp.getEmail(), circular));
+                    recipientes.add(dp.getEmail());
                 });
         return recipientes;
     }
-    
+
+    @Override
+    public boolean sendCircular(final Circular circular, final List<String> destinatarios) {
+        boolean enviado;
+
+        // modificar esto para colocar la cuenta que va estar válida
+        EmailAccount emailAccount = emailAccountFacade.find(1);
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < destinatarios.size(); i++) {
+            sb.append(destinatarios.get(i));
+            if (i != (destinatarios.size() - 1)) {
+                sb.append(",");
+            }
+        }
+        String destinatariosList = sb.toString();
+
+        System.out.println("la lista de destinatarios es " + destinatariosList);
+
+        try {
+            Properties prop = new Properties();
+            prop.put("mail.smtp.host", emailAccount.getSmtp());
+            prop.setProperty("mail.smtp.starttls.enable", "true");
+            prop.setProperty("mail.smtp.port", emailAccount.getPuerto());
+            prop.setProperty("mail.smtp.user", emailAccount.getUser());
+            prop.setProperty("mail.smtp.auth", "true");
+
+            Session session = Session.getDefaultInstance(prop, null);
+            // parte con el text
+            MimeBodyPart text = new MimeBodyPart();
+            text.setContent(circular.getMessage(), "text/html; charset=utf-8");
+
+            // parte con el adjunto
+            MimeBodyPart adjunto = new MimeBodyPart();
+
+            if (circular.getFilepath() != null && !circular.getFilepath().equals("")) {
+                adjunto.setDataHandler(new DataHandler(
+                        new FileDataSource(circular.getFilepath())));
+                adjunto.setFileName(circular.getFilename());
+            }
+
+            // se crea el combinado
+            MimeMultipart mimeMultipart = new MimeMultipart();
+            if (circular.getFilepath() != null && !circular.getFilepath().equals("")) {
+                mimeMultipart.addBodyPart(adjunto);
+            }
+
+            mimeMultipart.addBodyPart(text);
+
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(emailAccount.getUser()));
+            if (circular.getDestinatario() != null) {
+                message.setRecipient(Message.RecipientType.TO,
+                        new InternetAddress(circular.getDestinatario()));
+            }
+            
+            message.setRecipients(Message.RecipientType.BCC,
+                    InternetAddress.parse(destinatariosList, true));
+
+            message.setSubject(circular.getAsunto());
+            message.setContent(mimeMultipart);
+
+            Transport transport = session.getTransport("smtp");
+            transport.connect(emailAccount.getUser(), emailAccount.getPassword());
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+            enviado = true;
+        } catch (MessagingException ex) {
+            LOGGER.logger.log(Level.SEVERE, "Email no enviado", ex);
+            JsfUtils.messageError("Correo no enviado, ha ocurrido un error: " + ex.getMessage());
+            enviado = false;
+        }
+
+        return enviado;
+    }
+
 }

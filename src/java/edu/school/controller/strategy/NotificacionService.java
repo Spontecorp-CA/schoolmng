@@ -1,7 +1,5 @@
 package edu.school.controller.strategy;
 
-import edu.school.entities.User;
-
 /**
  *
  * @author jgcastillo

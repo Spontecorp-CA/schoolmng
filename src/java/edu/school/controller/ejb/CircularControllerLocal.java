@@ -4,7 +4,6 @@ import edu.school.entities.Circular;
 import edu.school.entities.Curso;
 import edu.school.entities.Etapa;
 import edu.school.entities.Mail;
-import edu.school.entities.Recipiente;
 import edu.school.entities.Seccion;
 import edu.school.entities.User;
 import java.util.List;
@@ -29,13 +28,13 @@ public interface CircularControllerLocal {
     
     boolean isGradoSupervisor(final User user, final Curso grado);
     
-    List<Recipiente> mailListColegio();
+    List<String> mailListColegio();
     
-    List<Recipiente> mailListEtapa(Etapa etapa);
+    List<String> mailListEtapa(Etapa etapa);
     
-    List<Recipiente> mailListGrado(Curso grado);
+    List<String> mailListGrado(Curso grado);
     
-    List<Recipiente> mailListSeccion(Seccion seccion);
+    List<String> mailListSeccion(Seccion seccion);
 
     Mail prepareMail(final String grupo, final String nombreGrupo, 
             final String para, final String subject, final String message, 
@@ -44,5 +43,7 @@ public interface CircularControllerLocal {
     Circular makeCircular(final String grupo, final String nombreGrupo,
             final String para, final String subject, final String message,
             final Part file, final String directory);
+
+    boolean sendCircular(final Circular circular, final List<String> destinatarios);
     
 }
