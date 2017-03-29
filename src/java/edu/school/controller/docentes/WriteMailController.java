@@ -9,6 +9,7 @@ import edu.school.ejb.SeccionFacadeLocal;
 import edu.school.ejb.SeccionHasDocenteFacadeLocal;
 import edu.school.ejb.StatusSupervisorFacadeLocal;
 import edu.school.ejb.SupervisorFacadeLocal;
+import edu.school.entities.Circular;
 import edu.school.entities.Curso;
 import edu.school.entities.Docente;
 import edu.school.entities.EmailAccount;
@@ -54,6 +55,8 @@ public class WriteMailController implements Serializable {
     private EmailAccount emailAccount;
     @Inject
     private Mail mail;
+    @Inject
+    private Circular circular;
     @Inject
     private DocenteDashboardController docenteDashboardController;
 
@@ -328,7 +331,7 @@ public class WriteMailController implements Serializable {
         try {
             docente = docenteFacade.findByCi(user.getCi());
 
-            LOGGER.logger.log(Level.INFO, "El docente que envía la circular es {0}",
+            LogFiler.logger.log(Level.INFO, "El docente que envía la circular es {0}",
                     docente.getDatosPersonaId().getNombre());
 
             // con el docente se obtiene que sección, grado o etapa está
@@ -342,13 +345,13 @@ public class WriteMailController implements Serializable {
                         .collect(Collectors.toList());
 
             } else {
-                LOGGER.logger.log(Level.WARNING, "El docente no tiene sección asignada");
+                LogFiler.logger.log(Level.WARNING, "El docente no tiene sección asignada");
             }
 
             // con el curso(grado) y/o etapa se obtiene el supervisor
         } catch (DocenteNotFoundException ex) {
             //Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
-            LOGGER.logger.log(Level.FINE, "Al buscar al docente con c.i.{0} dió error: {1}",
+            LogFiler.logger.log(Level.FINE, "Al buscar al docente con c.i.{0} dió error: {1}",
                     new Object[]{docente.getUserId().getCi(), ex});
         }
     }
@@ -374,19 +377,20 @@ public class WriteMailController implements Serializable {
         User user = docenteDashboardController.getUser();
         boolean isSupervisor = circularController.isSupervisor(user);
         boolean isSupervisorColegio = circularController.isColegioSupervisor(user);
+        //boolean isSupervisorEtapa = circularController.isEtapaSupervisor(user, etapa);
 
         if(isSupervisor){
             // debe chequear si es supervisor del colegio envía la circular
             if(isSupervisorColegio){
-                // prepara el email a enviar
-                mail = circularController.prepareMail(grupoAEnviar, null, para, 
-                        subject, message, file, directory);
+                // prepara la circular a enviar
+                circular = circularController.makeCircular(grupoAEnviar, "colegio", 
+                        para, subject, message, file, directory);
                 // si está correctamente preparado lo envía
-                if(null != mail){
+                if(null != circular){
                     String filePath = directory + file.getSubmittedFileName();
-
+                    List<String> destinatarios = circularController.mailListColegio();
                     // lo envía y muestra los mensajes si fue exitoso o no
-                    if (mailController.sendMail(emailAccount, mail)) {
+                    if(circularController.sendCircular(circular, destinatarios)){
                         JsfUtils.messageSuccess("Correo enviado con éxito");
                         this.clearFields();
 
