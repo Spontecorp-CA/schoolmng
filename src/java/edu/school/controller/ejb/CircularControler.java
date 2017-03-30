@@ -247,6 +247,7 @@ public class CircularControler implements CircularControllerLocal {
         circular.setMessage(message);
         circular.setPlantillaCircularId(getPlantillaCircular());
         circular.setEmailAccountId(emailAccount);
+        circular.setStatus(Constantes.CIRCULAR_NO_ENVIADA);
 
         String filePath = directory + file.getSubmittedFileName();
         circular.setFilepath(filePath);
@@ -391,75 +392,80 @@ public class CircularControler implements CircularControllerLocal {
 
     @Override
     public boolean sendCircular(final Circular circular, final List<String> destinatarios) {
-        boolean enviado;
+        boolean enviado = false;
+
+        // obtener la circular
+        // determina supervisor
+        // envia circular
+
 
         // modificar esto para colocar la cuenta que va estar válida
-        EmailAccount emailAccount = emailAccountFacade.find(1);
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < destinatarios.size(); i++) {
-            sb.append(destinatarios.get(i));
-            if (i != (destinatarios.size() - 1)) {
-                sb.append(",");
-            }
-        }
-        String destinatariosList = sb.toString();
-
-        System.out.println("la lista de destinatarios es " + destinatariosList);
-
-        try {
-            Properties prop = new Properties();
-            prop.put("mail.smtp.host", emailAccount.getSmtp());
-            prop.setProperty("mail.smtp.starttls.enable", "true");
-            prop.setProperty("mail.smtp.port", emailAccount.getPuerto());
-            prop.setProperty("mail.smtp.user", emailAccount.getUser());
-            prop.setProperty("mail.smtp.auth", "true");
-
-            Session session = Session.getDefaultInstance(prop, null);
-            // parte con el text
-            MimeBodyPart text = new MimeBodyPart();
-            text.setContent(circular.getMessage(), "text/html; charset=utf-8");
-
-            // parte con el adjunto
-            MimeBodyPart adjunto = new MimeBodyPart();
-
-            if (circular.getFilepath() != null && !circular.getFilepath().equals("")) {
-                adjunto.setDataHandler(new DataHandler(
-                        new FileDataSource(circular.getFilepath())));
-                adjunto.setFileName(circular.getFilename());
-            }
-
-            // se crea el combinado
-            MimeMultipart mimeMultipart = new MimeMultipart();
-            if (circular.getFilepath() != null && !circular.getFilepath().equals("")) {
-                mimeMultipart.addBodyPart(adjunto);
-            }
-
-            mimeMultipart.addBodyPart(text);
-
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(emailAccount.getUser()));
-            if (circular.getDestinatario() != null) {
-                message.setRecipient(Message.RecipientType.TO,
-                        new InternetAddress(circular.getDestinatario()));
-            }
-            
-            message.setRecipients(Message.RecipientType.BCC,
-                    InternetAddress.parse(destinatariosList, true));
-
-            message.setSubject(circular.getAsunto());
-            message.setContent(mimeMultipart);
-
-            Transport transport = session.getTransport("smtp");
-            transport.connect(emailAccount.getUser(), emailAccount.getPassword());
-            transport.sendMessage(message, message.getAllRecipients());
-            transport.close();
-            enviado = true;
-        } catch (MessagingException ex) {
-            LOGGER.logger.log(Level.SEVERE, "Email no enviado", ex);
-            JsfUtils.messageError("Correo no enviado, ha ocurrido un error: " + ex.getMessage());
-            enviado = false;
-        }
+//        EmailAccount emailAccount = emailAccountFacade.find(1);
+//        StringBuilder sb = new StringBuilder();
+//
+//        for (int i = 0; i < destinatarios.size(); i++) {
+//            sb.append(destinatarios.get(i));
+//            if (i != (destinatarios.size() - 1)) {
+//                sb.append(",");
+//            }
+//        }
+//        String destinatariosList = sb.toString();
+//
+//        System.out.println("la lista de destinatarios es " + destinatariosList);
+//
+//        try {
+//            Properties prop = new Properties();
+//            prop.put("mail.smtp.host", emailAccount.getSmtp());
+//            prop.setProperty("mail.smtp.starttls.enable", "true");
+//            prop.setProperty("mail.smtp.port", emailAccount.getPuerto());
+//            prop.setProperty("mail.smtp.user", emailAccount.getUser());
+//            prop.setProperty("mail.smtp.auth", "true");
+//
+//            Session session = Session.getDefaultInstance(prop, null);
+//            // parte con el text
+//            MimeBodyPart text = new MimeBodyPart();
+//            text.setContent(circular.getMessage(), "text/html; charset=utf-8");
+//
+//            // parte con el adjunto
+//            MimeBodyPart adjunto = new MimeBodyPart();
+//
+//            if (circular.getFilepath() != null && !circular.getFilepath().equals("")) {
+//                adjunto.setDataHandler(new DataHandler(
+//                        new FileDataSource(circular.getFilepath())));
+//                adjunto.setFileName(circular.getFilename());
+//            }
+//
+//            // se crea el combinado
+//            MimeMultipart mimeMultipart = new MimeMultipart();
+//            if (circular.getFilepath() != null && !circular.getFilepath().equals("")) {
+//                mimeMultipart.addBodyPart(adjunto);
+//            }
+//
+//            mimeMultipart.addBodyPart(text);
+//
+//            MimeMessage message = new MimeMessage(session);
+//            message.setFrom(new InternetAddress(emailAccount.getUser()));
+//            if (circular.getDestinatario() != null) {
+//                message.setRecipient(Message.RecipientType.TO,
+//                        new InternetAddress(circular.getDestinatario()));
+//            }
+//            
+//            message.setRecipients(Message.RecipientType.BCC,
+//                    InternetAddress.parse(destinatariosList, true));
+//
+//            message.setSubject(circular.getAsunto());
+//            message.setContent(mimeMultipart);
+//
+//            Transport transport = session.getTransport("smtp");
+//            transport.connect(emailAccount.getUser(), emailAccount.getPassword());
+//            transport.sendMessage(message, message.getAllRecipients());
+//            transport.close();
+//            enviado = true;
+//        } catch (MessagingException ex) {
+//            LOGGER.logger.log(Level.SEVERE, "Email no enviado", ex);
+//            JsfUtils.messageError("Correo no enviado, ha ocurrido un error: " + ex.getMessage());
+//            enviado = false;
+//        }
 
         return enviado;
     }
