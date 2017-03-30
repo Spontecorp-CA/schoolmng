@@ -13,6 +13,7 @@ import edu.school.entities.Circular;
 import edu.school.entities.Curso;
 import edu.school.entities.Docente;
 import edu.school.entities.EmailAccount;
+import edu.school.entities.Etapa;
 import edu.school.entities.Mail;
 import edu.school.entities.Periodo;
 import edu.school.entities.Seccion;
@@ -79,6 +80,15 @@ public class WriteMailController implements Serializable {
     @EJB
     private CircularControllerLocal circularController;
 
+    private Etapa etapa;
+    private Curso grado;
+    private Seccion seccion;
+    private List<Etapa> etapas;
+    private boolean showEtapasDropbox;
+    private List<Curso> grados;
+    private boolean showGradosDropbox;
+    private List<Seccion> secciones;
+    
     private String para;
     private String subject;
     private String message;
@@ -87,10 +97,8 @@ public class WriteMailController implements Serializable {
     private String fileLabel;
     private String grupoAEnviar;
     private List<String> grupos;
-    private List<Seccion> secciones;
-    private Seccion seccion;
-    private Curso grado;
-    private List<Curso> grados;
+
+    private String cargoSupervisor;
 
     private static final LogFiler LOGGER = LogFiler.getInstance();
 
@@ -112,7 +120,7 @@ public class WriteMailController implements Serializable {
 
         } catch (IOException ex) {
             //Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
-            LOGGER.logger.log(Level.SEVERE, "Error definiendo la dirección temporal: ", ex.getMessage());
+            LogFiler.logger.log(Level.SEVERE, "Error definiendo la dirección temporal: ", ex.getMessage());
         }
 
         fileLabel = "  No ha seleccionado archivo";
@@ -201,6 +209,22 @@ public class WriteMailController implements Serializable {
         this.seccion = seccion;
     }
 
+    public Etapa getEtapa() {
+        return etapa;
+    }
+
+    public void setEtapa(Etapa etapa) {
+        this.etapa = etapa;
+    }
+
+    public List<Etapa> getEtapas() {
+        return etapas;
+    }
+
+    public void setEtapas(List<Etapa> etapas) {
+        this.etapas = etapas;
+    }
+
     public Curso getGrado() {
         return grado;
     }
@@ -215,6 +239,33 @@ public class WriteMailController implements Serializable {
 
     public void setGrados(List<Curso> grados) {
         this.grados = grados;
+    }
+
+    public boolean isShowEtapasDropbox() {
+        return showEtapasDropbox;
+    }
+
+    public void setShowEtapasDropbox(boolean showEtapasDropbox) {
+        this.showEtapasDropbox = showEtapasDropbox;
+    }
+
+    public boolean isShowGradosDropbox() {
+        return showGradosDropbox;
+    }
+
+    public void setShowGradosDropbox(boolean showGradosDropbox) {
+        this.showGradosDropbox = showGradosDropbox;
+    }
+
+    public String getCargoSupervisor() {
+        if (null == cargoSupervisor) {
+            cargoSupervisor = lookupCargoSupervisor();
+        }
+        return cargoSupervisor;
+    }
+
+    public void setCargoSupervisor(String cargoSupervisor) {
+        this.cargoSupervisor = cargoSupervisor;
     }
 
     private List<String> makeGrupos() {
@@ -355,8 +406,12 @@ public class WriteMailController implements Serializable {
                     new Object[]{docente.getUserId().getCi(), ex});
         }
     }
+    
+    public void saveCircular(){
+        // terminar de construir la circular
+    }
 
-    public void checkSupervisorChain(){
+    public void checkSupervisorChain() {
 //        switch(grupoAEnviar){
 //            case Constantes.GRUPO_COLEGIO:
 //                System.out.println("No necesita permiso, envía de una vez");
@@ -374,23 +429,24 @@ public class WriteMailController implements Serializable {
 //                System.out.println("Si no es supervisor, identifica al supervisor de "
 //                        + "grado para su revisión y posterior envío");
 //        }
+
         User user = docenteDashboardController.getUser();
         boolean isSupervisor = circularController.isSupervisor(user);
         boolean isSupervisorColegio = circularController.isColegioSupervisor(user);
         //boolean isSupervisorEtapa = circularController.isEtapaSupervisor(user, etapa);
 
-        if(isSupervisor){
+        if (isSupervisor) {
             // debe chequear si es supervisor del colegio envía la circular
-            if(isSupervisorColegio){
+            if (isSupervisorColegio) {
                 // prepara la circular a enviar
-                circular = circularController.makeCircular(grupoAEnviar, "colegio", 
+                circular = circularController.makeCircular(grupoAEnviar, "colegio",
                         para, subject, message, file, directory);
                 // si está correctamente preparado lo envía
-                if(null != circular){
+                if (null != circular) {
                     String filePath = directory + file.getSubmittedFileName();
                     List<String> destinatarios = circularController.mailListColegio();
                     // lo envía y muestra los mensajes si fue exitoso o no
-                    if(circularController.sendCircular(circular, destinatarios)){
+                    if (circularController.sendCircular(circular, destinatarios)) {
                         JsfUtils.messageSuccess("Correo enviado con éxito");
                         this.clearFields();
 
@@ -413,6 +469,32 @@ public class WriteMailController implements Serializable {
         } else {
             // debe buscar su supervisor inmediato para enviarle la circular
         }
-        
+
+    }
+
+    private String lookupCargoSupervisor() {
+        String answer = " ";
+        User user = docenteDashboardController.getUser();
+        Optional<Supervisor> optSupervisor = Optional
+                .ofNullable(supervisorFacade.findByUser(user));
+        if (optSupervisor.isPresent()) {
+            Supervisor supervisor = optSupervisor.get();
+            Optional<StatusSupervisor> optStatSup = Optional
+                    .ofNullable(statusSupervisorFacade.findBySupervisor(supervisor));
+            if (optStatSup.isPresent()) {
+                StatusSupervisor statSup = optStatSup.get();
+                if (null != statSup.getColegioId()) {
+                    answer = "Supervisor del Colegio";
+                } else if (null != statSup.getEtapaId()) {
+                    Etapa etapa = statSup.getEtapaId();
+                    answer = "Supervisor de: " + etapa.getNombre();
+                } else if (null != statSup.getCursoId()) {
+                    Curso curso = statSup.getCursoId();
+                    answer = "Supervisor de: " + curso.getNombre();
+                }
+            }
+        }
+
+        return answer;
     }
 }
