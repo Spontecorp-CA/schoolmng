@@ -2,8 +2,10 @@ package edu.school.controller.docentes;
 
 import edu.school.controller.ejb.CircularControllerLocal;
 import edu.school.controller.ejb.MailControllerLocal;
+import edu.school.ejb.CursoFacadeLocal;
 import edu.school.ejb.DocenteFacadeLocal;
 import edu.school.ejb.EmailAccountFacadeLocal;
+import edu.school.ejb.EtapaFacadeLocal;
 import edu.school.ejb.PeriodoFacadeLocal;
 import edu.school.ejb.SeccionFacadeLocal;
 import edu.school.ejb.SeccionHasDocenteFacadeLocal;
@@ -79,16 +81,23 @@ public class WriteMailController implements Serializable {
     private PeriodoFacadeLocal periodoFacade;
     @EJB
     private CircularControllerLocal circularController;
+    @EJB
+    private EtapaFacadeLocal etapaFacade;
+    @EJB
+    private CursoFacadeLocal cursoFacade;
 
     private Etapa etapa;
     private Curso grado;
     private Seccion seccion;
     private List<Etapa> etapas;
     private boolean showEtapasDropbox;
+    private boolean enableEtapasDropbox;
     private List<Curso> grados;
     private boolean showGradosDropbox;
+    private boolean enableGradosDropbox;
     private List<Seccion> secciones;
-    
+    private boolean enableSeccionesDropbox;
+
     private String para;
     private String subject;
     private String message;
@@ -99,6 +108,7 @@ public class WriteMailController implements Serializable {
     private List<String> grupos;
 
     private String cargoSupervisor;
+    private String tipoSupervisor = "";
 
     private static final LogFiler LOGGER = LogFiler.getInstance();
 
@@ -182,16 +192,14 @@ public class WriteMailController implements Serializable {
 
     public List<Seccion> getSecciones() {
         if (grupoAEnviar != null) {
-            switch (grupoAEnviar) {
-                case Constantes.GRUPO_COLEGIO:
-                    break;
-                case Constantes.GRUPO_ETAPA:
-                    break;
-                case Constantes.GRUPO_GRADO:
-                    break;
-                case Constantes.GRUPO_SECCION:
-                    checkSeccion();
-                    break;
+            if (grupoAEnviar.equals(Constantes.GRUPO_SECCION)) {
+                secciones = checkSeccion();
+                if(null != etapas){
+                    etapas.clear();
+                }
+                if(null != grados){
+                    grados.clear();
+                }
             }
         }
         return secciones;
@@ -218,6 +226,17 @@ public class WriteMailController implements Serializable {
     }
 
     public List<Etapa> getEtapas() {
+        if (grupoAEnviar != null) {
+            if (grupoAEnviar.equals(Constantes.GRUPO_ETAPA)) {
+                etapas = etapaFacade.findAll();
+                if(null != grados){
+                    grados.clear();
+                }
+                if(null != secciones){
+                    secciones.clear();
+                }
+            }
+        }
         return etapas;
     }
 
@@ -234,6 +253,17 @@ public class WriteMailController implements Serializable {
     }
 
     public List<Curso> getGrados() {
+        if (grupoAEnviar != null) {
+            if (grupoAEnviar.equals(Constantes.GRUPO_GRADO)) {
+                grados = cursoFacade.findAllByEtapa(etapa);
+                if (null != etapas) {
+                    etapas.clear();
+                }
+                if (null != secciones) {
+                    secciones.clear();
+                }
+            }
+        }
         return grados;
     }
 
@@ -251,6 +281,30 @@ public class WriteMailController implements Serializable {
 
     public boolean isShowGradosDropbox() {
         return showGradosDropbox;
+    }
+
+    public boolean isEnableEtapasDropbox() {
+        return enableEtapasDropbox;
+    }
+
+    public void setEnableEtapasDropbox(boolean enableEtapasDropbox) {
+        this.enableEtapasDropbox = enableEtapasDropbox;
+    }
+
+    public boolean isEnableGradosDropbox() {
+        return enableGradosDropbox;
+    }
+
+    public void setEnableGradosDropbox(boolean enableGradosDropbox) {
+        this.enableGradosDropbox = enableGradosDropbox;
+    }
+
+    public boolean isEnableSeccionesDropbox() {
+        return enableSeccionesDropbox;
+    }
+
+    public void setEnableSeccionesDropbox(boolean enableSeccionesDropbox) {
+        this.enableSeccionesDropbox = enableSeccionesDropbox;
     }
 
     public void setShowGradosDropbox(boolean showGradosDropbox) {
@@ -283,18 +337,26 @@ public class WriteMailController implements Serializable {
 
                     if (null != statusSup.getColegioId()) {
                         nivel = 0;  // nivel colegio
+                        showEtapasDropbox = true;
+                        showGradosDropbox = true;
                         break;
                     }
                     if (null != statusSup.getEtapaId()) {
                         nivel = 1; // nivel etapa
+                        etapa = statusSup.getEtapaId();
+                        showEtapasDropbox = false;
+                        showGradosDropbox = true;
                         break;
                     }
                     if (null != statusSup.getCursoId()) {
                         nivel = 2; // nivel curso
+                        grado = statusSup.getCursoId();
+                        showEtapasDropbox = false;
+                        showGradosDropbox = false;
                         break;
                     }
                 } else {
-                    LOGGER.logger.log(Level.INFO, "El usuario {0} no es supervisor", user.getUsr());
+                    LogFiler.logger.log(Level.INFO, "El usuario {0} no es supervisor", user.getUsr());
                     nivel = 4; // nivel sección
                 }
             }
@@ -374,40 +436,51 @@ public class WriteMailController implements Serializable {
         this.fileLabel = null;
     }
 
-    public void checkSeccion() {
-        // con el usuario se obtiene el docente
-        User user = docenteDashboardController.getUser();
+    public List<Seccion> checkSeccion() {
+        List<Seccion> seccionesList = new ArrayList<>();
         Periodo periodo = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
-        Docente docente = null;
-        try {
-            docente = docenteFacade.findByCi(user.getCi());
 
-            LogFiler.logger.log(Level.INFO, "El docente que envía la circular es {0}",
-                    docente.getDatosPersonaId().getNombre());
+        if (tipoSupervisor.equals("")) {
+            // No es supervisor, sólo toma las secciones asiganadas a este docente
+            // con el usuario se obtiene el docente
+            User user = docenteDashboardController.getUser();
 
-            // con el docente se obtiene que sección, grado o etapa está
-            Optional<List<Seccion>> optSeccionList = Optional.ofNullable(seccionHasDocenteFacade.findAllByDocente(docente));
+            Docente docente = null;
+            try {
+                docente = docenteFacade.findByCi(user.getCi());
 
-            List<Seccion> seccionList;
-            if (optSeccionList.isPresent()) {
-                seccionList = optSeccionList.get();
-                secciones = seccionList.stream()
-                        .filter(sec -> sec.getPeriodoId().equals(periodo))
-                        .collect(Collectors.toList());
+                // con el docente se obtiene que sección, grado o etapa está
+                Optional<List<Seccion>> optSeccionList = Optional.ofNullable(seccionHasDocenteFacade.findAllByDocente(docente));
 
-            } else {
-                LogFiler.logger.log(Level.WARNING, "El docente no tiene sección asignada");
+                List<Seccion> seccionList;
+                if (optSeccionList.isPresent()) {
+                    seccionList = optSeccionList.get();
+                    seccionesList = seccionList.stream()
+                            .filter(sec -> sec.getPeriodoId().equals(periodo))
+                            .collect(Collectors.toList());
+
+                } else {
+                    LogFiler.logger.log(Level.WARNING, "El docente no tiene sección asignada");
+                }
+
+                // con el curso(grado) y/o etapa se obtiene el supervisor
+            } catch (DocenteNotFoundException ex) {
+                //Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
+                LogFiler.logger.log(Level.FINE, "Al buscar al docente con c.i.{0} dió error: {1}",
+                        new Object[]{docente.getUserId().getCi(), ex});
             }
-
-            // con el curso(grado) y/o etapa se obtiene el supervisor
-        } catch (DocenteNotFoundException ex) {
-            //Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
-            LogFiler.logger.log(Level.FINE, "Al buscar al docente con c.i.{0} dió error: {1}",
-                    new Object[]{docente.getUserId().getCi(), ex});
+        } else if (tipoSupervisor.equals(Constantes.SUPERVISOR_COLEGIO)) {
+            seccionesList = seccionFacade.findAllOrderedByCurso(periodo);
+        } else if (tipoSupervisor.equals(Constantes.SUPERVISOR_ETAPA)) {
+            seccionesList = seccionFacade.findAllOrderedByEtapa(etapa);
+        } else if (tipoSupervisor.equals(Constantes.SUPERVISOR_GRADO)) {
+            seccionesList = seccionFacade.findAllOrderedByGrado(grado, periodo);
         }
+
+        return seccionesList;
     }
-    
-    public void saveCircular(){
+
+    public void saveCircular() {
         // terminar de construir la circular
     }
 
@@ -485,16 +558,20 @@ public class WriteMailController implements Serializable {
                 StatusSupervisor statSup = optStatSup.get();
                 if (null != statSup.getColegioId()) {
                     answer = "Supervisor del Colegio";
+                    tipoSupervisor = Constantes.SUPERVISOR_COLEGIO;
                 } else if (null != statSup.getEtapaId()) {
-                    Etapa etapa = statSup.getEtapaId();
+                    etapa = statSup.getEtapaId();
                     answer = "Supervisor de: " + etapa.getNombre();
+                    tipoSupervisor = Constantes.SUPERVISOR_ETAPA;
                 } else if (null != statSup.getCursoId()) {
                     Curso curso = statSup.getCursoId();
                     answer = "Supervisor de: " + curso.getNombre();
+                    tipoSupervisor = Constantes.SUPERVISOR_GRADO;
                 }
             }
         }
 
         return answer;
     }
+
 }
