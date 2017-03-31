@@ -60,32 +60,68 @@
                                             class="form-horizontal form-label-left">
                                         <p:growl id="messages" showDetail="true"/>
 
-                                        <div class="col-md-offset-2">Aqui va que nivel de supervisión tiene</div>
+                                        <div class="col-md-offset-2">#{writeMailController.cargoSupervisor}</div>
 
                                         <div class="form-group col-md-9 col-sm-9 col-xs-12">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="grupo">
                                                 Grupo:
                                             </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <div class="form-group col-md-9 col-sm-9 col-xs-12">
                                                     <p:selectOneRadio id="grupo" value="#{writeMailController.grupo}">
                                                         <f:selectItems var="group" value="#{writeMailController.grupos}"
                                                                        itemLabel="#{group}"
                                                                        itemValue="#{group}"/>
-                                                        <p:ajax update="seccionList"/>
+                                                        <p:ajax update="etapaList gradoList seccionList" />
                                                     </p:selectOneRadio>
                                                 </div>
-                                                <div class="col-md-3 col-sm-3 col-xs-12">
-                                                    <p:selectOneMenu id="seccionList"
-                                                                     value="#{writeMailController.seccion}"
-                                                                     style="width: 180px;"
-                                                                     converter="edu.school.entities.converters.SeccionConverter">
-                                                        <f:selectItems value="#{writeMailController.secciones}"
-                                                                       var="seccion"
-                                                                       itemLabel="#{seccion.cursoId.nombre}-#{seccion.seccion}"
-                                                                       itemValue="#{seccion}"/>
-                                                    </p:selectOneMenu>
-                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <table class="col-md-offset-3">
+                                                    <tr>
+                                                        <td>
+                                                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                                                <p:selectOneMenu id="etapaList"
+                                                                                 value="#{writeMailController.etapa}"
+                                                                                 style="width: 180px;"
+                                                                                 converter="edu.school.entities.converters.EtapaConverter"
+                                                                                 rendered="#{writeMailController.showEtapasDropbox}">
+                                                                    <f:selectItems value="#{writeMailController.etapas}"
+                                                                                   var="etapa"
+                                                                                   itemLabel="#{etapa.nombre}"
+                                                                                   itemValue="#{etapa}"/>
+                                                                </p:selectOneMenu>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                                                <p:selectOneMenu id="gradoList"
+                                                                                 value="#{writeMailController.grado}"
+                                                                                 style="width: 180px;"
+                                                                                 converter="edu.school.entities.converters.CursoConverter"
+                                                                                 rendered="#{writeMailController.showGradosDropbox}">
+                                                                    <f:selectItems value="#{writeMailController.grados}"
+                                                                                   var="curso"
+                                                                                   itemLabel="#{curso.nombre}"
+                                                                                   itemValue="#{curso}"/>
+                                                                </p:selectOneMenu>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                                                <p:selectOneMenu id="seccionList"
+                                                                                 value="#{writeMailController.seccion}"
+                                                                                 style="width: 180px;"
+                                                                                 converter="edu.school.entities.converters.SeccionConverter">
+                                                                    <f:selectItems value="#{writeMailController.secciones}"
+                                                                                   var="seccion"
+                                                                                   itemLabel="#{seccion.cursoId.nombre} - #{seccion.seccion}"
+                                                                                   itemValue="#{seccion}"/>
+                                                                </p:selectOneMenu>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
 

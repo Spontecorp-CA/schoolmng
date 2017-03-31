@@ -3,6 +3,7 @@ package edu.school.ejb;
 import edu.school.entities.Seccion;
 import edu.school.entities.Curso;
 import edu.school.entities.Docente;
+import edu.school.entities.Etapa;
 import edu.school.entities.Periodo;
 import edu.school.utilities.Constantes;
 import edu.school.utilities.LogFiler;
@@ -153,6 +154,38 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
         } catch (NoResultException e) {
             LOGGER.logger.log(Level.WARNING, "No encontró secciones del período"
                     + " {0}.",periodo.getNombre());
+        }
+        return secciones;
+    }
+
+    @Override
+    public List<Seccion> findAllOrderedByEtapa(final Etapa etapa) {
+        List<Seccion> secciones = null;
+        try {
+            String query = "FROM Seccion s"
+                    + "	JOIN s.cursoId c"
+                    + " WHERE c.etapaId = :etapa"
+                    + " ORDER BY c.nombre, s.seccion";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("etapa", etapa);
+            secciones = q.getResultList();
+        } catch (NoResultException e) {
+        }
+        return secciones;
+    }
+
+    @Override
+    public List<Seccion> findAllOrderedByGrado(final Curso curso, final Periodo periodo) {
+        List<Seccion> secciones = null;
+        try {
+            String query = "FROM Seccion s"
+                    + " WHERE s.cursoId = :curso AND s.periodoId = :periodo"
+                    + " ORDER BY s.cursoId.nombre, s.seccion";
+            Query q = getEntityManager().createQuery(query);
+            q.setParameter("curso", curso);
+            q.setParameter("periodo", periodo);
+            secciones = q.getResultList();
+        } catch (NoResultException e) {
         }
         return secciones;
     }
