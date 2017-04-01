@@ -27,6 +27,9 @@ public final class Constantes {
     public static final int SUPERVISOR_ACTIVO = 1;
     public static final int SUPERVISOR_INACTIVO = 0;
     public static final int SUPERVISOR_ELIMINADO = 2;
+    public static final String SUPERVISOR_COLEGIO = "Colegio";
+    public static final String SUPERVISOR_ETAPA = "Etapa";
+    public static final String SUPERVISOR_GRADO = "Grado";
     
     public static final int PERIODO_ACTIVO = 1;
     public static final int PERIODO_INACTIVO = 0;

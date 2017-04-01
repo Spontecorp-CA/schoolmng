@@ -5,7 +5,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-public class JsfUtils {
+public final class JsfUtils {
+    
+    private JsfUtils(){}
     
     public static void messageSuccess(String message){
         FacesContext.getCurrentInstance().addMessage(null, 
