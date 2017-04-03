@@ -26,10 +26,11 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
 
-    public void create(T entity) {
+    public T create(T entity) {
         if(!constraintValidationsDetected(entity)){
             getEntityManager().persist(entity);
         }
+        return entity;
     }
     
     public void batchCreate(Collection<T> col) {

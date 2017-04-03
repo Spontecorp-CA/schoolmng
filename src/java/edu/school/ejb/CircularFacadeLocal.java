@@ -8,15 +8,15 @@ import javax.ejb.Local;
 @Local
 public interface CircularFacadeLocal {
     
-    void create(Circular autorizacion);
+    Circular create(Circular circular);
     
     void batchCreate(Collection<Circular> collection);
 
-    void edit(Circular autorizacion);
+    void edit(Circular circular);
     
     void batchEdit(Collection<Circular> collection);
 
-    void remove(Circular autorizacion);
+    void remove(Circular circular);
 
     Circular find(Object id);
 

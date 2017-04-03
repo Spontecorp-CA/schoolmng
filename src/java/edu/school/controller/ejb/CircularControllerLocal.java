@@ -5,8 +5,10 @@ import edu.school.entities.Curso;
 import edu.school.entities.Etapa;
 import edu.school.entities.Mail;
 import edu.school.entities.Seccion;
+import edu.school.entities.StatusSupervisor;
 import edu.school.entities.User;
 import java.util.List;
+import java.util.Optional;
 import javax.ejb.Local;
 import javax.servlet.http.Part;
 
@@ -42,8 +44,10 @@ public interface CircularControllerLocal {
     
     Circular makeCircular(final String grupo, final String nombreGrupo,
             final String para, final String subject, final String message,
-            final Part file, final String directory);
+            final Part file, final String directory, final User user);
 
     boolean sendCircular(final Circular circular, final List<String> destinatarios);
+    
+    Optional<StatusSupervisor> lookupCargoSupervisor(User user);
     
 }

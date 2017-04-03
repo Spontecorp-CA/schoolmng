@@ -72,7 +72,8 @@
                                                         <f:selectItems var="group" value="#{writeMailController.grupos}"
                                                                        itemLabel="#{group}"
                                                                        itemValue="#{group}"/>
-                                                        <p:ajax update="etapaList gradoList seccionList" />
+                                                        <p:ajax update="etapaList gradoList seccionList" 
+                                                                listener="#{writeMailController.ongrupoChange}"/>
                                                     </p:selectOneRadio>
                                                 </div>
                                             </div>
@@ -162,6 +163,11 @@
 
                                         <div class="form-group">
                                             <div class="col-md-6 col-md-offset-3">
+                                                <p:commandButton id="save" 
+                                                                 value="Guardar"
+                                                                 actionListener="#{writeMailController.saveCircular()}"
+                                                                 styleClass="btn btn-warning"
+                                                                 update="form1:messages"/>
                                                 <p:commandButton id="ok"
                                                                  value="Enviar"
                                                                  action="#{writeMailController.checkSupervisorChain()}"

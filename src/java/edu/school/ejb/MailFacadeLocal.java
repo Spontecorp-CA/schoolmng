@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface MailFacadeLocal {
     
-    void create(Mail autorizacion);
+    Mail create(Mail autorizacion);
     
     void batchCreate(Collection<Mail> collection);
 

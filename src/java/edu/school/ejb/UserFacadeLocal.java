@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface UserFacadeLocal {
 
-    void create(User user);
+    User create(User user);
     
     void batchCreate(Collection<User> collection);
 

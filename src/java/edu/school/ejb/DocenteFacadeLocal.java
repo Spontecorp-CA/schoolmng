@@ -10,7 +10,7 @@ import javax.ejb.Local;
 @Local
 public interface DocenteFacadeLocal {
 
-    void create(Docente docente);
+    Docente create(Docente docente);
     
     void batchCreate(Collection<Docente> collection);
 

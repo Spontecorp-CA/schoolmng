@@ -9,11 +9,10 @@ package edu.school.ejb;
 import edu.school.entities.PlantillaCircular;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public interface PlantillaCircularFacadeLocal {
 
-    void create(PlantillaCircular plantillaCircular);
+    PlantillaCircular create(PlantillaCircular plantillaCircular);
 
     void batchCreate(Collection<PlantillaCircular> collection);
 

@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface RolFacadeLocal {
 
-    void create(Rol rol);
+    Rol create(Rol rol);
     
     void batchCreate(Collection<Rol> collection);
 
