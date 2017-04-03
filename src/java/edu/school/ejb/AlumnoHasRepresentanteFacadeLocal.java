@@ -18,7 +18,7 @@ import javax.ejb.Local;
 @Local
 public interface AlumnoHasRepresentanteFacadeLocal {
 
-    void create(AlumnoHasRepresentante alumnoHasRepresentante);
+    AlumnoHasRepresentante create(AlumnoHasRepresentante alumnoHasRepresentante);
     
     void batchCreate(Collection<AlumnoHasRepresentante> collection);
 

@@ -10,7 +10,7 @@ import javax.ejb.Local;
 @Local
 public interface MateriaHasDocenteFacadeLocal {
 
-    void create(MateriaHasDocente materiaHasDocente);
+    MateriaHasDocente create(MateriaHasDocente materiaHasDocente);
 
     void batchCreate(Collection<MateriaHasDocente> collection);
     

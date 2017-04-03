@@ -9,7 +9,7 @@ import javax.ejb.Local;
 @Local
 public interface PagoAlumnoFacadeLocal {
 
-    void create(PagoAlumno pagoAlumno);
+    PagoAlumno create(PagoAlumno pagoAlumno);
     
     void batchCreate(Collection<PagoAlumno> lista);
 

@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface EmailAccountFacadeLocal {
 
-    void create(EmailAccount emailAccount);
+    EmailAccount create(EmailAccount emailAccount);
     
     void batchCreate(Collection<EmailAccount> collection);
 

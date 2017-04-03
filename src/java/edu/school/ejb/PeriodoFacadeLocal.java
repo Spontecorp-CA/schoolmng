@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface PeriodoFacadeLocal {
 
-    void create(Periodo periodo);
+    Periodo create(Periodo periodo);
 
     void batchCreate(Collection<Periodo> collection);
     

@@ -13,7 +13,7 @@ import javax.ejb.Local;
 @Local
 public interface AutorizacionFacadeLocal {
     
-    void create(Autorizacion autorizacion);
+    Autorizacion create(Autorizacion autorizacion);
     
     void batchCreate(Collection<Autorizacion> collection);
 

@@ -12,7 +12,7 @@ import javax.ejb.Local;
 @Local
 public interface SeccionFacadeLocal {
 
-    void create(Seccion curso);
+    Seccion create(Seccion curso);
     
     void batchCreate(Collection<Seccion> collection);
 

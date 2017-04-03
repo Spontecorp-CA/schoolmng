@@ -97,6 +97,7 @@ public class WriteMailController implements Serializable {
     private boolean enableGradosDropbox;
     private List<Seccion> secciones;
     private boolean enableSeccionesDropbox;
+    private User user;
 
     private String para;
     private String subject;
@@ -132,7 +133,7 @@ public class WriteMailController implements Serializable {
             //Logger.getLogger(WriteMailController.class.getName()).log(Level.SEVERE, null, ex);
             LogFiler.logger.log(Level.SEVERE, "Error definiendo la dirección temporal: ", ex.getMessage());
         }
-
+        user = docenteDashboardController.getUser();
         fileLabel = "  No ha seleccionado archivo";
         grupos = makeGrupos();
         secciones = new ArrayList<>();
@@ -191,21 +192,6 @@ public class WriteMailController implements Serializable {
     }
 
     public List<Seccion> getSecciones() {
-        if (grupoAEnviar != null) {
-            if (grupoAEnviar.equals(Constantes.GRUPO_SECCION)) {
-                secciones = checkSeccion();
-                if(null != etapas){
-                    etapas.clear();
-                } else {
-                    etapas = new ArrayList<>();
-                }
-                if(null != grados){
-                    grados.clear();
-                } else {
-                    grados = new ArrayList<>();
-                }
-            }
-        }
         return secciones;
     }
 
@@ -230,17 +216,6 @@ public class WriteMailController implements Serializable {
     }
 
     public List<Etapa> getEtapas() {
-        if (grupoAEnviar != null) {
-            if (grupoAEnviar.equals(Constantes.GRUPO_ETAPA)) {
-                etapas = etapaFacade.findAll();
-                if(null != grados){
-                    grados.clear();
-                }
-                if(null != secciones){
-                    secciones.clear();
-                }
-            }
-        }
         return etapas;
     }
 
@@ -257,17 +232,6 @@ public class WriteMailController implements Serializable {
     }
 
     public List<Curso> getGrados() {
-        if (grupoAEnviar != null) {
-            if (grupoAEnviar.equals(Constantes.GRUPO_GRADO)) {
-                grados = cursoFacade.findAllByEtapa(etapa);
-                if (null != etapas) {
-                    etapas.clear();
-                }
-                if (null != secciones) {
-                    secciones.clear();
-                }
-            }
-        }
         return grados;
     }
 
@@ -317,7 +281,13 @@ public class WriteMailController implements Serializable {
 
     public String getCargoSupervisor() {
         if (null == cargoSupervisor) {
-            cargoSupervisor = lookupCargoSupervisor();
+            Optional<StatusSupervisor> optStatSup = circularController.lookupCargoSupervisor(user);
+            if(optStatSup.isPresent()){
+                defineTipoAndCargoSupervisor(optStatSup);
+            } else {
+                cargoSupervisor = "";
+            }
+            
         }
         return cargoSupervisor;
     }
@@ -328,7 +298,7 @@ public class WriteMailController implements Serializable {
 
     private List<String> makeGrupos() {
         int nivel = 0;
-        User user = docenteDashboardController.getUser();
+       
         List<Supervisor> supervisores = supervisorFacade.findAllByUser(user);
         if (!supervisores.isEmpty()) {
             for (Supervisor superv : supervisores) {
@@ -381,6 +351,58 @@ public class WriteMailController implements Serializable {
                 break;
         }
         return groups;
+    }
+    
+    public void ongrupoChange(){
+//        String cargo = lookupCargoSupervisor();
+        Optional<StatusSupervisor> optStatSup = circularController.lookupCargoSupervisor(user);
+        defineTipoAndCargoSupervisor(optStatSup);
+        
+        Periodo periodo = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
+        
+//        System.out.println("cargo: " + cargo
+//                            + " tipoSupervisor: " + tipoSupervisor 
+//                            + ", grupoAEnviar: " + grupoAEnviar);
+//        
+        
+        switch(grupoAEnviar){
+            case Constantes.GRUPO_ETAPA:
+                if (tipoSupervisor.equals(Constantes.SUPERVISOR_COLEGIO)) {
+                    etapas = etapaFacade.findAll();
+                } else {
+                    etapas = new ArrayList<>();
+                }
+                grados = new ArrayList<>();
+                secciones = new ArrayList();
+                break;
+            case Constantes.GRUPO_GRADO:
+                switch(tipoSupervisor){
+                    case Constantes.SUPERVISOR_COLEGIO:
+                        grados = cursoFacade.findAllOrderedByEtapa();
+                        break;
+                    case Constantes.SUPERVISOR_ETAPA:
+                        grados = cursoFacade.findAllByEtapa(etapa);
+                        break;
+                }
+                etapas = new ArrayList<>();
+                secciones = new ArrayList<>();
+                break;
+            case Constantes.GRUPO_SECCION:
+                switch(tipoSupervisor){
+                    case Constantes.SUPERVISOR_COLEGIO:
+                        secciones = seccionFacade.findAllOrdered();
+                        break;
+                    case Constantes.SUPERVISOR_ETAPA:
+                        secciones = seccionFacade.findAllOrderedByEtapa(etapa);
+                        break;
+                    case Constantes.SUPERVISOR_GRADO:
+                        secciones = seccionFacade.findAllOrderedByGrado(grado, periodo);
+                }
+                etapas = new ArrayList<>();
+                grados = new ArrayList<>();
+                break;
+        }
+    
     }
 
     public void sendMail() {
@@ -447,8 +469,6 @@ public class WriteMailController implements Serializable {
         if (tipoSupervisor.equals("")) {
             // No es supervisor, sólo toma las secciones asiganadas a este docente
             // con el usuario se obtiene el docente
-            User user = docenteDashboardController.getUser();
-
             Docente docente = null;
             try {
                 docente = docenteFacade.findByCi(user.getCi());
@@ -485,29 +505,44 @@ public class WriteMailController implements Serializable {
     }
 
     public void saveCircular() {
-        // terminar de construir la circular
+        
+        String subgrupo = "";
+        System.out.println("grupo a enviar: " + grupoAEnviar);
+        switch(grupoAEnviar){
+            case Constantes.GRUPO_COLEGIO:
+                subgrupo = Constantes.GRUPO_COLEGIO;
+                break;
+            case Constantes.GRUPO_ETAPA:
+                subgrupo = etapa.getNombre();
+                break;
+            case Constantes.GRUPO_GRADO:
+                subgrupo = grado.getNombre();
+                break;
+            case Constantes.GRUPO_SECCION:
+                subgrupo = seccion.getCursoId().getNombre() + "-" + seccion.getSeccion();
+                break;
+        }
+        System.out.println("El subgrupo: " + subgrupo);
+        System.out.println("para: " + para);
+        System.out.println("asunto: " + subject);
+        System.out.println("mensaje: " + message);
+        Optional<Part> optFile = Optional.ofNullable(file);
+        if(optFile.isPresent()){
+            System.out.println("el archivo: " + file.getName());
+        } else {
+            System.out.println("el archivo: no tiene archivo adjunto");
+            file = null;
+        }
+        
+        System.out.println("el directorio " + directory);
+        
+        circular = circularController.makeCircular(grupoAEnviar, subgrupo, para, 
+                subject, message, file, directory, user);
+        JsfUtils.messageSuccess("Guardada circular " 
+                + circular.getCodigoCircular() + " con éxito");
     }
 
     public void checkSupervisorChain() {
-//        switch(grupoAEnviar){
-//            case Constantes.GRUPO_COLEGIO:
-//                System.out.println("No necesita permiso, envía de una vez");
-//                break;
-//            case Constantes.GRUPO_ETAPA:
-//                System.out.println("Envía al supervisor de colegio para su posterior envío");
-//                break;
-//            case Constantes.GRUPO_GRADO:
-//                System.out.println("Envía al supervidor de etapa para su revisión y reenvío al "
-//                        + "supervisor e colegio");
-//                break;
-//            default:
-//                System.out.println("Si es supervisor de grado, envía al de etapa "
-//                        + "para su revisión y posterior envío");
-//                System.out.println("Si no es supervisor, identifica al supervisor de "
-//                        + "grado para su revisión y posterior envío");
-//        }
-
-        User user = docenteDashboardController.getUser();
         boolean isSupervisor = circularController.isSupervisor(user);
         boolean isSupervisorColegio = circularController.isColegioSupervisor(user);
         //boolean isSupervisorEtapa = circularController.isEtapaSupervisor(user, etapa);
@@ -517,7 +552,7 @@ public class WriteMailController implements Serializable {
             if (isSupervisorColegio) {
                 // prepara la circular a enviar
                 circular = circularController.makeCircular(grupoAEnviar, "colegio",
-                        para, subject, message, file, directory);
+                        para, subject, message, file, directory, user);
                 // si está correctamente preparado lo envía
                 if (null != circular) {
                     String filePath = directory + file.getSubmittedFileName();
@@ -549,33 +584,50 @@ public class WriteMailController implements Serializable {
 
     }
 
-    private String lookupCargoSupervisor() {
-        String answer = " ";
-        User user = docenteDashboardController.getUser();
-        Optional<Supervisor> optSupervisor = Optional
-                .ofNullable(supervisorFacade.findByUser(user));
-        if (optSupervisor.isPresent()) {
-            Supervisor supervisor = optSupervisor.get();
-            Optional<StatusSupervisor> optStatSup = Optional
-                    .ofNullable(statusSupervisorFacade.findBySupervisor(supervisor));
-            if (optStatSup.isPresent()) {
-                StatusSupervisor statSup = optStatSup.get();
-                if (null != statSup.getColegioId()) {
-                    answer = "Supervisor del Colegio";
-                    tipoSupervisor = Constantes.SUPERVISOR_COLEGIO;
-                } else if (null != statSup.getEtapaId()) {
-                    etapa = statSup.getEtapaId();
-                    answer = "Supervisor de: " + etapa.getNombre();
-                    tipoSupervisor = Constantes.SUPERVISOR_ETAPA;
-                } else if (null != statSup.getCursoId()) {
-                    Curso curso = statSup.getCursoId();
-                    answer = "Supervisor de: " + curso.getNombre();
-                    tipoSupervisor = Constantes.SUPERVISOR_GRADO;
-                }
+//    private String lookupCargoSupervisor() {
+//        String answer = " ";
+//        Optional<Supervisor> optSupervisor = Optional
+//                .ofNullable(supervisorFacade.findByUser(user));
+//        if (optSupervisor.isPresent()) {
+//            Supervisor supervisor = optSupervisor.get();
+//            Optional<StatusSupervisor> optStatSup = Optional
+//                    .ofNullable(statusSupervisorFacade.findBySupervisor(supervisor));
+//            if (optStatSup.isPresent()) {
+//                StatusSupervisor statSup = optStatSup.get();
+//                if (null != statSup.getColegioId()) {
+//                    answer = "Supervisor del Colegio";
+//                    tipoSupervisor = Constantes.SUPERVISOR_COLEGIO;
+//                } else if (null != statSup.getEtapaId()) {
+//                    etapa = statSup.getEtapaId();
+//                    answer = "Supervisor de: " + etapa.getNombre();
+//                    tipoSupervisor = Constantes.SUPERVISOR_ETAPA;
+//                } else if (null != statSup.getCursoId()) {
+//                    Curso curso = statSup.getCursoId();
+//                    answer = "Supervisor de: " + curso.getNombre();
+//                    tipoSupervisor = Constantes.SUPERVISOR_GRADO;
+//                }
+//            }
+//        }
+//
+//        return answer;
+//    }
+
+    
+    private void defineTipoAndCargoSupervisor(Optional<StatusSupervisor> optStatSup){
+        if (optStatSup.isPresent()) {
+            StatusSupervisor statSup = optStatSup.get();
+            if (null != statSup.getColegioId()) {
+                cargoSupervisor = "Supervisor del Colegio";
+                tipoSupervisor = Constantes.SUPERVISOR_COLEGIO;
+            } else if (null != statSup.getEtapaId()) {
+                etapa = statSup.getEtapaId();
+                cargoSupervisor = "Supervisor de: " + etapa.getNombre();
+                tipoSupervisor = Constantes.SUPERVISOR_ETAPA;
+            } else if (null != statSup.getCursoId()) {
+                Curso curso = statSup.getCursoId();
+                cargoSupervisor = "Supervisor de: " + curso.getNombre();
+                tipoSupervisor = Constantes.SUPERVISOR_GRADO;
             }
         }
-
-        return answer;
     }
-
 }

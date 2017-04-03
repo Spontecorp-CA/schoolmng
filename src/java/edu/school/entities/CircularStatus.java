@@ -6,8 +6,10 @@
 package edu.school.entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,25 +19,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author jgcastillo
  */
 @Entity
-@Table(name = "autorizacion_status")
+@Table(name = "circular_status")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AutorizacionStatus.findAll", query = "SELECT a FROM AutorizacionStatus a")
-    , @NamedQuery(name = "AutorizacionStatus.findById", query = "SELECT a FROM AutorizacionStatus a WHERE a.id = :id")
-    , @NamedQuery(name = "AutorizacionStatus.findByFecha", query = "SELECT a FROM AutorizacionStatus a WHERE a.fecha = :fecha")
-    , @NamedQuery(name = "AutorizacionStatus.findByStatus", query = "SELECT a FROM AutorizacionStatus a WHERE a.status = :status")})
-public class AutorizacionStatus implements Serializable {
+    @NamedQuery(name = "CircularStatus.findAll", query = "SELECT c FROM CircularStatus c")
+    , @NamedQuery(name = "CircularStatus.findById", query = "SELECT c FROM CircularStatus c WHERE c.id = :id")
+    , @NamedQuery(name = "CircularStatus.findByFecha", query = "SELECT c FROM CircularStatus c WHERE c.fecha = :fecha")
+    , @NamedQuery(name = "CircularStatus.findByStatus", query = "SELECT c FROM CircularStatus c WHERE c.status = :status")})
+public class CircularStatus implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,15 +52,17 @@ public class AutorizacionStatus implements Serializable {
     private Date fecha;
     @Size(max = 10)
     @Column(name = "status")
-    private String status;
-    @JoinColumn(name = "autorizacion_id", referencedColumnName = "id")
+    private int status;
+    @JoinColumn(name = "circular_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Autorizacion autorizacionId;
+    private Circular circularId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "circularStatusId")
+    private Collection<Autorizacion> autorizacionCollection;
 
-    public AutorizacionStatus() {
+    public CircularStatus() {
     }
 
-    public AutorizacionStatus(Integer id) {
+    public CircularStatus(Integer id) {
         this.id = id;
     }
 
@@ -76,20 +82,29 @@ public class AutorizacionStatus implements Serializable {
         this.fecha = fecha;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
-    public Autorizacion getAutorizacionId() {
-        return autorizacionId;
+    public Circular getCircularId() {
+        return circularId;
     }
 
-    public void setAutorizacionId(Autorizacion autorizacionId) {
-        this.autorizacionId = autorizacionId;
+    public void setCircularId(Circular circularId) {
+        this.circularId = circularId;
+    }
+
+    @XmlTransient
+    public Collection<Autorizacion> getAutorizacionCollection() {
+        return autorizacionCollection;
+    }
+
+    public void setAutorizacionCollection(Collection<Autorizacion> autorizacionCollection) {
+        this.autorizacionCollection = autorizacionCollection;
     }
 
     @Override
@@ -102,10 +117,10 @@ public class AutorizacionStatus implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof AutorizacionStatus)) {
+        if (!(object instanceof CircularStatus)) {
             return false;
         }
-        AutorizacionStatus other = (AutorizacionStatus) object;
+        CircularStatus other = (CircularStatus) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -114,7 +129,7 @@ public class AutorizacionStatus implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.school.entities.AutorizacionStatus[ id=" + id + " ]";
+        return "edu.school.entities.CircularStatus[ id=" + id + " ]";
     }
     
 }

@@ -6,9 +6,7 @@
 package edu.school.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -16,11 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -40,14 +36,12 @@ public class Autorizacion implements Serializable {
     @NotNull
     @Column(name = "id")
     private Integer id;
-    @JoinColumn(name = "circular_id", referencedColumnName = "id")
+    @JoinColumn(name = "circular_status_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Circular circularId;
+    private CircularStatus circularStatusId;
     @JoinColumn(name = "supervisor_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Supervisor supervisorId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "autorizacionId")
-    private Collection<AutorizacionStatus> autorizacionStatusCollection;
 
     public Autorizacion() {
     }
@@ -64,12 +58,12 @@ public class Autorizacion implements Serializable {
         this.id = id;
     }
 
-    public Circular getCircularId() {
-        return circularId;
+    public CircularStatus getCircularStatusId() {
+        return circularStatusId;
     }
 
-    public void setCircularId(Circular circularId) {
-        this.circularId = circularId;
+    public void setCircularStatusId(CircularStatus circularStatusId) {
+        this.circularStatusId = circularStatusId;
     }
 
     public Supervisor getSupervisorId() {
@@ -78,15 +72,6 @@ public class Autorizacion implements Serializable {
 
     public void setSupervisorId(Supervisor supervisorId) {
         this.supervisorId = supervisorId;
-    }
-
-    @XmlTransient
-    public Collection<AutorizacionStatus> getAutorizacionStatusCollection() {
-        return autorizacionStatusCollection;
-    }
-
-    public void setAutorizacionStatusCollection(Collection<AutorizacionStatus> autorizacionStatusCollection) {
-        this.autorizacionStatusCollection = autorizacionStatusCollection;
     }
 
     @Override

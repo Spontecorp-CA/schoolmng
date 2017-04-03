@@ -21,19 +21,26 @@ import static edu.school.controller.strategy.Notificaciones.ETAPA;
 import static edu.school.controller.strategy.Notificaciones.GRADO;
 import static edu.school.controller.strategy.Notificaciones.SECCION;
 import edu.school.ejb.AlumnoHasRepresentanteFacadeLocal;
+import edu.school.ejb.AutorizacionFacadeLocal;
 import edu.school.ejb.CircularFacadeLocal;
+import edu.school.ejb.CircularStatusFacadeLocal;
 import edu.school.ejb.ColegioFacadeLocal;
 import edu.school.ejb.CursoFacadeLocal;
+import edu.school.ejb.DocenteFacadeLocal;
 import edu.school.ejb.EmailAccountFacadeLocal;
 import edu.school.ejb.EtapaFacadeLocal;
 import edu.school.ejb.PeriodoFacadeLocal;
 import edu.school.ejb.PlantillaCircularFacadeLocal;
 import edu.school.ejb.SeccionFacadeLocal;
 import edu.school.ejb.SeccionHasAlumnoFacadeLocal;
+import edu.school.ejb.SeccionHasDocenteFacadeLocal;
 import edu.school.entities.Alumno;
+import edu.school.entities.Autorizacion;
 import edu.school.entities.Circular;
+import edu.school.entities.CircularStatus;
 import edu.school.entities.Colegio;
 import edu.school.entities.Curso;
+import edu.school.entities.Docente;
 import edu.school.entities.EmailAccount;
 import edu.school.entities.Etapa;
 import edu.school.entities.Mail;
@@ -43,27 +50,15 @@ import edu.school.entities.Representante;
 import edu.school.entities.Seccion;
 import edu.school.entities.SeccionHasAlumno;
 import edu.school.entities.StatusSupervisor;
-import edu.school.utilities.JsfUtils;
+import edu.school.excepciones.DocenteNotFoundException;
 import edu.school.utilities.LogFiler;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import javax.inject.Inject;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.Part;
 
 @Stateless
@@ -88,11 +83,19 @@ public class CircularControler implements CircularControllerLocal {
     @EJB
     private SeccionHasAlumnoFacadeLocal seccionHasAlumnoFacade;
     @EJB
+    private SeccionHasDocenteFacadeLocal seccionHasDocenteFacade;
+    @EJB
     private AlumnoHasRepresentanteFacadeLocal alumnoHasRepresentanteFacade;
     @EJB
     private PlantillaCircularFacadeLocal plantillaCircularFacade;
     @EJB
     private CircularFacadeLocal circularFacade;
+    @EJB
+    private CircularStatusFacadeLocal circularStatusFacade;
+    @EJB
+    private AutorizacionFacadeLocal autorizacionFacade;
+    @EJB
+    private DocenteFacadeLocal docenteFacade;
     @Inject
     private Mail mail;
 //    @Inject
@@ -230,10 +233,22 @@ public class CircularControler implements CircularControllerLocal {
 
     }
 
+    
+    /**
+     * Construye la circular que se va a enviar
+     * @param grupo
+     * @param nombreGrupo
+     * @param para
+     * @param subject
+     * @param message
+     * @param file
+     * @param directory
+     * @return 
+     */
     @Override
     public Circular makeCircular(final String grupo, final String nombreGrupo,
             final String para, final String subject, final String message,
-            final Part file, final String directory) {
+            final Part file, final String directory, final User user) {
 
         EmailAccount emailAccount = emailAccountFacade.find(1);
         Circular circular = new Circular();
@@ -248,12 +263,31 @@ public class CircularControler implements CircularControllerLocal {
         circular.setPlantillaCircularId(getPlantillaCircular());
         circular.setEmailAccountId(emailAccount);
         circular.setStatus(Constantes.CIRCULAR_NO_ENVIADA);
+        circular.setUserId(user);
 
-        String filePath = directory + file.getSubmittedFileName();
-        circular.setFilepath(filePath);
-        circular.setFilename(file.getSubmittedFileName());
+        if(null !=file){
+            String filePath = directory + file.getSubmittedFileName();
+            circular.setFilepath(filePath);
+            circular.setFilename(file.getSubmittedFileName());
+        } else {
+            circular.setFilepath("");
+            circular.setFilename("");
+        }
+        
 
-        circularFacade.create(circular);
+        circular = circularFacade.create(circular);
+        
+        CircularStatus status = new CircularStatus();
+        status.setCircularId(circular);
+        status.setFecha(circular.getFecha());
+        status.setStatus(Constantes.CIRCULAR_NO_ENVIADA);
+        
+        status = circularStatusFacade.create(status);
+        
+        Autorizacion autorizacion = new Autorizacion();
+        autorizacion.setCircularStatusId(status);
+        
+        
         return circular;
     }
 
@@ -283,7 +317,7 @@ public class CircularControler implements CircularControllerLocal {
 
     private String generateCodigoCircular(String grupo, String subgrupo) {
         StringBuilder sb = new StringBuilder();
-        DateFormat df = new SimpleDateFormat("yyyyMMHHmm");
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmm");
         Object grupoObjetivo = getGrupoObjetivo(grupo, subgrupo);
 
         String nombreGrupo = "COL";
@@ -297,7 +331,7 @@ public class CircularControler implements CircularControllerLocal {
             nombreGrupo = ((Seccion) grupoObjetivo).getCodigo();
         }
 
-        sb.append(grupo).append(nombreGrupo).append(df.format(new Date()));
+        sb.append(grupo).append(nombreGrupo).append(":").append(df.format(new Date()));
         return sb.toString().toUpperCase();
     }
 
@@ -470,4 +504,46 @@ public class CircularControler implements CircularControllerLocal {
         return enviado;
     }
 
+    private Supervisor findInmmediateSupervisor(User user){
+       Supervisor inmediate = null;
+        Docente docente = null;
+        Seccion seccion = null;
+        try {
+            Optional<Docente> optDocente = Optional
+                    .ofNullable(docenteFacade.findByCi(user.getCi()));
+            if(optDocente.isPresent()){
+                docente = optDocente.get();
+                
+                //SeccionHasDocente shd = seccionHasDocenteFacade.f
+            }
+            
+        } catch (DocenteNotFoundException ex) {
+            
+        }
+        
+        // identifica si es supervisor
+        Optional<StatusSupervisor> optStatSup = lookupCargoSupervisor(user);
+        StatusSupervisor soySupervisor = null;
+        if(optStatSup.isPresent()){
+            StatusSupervisor statSup = optStatSup.get();
+            soySupervisor = optStatSup.get();
+        } else {
+            // docente cachirulo
+        }
+        return inmediate;
+    }
+    
+    @Override
+    public Optional<StatusSupervisor> lookupCargoSupervisor(User user) {
+        Optional<StatusSupervisor> optStatSup = Optional.empty();
+        Optional<Supervisor> optSupervisor = Optional
+                .ofNullable(supervisorFacade.findByUser(user));
+        if (optSupervisor.isPresent()) {
+            Supervisor supervisor = optSupervisor.get();
+            optStatSup = Optional
+                    .ofNullable(statusSupervisorFacade.findBySupervisor(supervisor));
+        }
+
+        return optStatSup;
+    }
 }

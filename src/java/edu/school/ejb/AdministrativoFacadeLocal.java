@@ -17,7 +17,7 @@ import javax.ejb.Local;
 @Local
 public interface AdministrativoFacadeLocal {
 
-    void create(Administrativo adminitrativo);
+    Administrativo create(Administrativo adminitrativo);
     
     void batchCreate(Collection<Administrativo> administrativoColl);
 

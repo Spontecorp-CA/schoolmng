@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface DatosPersonaFacadeLocal {
 
-    void create(DatosPersona datosPersona);
+    DatosPersona create(DatosPersona datosPersona);
 
     void batchCreate(Collection<DatosPersona> collection);
     
