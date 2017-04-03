@@ -196,9 +196,13 @@ public class WriteMailController implements Serializable {
                 secciones = checkSeccion();
                 if(null != etapas){
                     etapas.clear();
+                } else {
+                    etapas = new ArrayList<>();
                 }
                 if(null != grados){
                     grados.clear();
+                } else {
+                    grados = new ArrayList<>();
                 }
             }
         }
