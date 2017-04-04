@@ -505,7 +505,6 @@ public class WriteMailController implements Serializable {
     }
 
     public void saveCircular() {
-        
         String subgrupo = "";
         System.out.println("grupo a enviar: " + grupoAEnviar);
         switch(grupoAEnviar){
@@ -545,7 +544,8 @@ public class WriteMailController implements Serializable {
     public void checkSupervisorChain() {
         boolean isSupervisor = circularController.isSupervisor(user);
         boolean isSupervisorColegio = circularController.isColegioSupervisor(user);
-        //boolean isSupervisorEtapa = circularController.isEtapaSupervisor(user, etapa);
+        boolean isSupervisorEtapa = circularController.isEtapaSupervisor(user);
+        boolean isSupervisorGrado = circularController.isGradoSupervisor(user);
 
         if (isSupervisor) {
             // debe chequear si es supervisor del colegio envía la circular
@@ -575,44 +575,18 @@ public class WriteMailController implements Serializable {
                 } else { // problemas preparando el mail
                     JsfUtils.messageError("No se ha podido preparar el correo a enviar");
                 }
-            } else {
+            } else if(isSupervisorEtapa || isSupervisorGrado){
                 // envía al supervisor inmediato
-            }
+                Supervisor inmediato = circularController.findInmmediateSupervisor(user);
+                circularController.checkEnvio(grupoAEnviar, user);
+            } 
         } else {
-            // debe buscar su supervisor inmediato para enviarle la circular
+            Supervisor inmediato = circularController.findInmmediateSupervisor(user);
+            circularController.checkEnvio(grupoAEnviar, user);
         }
 
     }
 
-//    private String lookupCargoSupervisor() {
-//        String answer = " ";
-//        Optional<Supervisor> optSupervisor = Optional
-//                .ofNullable(supervisorFacade.findByUser(user));
-//        if (optSupervisor.isPresent()) {
-//            Supervisor supervisor = optSupervisor.get();
-//            Optional<StatusSupervisor> optStatSup = Optional
-//                    .ofNullable(statusSupervisorFacade.findBySupervisor(supervisor));
-//            if (optStatSup.isPresent()) {
-//                StatusSupervisor statSup = optStatSup.get();
-//                if (null != statSup.getColegioId()) {
-//                    answer = "Supervisor del Colegio";
-//                    tipoSupervisor = Constantes.SUPERVISOR_COLEGIO;
-//                } else if (null != statSup.getEtapaId()) {
-//                    etapa = statSup.getEtapaId();
-//                    answer = "Supervisor de: " + etapa.getNombre();
-//                    tipoSupervisor = Constantes.SUPERVISOR_ETAPA;
-//                } else if (null != statSup.getCursoId()) {
-//                    Curso curso = statSup.getCursoId();
-//                    answer = "Supervisor de: " + curso.getNombre();
-//                    tipoSupervisor = Constantes.SUPERVISOR_GRADO;
-//                }
-//            }
-//        }
-//
-//        return answer;
-//    }
-
-    
     private void defineTipoAndCargoSupervisor(Optional<StatusSupervisor> optStatSup){
         if (optStatSup.isPresent()) {
             StatusSupervisor statSup = optStatSup.get();

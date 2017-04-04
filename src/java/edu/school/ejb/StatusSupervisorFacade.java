@@ -1,5 +1,6 @@
 package edu.school.ejb;
 
+import edu.school.entities.Colegio;
 import edu.school.entities.Curso;
 import edu.school.entities.Etapa;
 import edu.school.entities.StatusSupervisor;
@@ -8,7 +9,6 @@ import edu.school.utilities.Constantes;
 import edu.school.utilities.LogFiler;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -53,7 +53,13 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
         try {
             query.append(" AND ss.status = :status");
             Query q = getEntityManager().createQuery(query.toString());
-            q.setParameter("param", obj);
+            if (obj instanceof Curso) {
+                q.setParameter("param", (Curso)obj);
+            } else if (obj instanceof Etapa) {
+                q.setParameter("param", (Etapa) obj);
+            } else {
+                q.setParameter("param", (Colegio) obj);
+            }
             q.setParameter("status", status);
             ss = (StatusSupervisor) q.getSingleResult();
         } catch (NoResultException e) {

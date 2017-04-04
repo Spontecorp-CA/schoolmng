@@ -6,6 +6,7 @@ import edu.school.entities.Etapa;
 import edu.school.entities.Mail;
 import edu.school.entities.Seccion;
 import edu.school.entities.StatusSupervisor;
+import edu.school.entities.Supervisor;
 import edu.school.entities.User;
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +27,9 @@ public interface CircularControllerLocal {
 
     boolean isColegioSupervisor(final User user);
     
-    boolean isEtapaSupervisor(final User user, final Etapa etapa);
+    boolean isEtapaSupervisor(final User user);
     
-    boolean isGradoSupervisor(final User user, final Curso grado);
+    boolean isGradoSupervisor(final User user);
     
     List<String> mailListColegio();
     
@@ -49,5 +50,7 @@ public interface CircularControllerLocal {
     boolean sendCircular(final Circular circular, final List<String> destinatarios);
     
     Optional<StatusSupervisor> lookupCargoSupervisor(User user);
+    
+    Supervisor findInmmediateSupervisor(User user);
     
 }

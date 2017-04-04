@@ -98,8 +98,6 @@ public class CircularControler implements CircularControllerLocal {
     private DocenteFacadeLocal docenteFacade;
     @Inject
     private Mail mail;
-//    @Inject
-//    private Circular circular;
 
     @Inject
     @Notificacion(COLEGIO)
@@ -114,7 +112,19 @@ public class CircularControler implements CircularControllerLocal {
     @Notificacion(SECCION)
     private NotificacionService notificacionSeccion;
     
+    private Seccion seccion;
+
     private static final LogFiler LOGGER = LogFiler.getInstance();
+
+    public Seccion getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(Seccion seccion) {
+        this.seccion = seccion;
+    }
+    
+    
 
     @Override
     public void checkEnvio(final String grupoAEnviar, final User user) {
@@ -126,6 +136,7 @@ public class CircularControler implements CircularControllerLocal {
         notificacionMap.put(Constantes.GRUPO_SECCION, new NotificaSeccion(user));
 
         NotificacionService notificacion = notificacionMap.get(grupoAEnviar);
+        notificacion.notifica();
 
         // ¿el que envía (user) es supervisor del grupo?
         // si
@@ -147,10 +158,8 @@ public class CircularControler implements CircularControllerLocal {
     @Override
     public boolean isColegioSupervisor(final User user) {
         boolean isColegioSprv = false;
-        Supervisor supervisor = supervisorFacade.findByUser(user);
-        Optional<StatusSupervisor> optSttSprv = Optional.ofNullable(
-                statusSupervisorFacade.findBySupervisor(supervisor));
 
+        Optional<StatusSupervisor> optSttSprv = getStatusSupervisor(user);
         if (optSttSprv.isPresent()) {
             StatusSupervisor sttSprv = optSttSprv.get();
             if (null != sttSprv.getColegioId()) {
@@ -162,13 +171,33 @@ public class CircularControler implements CircularControllerLocal {
     }
 
     @Override
-    public boolean isEtapaSupervisor(final User user, final Etapa etapa) {
-        return false;
+    public boolean isEtapaSupervisor(final User user) {
+        boolean isEtapaSprv = false;
+
+        Optional<StatusSupervisor> optSttSprv = getStatusSupervisor(user);
+        if (optSttSprv.isPresent()) {
+            StatusSupervisor sttSprv = optSttSprv.get();
+            if (null != sttSprv.getEtapaId()) {
+                isEtapaSprv = true;
+            }
+        }
+
+        return isEtapaSprv;
     }
 
     @Override
-    public boolean isGradoSupervisor(final User user, final Curso grado) {
-        return false;
+    public boolean isGradoSupervisor(final User user) {
+        boolean isGradoSpvr = false;
+
+        Optional<StatusSupervisor> optSttSprv = getStatusSupervisor(user);
+        if (optSttSprv.isPresent()) {
+            StatusSupervisor sttSprv = optSttSprv.get();
+            if (null != sttSprv.getCursoId()) {
+                isGradoSpvr = true;
+            }
+        }
+
+        return isGradoSpvr;
     }
 
     @Override
@@ -233,9 +262,23 @@ public class CircularControler implements CircularControllerLocal {
 
     }
 
-    
+    private Optional<StatusSupervisor> getStatusSupervisor(User user) {
+        Optional<StatusSupervisor> optSttSprv = Optional.empty();
+        Optional<Supervisor> optSupervisor = Optional
+                .ofNullable(supervisorFacade.findByUser(user));
+
+        if (optSupervisor.isPresent()) {
+            Supervisor supervisor = optSupervisor.get();
+            optSttSprv = Optional.ofNullable(
+                    statusSupervisorFacade.findBySupervisor(supervisor));
+        }
+
+        return optSttSprv;
+    }
+
     /**
      * Construye la circular que se va a enviar
+     *
      * @param grupo
      * @param nombreGrupo
      * @param para
@@ -243,7 +286,8 @@ public class CircularControler implements CircularControllerLocal {
      * @param message
      * @param file
      * @param directory
-     * @return 
+     * @param user
+     * @return
      */
     @Override
     public Circular makeCircular(final String grupo, final String nombreGrupo,
@@ -265,7 +309,7 @@ public class CircularControler implements CircularControllerLocal {
         circular.setStatus(Constantes.CIRCULAR_NO_ENVIADA);
         circular.setUserId(user);
 
-        if(null !=file){
+        if (null != file) {
             String filePath = directory + file.getSubmittedFileName();
             circular.setFilepath(filePath);
             circular.setFilename(file.getSubmittedFileName());
@@ -273,21 +317,19 @@ public class CircularControler implements CircularControllerLocal {
             circular.setFilepath("");
             circular.setFilename("");
         }
-        
 
         circular = circularFacade.create(circular);
-        
+
         CircularStatus status = new CircularStatus();
         status.setCircularId(circular);
         status.setFecha(circular.getFecha());
         status.setStatus(Constantes.CIRCULAR_NO_ENVIADA);
-        
+
         status = circularStatusFacade.create(status);
-        
+
         Autorizacion autorizacion = new Autorizacion();
         autorizacion.setCircularStatusId(status);
-        
-        
+
         return circular;
     }
 
@@ -307,8 +349,8 @@ public class CircularControler implements CircularControllerLocal {
                 grupoObjetivo = curso;
                 break;
             case Constantes.GRUPO_SECCION:
-                Seccion seccion = seccionFacade.findByCodigo(nombreGrupo);
-                grupoObjetivo = seccion;
+                Seccion seccionFound = seccionFacade.findByCodigo(nombreGrupo);
+                grupoObjetivo = seccionFound;
                 break;
         }
 
@@ -412,7 +454,7 @@ public class CircularControler implements CircularControllerLocal {
         List<Representante> representantes = new ArrayList<>();
         List<String> recipientes = new ArrayList<>();
         secciones.stream()
-                .map((seccion) -> getCurrentRepresentantes(seccion))
+                .map((sec) -> getCurrentRepresentantes(sec))
                 .forEachOrdered((representantesEnSeccion) -> {
                     representantes.addAll(representantesEnSeccion);
                 });
@@ -431,8 +473,6 @@ public class CircularControler implements CircularControllerLocal {
         // obtener la circular
         // determina supervisor
         // envia circular
-
-
         // modificar esto para colocar la cuenta que va estar válida
 //        EmailAccount emailAccount = emailAccountFacade.find(1);
 //        StringBuilder sb = new StringBuilder();
@@ -500,50 +540,48 @@ public class CircularControler implements CircularControllerLocal {
 //            JsfUtils.messageError("Correo no enviado, ha ocurrido un error: " + ex.getMessage());
 //            enviado = false;
 //        }
-
         return enviado;
     }
 
-    private Supervisor findInmmediateSupervisor(User user){
-       Supervisor inmediate = null;
-        Docente docente = null;
-        Seccion seccion = null;
-        try {
-            Optional<Docente> optDocente = Optional
-                    .ofNullable(docenteFacade.findByCi(user.getCi()));
-            if(optDocente.isPresent()){
-                docente = optDocente.get();
-                
-                //SeccionHasDocente shd = seccionHasDocenteFacade.f
+    @Override
+    public Supervisor findInmmediateSupervisor(User user) {
+        Supervisor inmediate = null;
+        if (isSupervisor(user)) {
+            if (isColegioSupervisor(user)) {
+                inmediate = lookupCargoSupervisor(user).get().getSupervisorId();
+            } else if(isEtapaSupervisor(user)){
+                Colegio colegio = colegioFacade.find(1); 
+                inmediate = statusSupervisorFacade.findByGrupo(colegio).getSupervisorId();
+            } else if(isGradoSupervisor(user)){
+                Supervisor supervisor = supervisorFacade.findByUser(user);
+                StatusSupervisor sttSprv = statusSupervisorFacade.findBySupervisor(supervisor);
+                Etapa etapa = sttSprv.getCursoId().getEtapaId();
+                inmediate = statusSupervisorFacade.findByGrupo(etapa).getSupervisorId();
             }
-            
-        } catch (DocenteNotFoundException ex) {
-            
-        }
-        
-        // identifica si es supervisor
-        Optional<StatusSupervisor> optStatSup = lookupCargoSupervisor(user);
-        StatusSupervisor soySupervisor = null;
-        if(optStatSup.isPresent()){
-            StatusSupervisor statSup = optStatSup.get();
-            soySupervisor = optStatSup.get();
         } else {
-            // docente cachirulo
+            // busca el supervisor del grado y se lo asigna
+            Curso curso = findCursoBySeccion(seccion);
+            inmediate = statusSupervisorFacade.findByGrupo(curso).getSupervisorId();
         }
+
         return inmediate;
+    }
+    
+    private Curso findCursoBySeccion(Seccion seccion){
+        return seccion.getCursoId();
     }
     
     @Override
     public Optional<StatusSupervisor> lookupCargoSupervisor(User user) {
-        Optional<StatusSupervisor> optStatSup = Optional.empty();
-        Optional<Supervisor> optSupervisor = Optional
-                .ofNullable(supervisorFacade.findByUser(user));
-        if (optSupervisor.isPresent()) {
-            Supervisor supervisor = optSupervisor.get();
-            optStatSup = Optional
-                    .ofNullable(statusSupervisorFacade.findBySupervisor(supervisor));
-        }
+//        Optional<StatusSupervisor> optStatSup = Optional.empty();
+//        Optional<Supervisor> optSupervisor = Optional
+//                .ofNullable(supervisorFacade.findByUser(user));
+//        if (optSupervisor.isPresent()) {
+//            Supervisor supervisor = optSupervisor.get();
+//            optStatSup = Optional
+//                    .ofNullable(statusSupervisorFacade.findBySupervisor(supervisor));
+//        }
 
-        return optStatSup;
+        return getStatusSupervisor(user);
     }
 }
