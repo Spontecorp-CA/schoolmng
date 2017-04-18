@@ -40,7 +40,6 @@ import edu.school.entities.Circular;
 import edu.school.entities.CircularStatus;
 import edu.school.entities.Colegio;
 import edu.school.entities.Curso;
-import edu.school.entities.Docente;
 import edu.school.entities.EmailAccount;
 import edu.school.entities.Etapa;
 import edu.school.entities.Mail;
@@ -50,7 +49,8 @@ import edu.school.entities.Representante;
 import edu.school.entities.Seccion;
 import edu.school.entities.SeccionHasAlumno;
 import edu.school.entities.StatusSupervisor;
-import edu.school.excepciones.DocenteNotFoundException;
+import edu.school.excepciones.SupervisorNotFoundException;
+import edu.school.utilities.JsfUtils;
 import edu.school.utilities.LogFiler;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -111,7 +111,7 @@ public class CircularControler implements CircularControllerLocal {
     @Inject
     @Notificacion(SECCION)
     private NotificacionService notificacionSeccion;
-    
+
     private Seccion seccion;
 
     private static final LogFiler LOGGER = LogFiler.getInstance();
@@ -120,11 +120,10 @@ public class CircularControler implements CircularControllerLocal {
         return seccion;
     }
 
+    @Override
     public void setSeccion(Seccion seccion) {
         this.seccion = seccion;
     }
-    
-    
 
     @Override
     public void checkEnvio(final String grupoAEnviar, final User user) {
@@ -301,7 +300,8 @@ public class CircularControler implements CircularControllerLocal {
         circular.setSubgrupoNombre(nombreGrupo);
         circular.setAsunto(subject);
         circular.setFecha(new Date());
-        circular.setCodigoCircular(generateCodigoCircular(grupo, nombreGrupo));
+        String codigo = generateCodigoCircular(grupo, nombreGrupo);
+        circular.setCodigoCircular(codigo);
         circular.setDestinatario(para);
         circular.setMessage(message);
         circular.setPlantillaCircularId(getPlantillaCircular());
@@ -317,19 +317,27 @@ public class CircularControler implements CircularControllerLocal {
             circular.setFilepath("");
             circular.setFilename("");
         }
-
-        circular = circularFacade.create(circular);
+        
+        circularFacade.create(circular);
+        
+        circular = circularFacade.findCircularByCodigoCircular(codigo);
+        
+        System.out.println("Circular es: " + circular.getId());
+        
 
         CircularStatus status = new CircularStatus();
         status.setCircularId(circular);
         status.setFecha(circular.getFecha());
         status.setStatus(Constantes.CIRCULAR_NO_ENVIADA);
 
-        status = circularStatusFacade.create(status);
-
+        circularStatusFacade.create(status);
+        status = circularStatusFacade.findByCircular(circular);
+        
         Autorizacion autorizacion = new Autorizacion();
         autorizacion.setCircularStatusId(status);
-
+        Supervisor supervisor = supervisorFacade.findByUser(user);
+        
+        autorizacion.setSupervisorId(supervisor);
         return circular;
     }
 
@@ -546,31 +554,45 @@ public class CircularControler implements CircularControllerLocal {
     @Override
     public Supervisor findInmmediateSupervisor(User user) {
         Supervisor inmediate = null;
-        if (isSupervisor(user)) {
-            if (isColegioSupervisor(user)) {
-                inmediate = lookupCargoSupervisor(user).get().getSupervisorId();
-            } else if(isEtapaSupervisor(user)){
-                Colegio colegio = colegioFacade.find(1); 
-                inmediate = statusSupervisorFacade.findByGrupo(colegio).getSupervisorId();
-            } else if(isGradoSupervisor(user)){
-                Supervisor supervisor = supervisorFacade.findByUser(user);
-                StatusSupervisor sttSprv = statusSupervisorFacade.findBySupervisor(supervisor);
-                Etapa etapa = sttSprv.getCursoId().getEtapaId();
-                inmediate = statusSupervisorFacade.findByGrupo(etapa).getSupervisorId();
+        try {
+
+            if (isSupervisor(user)) {
+                if (isColegioSupervisor(user)) {
+                    inmediate = lookupCargoSupervisor(user).get().getSupervisorId();
+                } else if (isEtapaSupervisor(user)) {
+                    Colegio colegio = colegioFacade.find(1);
+                    inmediate = statusSupervisorFacade.findByGrupo(colegio).getSupervisorId();
+                } else if (isGradoSupervisor(user)) {
+                    Supervisor supervisor = supervisorFacade.findByUser(user);
+                    StatusSupervisor sttSprv = statusSupervisorFacade.findBySupervisor(supervisor);
+                    Etapa etapa = sttSprv.getCursoId().getEtapaId();
+
+                    System.out.println("la etapa es " + etapa.getNombre());
+
+                    inmediate = statusSupervisorFacade.findByGrupo(etapa).getSupervisorId();
+                }
+            } else {
+                // busca el supervisor del grado y se lo asigna
+                Curso curso = findCursoBySeccion(seccion);
+                
+                System.out.println("el grado de la sección " + seccion.getCodigo() + 
+                        " es " + (findCursoBySeccion(seccion)).getNombre());
+                
+                inmediate = statusSupervisorFacade.findByGrupo(curso).getSupervisorId();
             }
-        } else {
-            // busca el supervisor del grado y se lo asigna
-            Curso curso = findCursoBySeccion(seccion);
-            inmediate = statusSupervisorFacade.findByGrupo(curso).getSupervisorId();
+
+        } catch (SupervisorNotFoundException e) {
+            JsfUtils.messageError("No puede enviar circulares, "
+                    + "no tiene supervisor inmediato, contácte al admnistrador");
         }
 
         return inmediate;
     }
-    
-    private Curso findCursoBySeccion(Seccion seccion){
+
+    private Curso findCursoBySeccion(Seccion seccion) {
         return seccion.getCursoId();
     }
-    
+
     @Override
     public Optional<StatusSupervisor> lookupCargoSupervisor(User user) {
 //        Optional<StatusSupervisor> optStatSup = Optional.empty();

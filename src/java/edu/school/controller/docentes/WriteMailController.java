@@ -282,12 +282,12 @@ public class WriteMailController implements Serializable {
     public String getCargoSupervisor() {
         if (null == cargoSupervisor) {
             Optional<StatusSupervisor> optStatSup = circularController.lookupCargoSupervisor(user);
-            if(optStatSup.isPresent()){
+            if (optStatSup.isPresent()) {
                 defineTipoAndCargoSupervisor(optStatSup);
             } else {
                 cargoSupervisor = "";
             }
-            
+
         }
         return cargoSupervisor;
     }
@@ -298,7 +298,7 @@ public class WriteMailController implements Serializable {
 
     private List<String> makeGrupos() {
         int nivel = 0;
-       
+
         List<Supervisor> supervisores = supervisorFacade.findAllByUser(user);
         if (!supervisores.isEmpty()) {
             for (Supervisor superv : supervisores) {
@@ -352,20 +352,19 @@ public class WriteMailController implements Serializable {
         }
         return groups;
     }
-    
-    public void ongrupoChange(){
+
+    public void ongrupoChange() {
 //        String cargo = lookupCargoSupervisor();
         Optional<StatusSupervisor> optStatSup = circularController.lookupCargoSupervisor(user);
         defineTipoAndCargoSupervisor(optStatSup);
-        
+
         Periodo periodo = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
-        
+
 //        System.out.println("cargo: " + cargo
 //                            + " tipoSupervisor: " + tipoSupervisor 
 //                            + ", grupoAEnviar: " + grupoAEnviar);
 //        
-        
-        switch(grupoAEnviar){
+        switch (grupoAEnviar) {
             case Constantes.GRUPO_ETAPA:
                 if (tipoSupervisor.equals(Constantes.SUPERVISOR_COLEGIO)) {
                     etapas = etapaFacade.findAll();
@@ -376,7 +375,7 @@ public class WriteMailController implements Serializable {
                 secciones = new ArrayList();
                 break;
             case Constantes.GRUPO_GRADO:
-                switch(tipoSupervisor){
+                switch (tipoSupervisor) {
                     case Constantes.SUPERVISOR_COLEGIO:
                         grados = cursoFacade.findAllOrderedByEtapa();
                         break;
@@ -388,7 +387,7 @@ public class WriteMailController implements Serializable {
                 secciones = new ArrayList<>();
                 break;
             case Constantes.GRUPO_SECCION:
-                switch(tipoSupervisor){
+                switch (tipoSupervisor) {
                     case Constantes.SUPERVISOR_COLEGIO:
                         secciones = seccionFacade.findAllOrdered();
                         break;
@@ -397,12 +396,20 @@ public class WriteMailController implements Serializable {
                         break;
                     case Constantes.SUPERVISOR_GRADO:
                         secciones = seccionFacade.findAllOrderedByGrado(grado, periodo);
+                    default:
+                        try {
+                            Docente docente = docenteFacade.findByCi(user.getCi());
+                            secciones = seccionHasDocenteFacade.findAllByDocente(docente);
+                        } catch (Exception e) {
+                            LogFiler.logger.log(Level.WARNING, "El usuario {0} no es docente", user.getCi());
+                        }
+
                 }
                 etapas = new ArrayList<>();
                 grados = new ArrayList<>();
                 break;
         }
-    
+
     }
 
     public void sendMail() {
@@ -507,7 +514,7 @@ public class WriteMailController implements Serializable {
     public void saveCircular() {
         String subgrupo = "";
         System.out.println("grupo a enviar: " + grupoAEnviar);
-        switch(grupoAEnviar){
+        switch (grupoAEnviar) {
             case Constantes.GRUPO_COLEGIO:
                 subgrupo = Constantes.GRUPO_COLEGIO;
                 break;
@@ -526,18 +533,18 @@ public class WriteMailController implements Serializable {
         System.out.println("asunto: " + subject);
         System.out.println("mensaje: " + message);
         Optional<Part> optFile = Optional.ofNullable(file);
-        if(optFile.isPresent()){
+        if (optFile.isPresent()) {
             System.out.println("el archivo: " + file.getName());
         } else {
             System.out.println("el archivo: no tiene archivo adjunto");
             file = null;
         }
-        
+
         System.out.println("el directorio " + directory);
-        
-        circular = circularController.makeCircular(grupoAEnviar, subgrupo, para, 
+
+        circular = circularController.makeCircular(grupoAEnviar, subgrupo, para,
                 subject, message, file, directory, user);
-        JsfUtils.messageSuccess("Guardada circular " 
+        JsfUtils.messageSuccess("Guardada circular "
                 + circular.getCodigoCircular() + " con éxito");
     }
 
@@ -547,6 +554,8 @@ public class WriteMailController implements Serializable {
         boolean isSupervisorEtapa = circularController.isEtapaSupervisor(user);
         boolean isSupervisorGrado = circularController.isGradoSupervisor(user);
 
+        circularController.setSeccion(seccion);
+        
         if (isSupervisor) {
             // debe chequear si es supervisor del colegio envía la circular
             if (isSupervisorColegio) {
@@ -575,19 +584,25 @@ public class WriteMailController implements Serializable {
                 } else { // problemas preparando el mail
                     JsfUtils.messageError("No se ha podido preparar el correo a enviar");
                 }
-            } else if(isSupervisorEtapa || isSupervisorGrado){
+            } else if (isSupervisorEtapa || isSupervisorGrado) {
                 // envía al supervisor inmediato
                 Supervisor inmediato = circularController.findInmmediateSupervisor(user);
                 circularController.checkEnvio(grupoAEnviar, user);
-            } 
+            }
         } else {
+
+            System.out.println("el user es " + user.getUsr());
+            System.out.println("la seccion es " + seccion.getCodigo());
+            
             Supervisor inmediato = circularController.findInmmediateSupervisor(user);
+            
+            System.out.println("El inmediato es " + inmediato.getUserId().getUsr());
             circularController.checkEnvio(grupoAEnviar, user);
         }
 
     }
 
-    private void defineTipoAndCargoSupervisor(Optional<StatusSupervisor> optStatSup){
+    private void defineTipoAndCargoSupervisor(Optional<StatusSupervisor> optStatSup) {
         if (optStatSup.isPresent()) {
             StatusSupervisor statSup = optStatSup.get();
             if (null != statSup.getColegioId()) {

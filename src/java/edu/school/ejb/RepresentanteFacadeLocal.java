@@ -9,7 +9,7 @@ import javax.ejb.Local;
 @Local
 public interface RepresentanteFacadeLocal {
 
-    Representante create(Representante representante);
+    void create(Representante representante);
 
     void batchCreate(Collection<Representante> collection);
     

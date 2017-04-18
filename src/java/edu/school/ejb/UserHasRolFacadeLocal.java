@@ -9,7 +9,7 @@ import javax.ejb.Local;
 @Local
 public interface UserHasRolFacadeLocal {
 
-    UserHasRol create(UserHasRol userHasRol);
+    void create(UserHasRol userHasRol);
     
     void batchCreate(Collection<UserHasRol> collection);
 

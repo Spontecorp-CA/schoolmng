@@ -21,6 +21,7 @@ import edu.school.entities.StatusSupervisor;
 import edu.school.entities.Supervisor;
 import edu.school.entities.User;
 import edu.school.excepciones.DocenteNotFoundException;
+import edu.school.excepciones.SupervisorNotFoundException;
 import edu.school.utilities.Constantes;
 import edu.school.utilities.JsfUtils;
 import java.io.Serializable;
@@ -237,34 +238,47 @@ public class AdminSupervisorAgregar implements Serializable {
                 Supervisor superv = new Supervisor();
                 superv.setUserId(user);
 
+                StatusSupervisor ss;
                 switch (nivel) {
                     case Constantes.GRUPO_GRADO:
                         Curso grado = cursoFacade.findByName(grupo);
-                        StatusSupervisor ss = statusSupervisorFacade.findByGrupo(grado);
-                        if (null != ss) {
-                            // aqui va la parte de indicar que va a cambiar el supervisor
-                            showSupervisorFound(ss);
-                            changeStatusSupervisor(ss, grado, dp);
+                        try {
+                            ss = statusSupervisorFacade.findByGrupo(grado);
+                            if (null != ss) {
+                                // aqui va la parte de indicar que va a cambiar el supervisor
+                                showSupervisorFound(ss);
+                                changeStatusSupervisor(ss, grado, dp);
+                            }
+                            createStatusSupervisor(superv, grado, dp);
+                        } catch (SupervisorNotFoundException e) {
+                            JsfUtils.messageWarning("No hay supervisor para este grado");
                         }
-                        createStatusSupervisor(superv, grado, dp);
                         break;
                     case Constantes.GRUPO_ETAPA:
                         Etapa etapa = etapaFacade.findByNombre(grupo);
-                        ss = statusSupervisorFacade.findByGrupo(etapa);
-                        if (null != ss) {
-                            showSupervisorFound(ss);
-                            changeStatusSupervisor(ss, etapa, dp);
+                        try {
+                            ss = statusSupervisorFacade.findByGrupo(etapa);
+                            if (null != ss) {
+                                showSupervisorFound(ss);
+                                changeStatusSupervisor(ss, etapa, dp);
+                            }
+                            createStatusSupervisor(superv, etapa, dp);
+                        } catch (SupervisorNotFoundException e) {
+                            JsfUtils.messageWarning("No hay supervisor para esta etapa");
                         }
-                        createStatusSupervisor(superv, etapa, dp);
                         break;
                     case Constantes.GRUPO_COLEGIO:
                         Colegio colegio = colegioFacade.findByRif(rifColegio);
-                        ss = statusSupervisorFacade.findByGrupo(colegio);
-                        if (null != ss) {
-                            // el colegio ya tiene un supervisor va a agregar otro
-                            showSupervisorFound(ss);
+                        try {
+                            ss = statusSupervisorFacade.findByGrupo(colegio);
+                            if (null != ss) {
+                                // el colegio ya tiene un supervisor va a agregar otro
+                                showSupervisorFound(ss);
+                            }
+                            createStatusSupervisor(superv, colegio, dp);
+                        } catch (SupervisorNotFoundException e) {
+                            JsfUtils.messageWarning("No hay supervisor para el colegio");
                         }
-                        createStatusSupervisor(superv, colegio, dp);
                         break;
                 }
                 clearFields();

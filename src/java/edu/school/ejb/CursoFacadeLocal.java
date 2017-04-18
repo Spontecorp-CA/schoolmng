@@ -9,7 +9,7 @@ import javax.ejb.Local;
 @Local
 public interface CursoFacadeLocal {
     
-    public Curso create(Curso curso);
+    public void create(Curso curso);
 
     public void batchCreate(Collection<Curso> col);
 

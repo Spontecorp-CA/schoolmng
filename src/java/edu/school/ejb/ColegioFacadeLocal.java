@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface ColegioFacadeLocal {
 
-    Colegio create(Colegio colegio);
+    void create(Colegio colegio);
     
     void batchCreate(Collection<Colegio> collection);
 

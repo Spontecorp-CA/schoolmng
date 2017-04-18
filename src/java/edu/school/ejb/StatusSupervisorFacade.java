@@ -5,6 +5,7 @@ import edu.school.entities.Curso;
 import edu.school.entities.Etapa;
 import edu.school.entities.StatusSupervisor;
 import edu.school.entities.Supervisor;
+import edu.school.excepciones.SupervisorNotFoundException;
 import edu.school.utilities.Constantes;
 import edu.school.utilities.LogFiler;
 import java.util.List;
@@ -35,7 +36,7 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
     }
 
     @Override
-    public StatusSupervisor findByGrupo(Object obj) {
+    public StatusSupervisor findByGrupo(Object obj) throws SupervisorNotFoundException{
         StatusSupervisor ss = null;
 
         Integer status = Constantes.SUPERVISOR_ACTIVO;
@@ -63,7 +64,8 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
             q.setParameter("status", status);
             ss = (StatusSupervisor) q.getSingleResult();
         } catch (NoResultException e) {
-            LOGGER.logger.log(Level.WARNING,"No encontró Curso o Etapa", e);
+            LogFiler.logger.log(Level.WARNING,"No encontró Curso o Etapa", e.getMessage());
+            throw new SupervisorNotFoundException();
         }
         return ss;
     }

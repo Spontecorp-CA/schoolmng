@@ -53,4 +53,6 @@ public interface CircularControllerLocal {
     
     Supervisor findInmmediateSupervisor(User user);
     
+    void setSeccion(Seccion seccion);
+    
 }

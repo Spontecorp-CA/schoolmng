@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface PagoFacadeLocal {
 
-    Pago create(Pago pago);
+    void create(Pago pago);
 
     void batchCreate(Collection<Pago> collection);
     

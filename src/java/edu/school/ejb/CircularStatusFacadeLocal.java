@@ -1,5 +1,6 @@
 package edu.school.ejb;
 
+import edu.school.entities.Circular;
 import edu.school.entities.CircularStatus;
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +12,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface CircularStatusFacadeLocal {
-    CircularStatus create(CircularStatus adminitrativo);
+    void create(CircularStatus adminitrativo);
 
     void batchCreate(Collection<CircularStatus> circularStatusColl);
 
@@ -28,5 +29,7 @@ public interface CircularStatusFacadeLocal {
     List<CircularStatus> findRange(int[] range);
 
     int count();
+
+    CircularStatus findByCircular(final Circular circular);
 
 }
