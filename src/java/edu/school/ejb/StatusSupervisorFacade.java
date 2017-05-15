@@ -69,7 +69,7 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
         }
         return ss;
     }
-
+    
     @Override
     public List<StatusSupervisor> findAllByStatus(int status) {
         List<StatusSupervisor> ssList = null;
@@ -103,6 +103,21 @@ public class StatusSupervisorFacade extends AbstractFacade<StatusSupervisor>
         }
         return ss;
     }   
+
+    @Override
+    public List<StatusSupervisor> findColegioSupervisor(final int status) {
+        List<StatusSupervisor> lista = null;
+        try {
+            String query = "FROM StatusSupervisor ss WHERE ss.status = :status";
+            TypedQuery q = getEntityManager().createQuery(query, StatusSupervisor.class);
+            q.setParameter("status", status);
+            lista = q.getResultList();
+        } catch (NoResultException e) {
+            LOGGER.logger.log(Level.WARNING, "No encontró supervisores de colegio en estatus {0}",
+                    status);
+        }
+        return lista;
+    }
 
     
 }

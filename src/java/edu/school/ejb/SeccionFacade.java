@@ -96,7 +96,7 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
     public List<Seccion> findAllOrdered() {
         List<Seccion> cursos = null;
         try {
-            String query = "FROM Seccion c ORDER BY c.periodoInt, c.cursoId";
+            String query = "FROM Seccion c ORDER BY c.periodoId, c.cursoId";
             Query q = getEntityManager().createQuery(query);
             cursos = q.getResultList();
         } catch (NoResultException e) {
@@ -183,6 +183,21 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
                     + " ORDER BY s.cursoId.nombre, s.seccion";
             Query q = getEntityManager().createQuery(query);
             q.setParameter("curso", curso);
+            q.setParameter("periodo", periodo);
+            secciones = q.getResultList();
+        } catch (NoResultException e) {
+        }
+        return secciones;
+    }
+
+    @Override
+    public List<Seccion> findAllOrderedBySeccion(Periodo periodo) {
+        List<Seccion> secciones = null;
+        try {
+            String query = "FROM Seccion s"
+                    + " WHERE s.periodoId = :periodo"
+                    + " ORDER BY s.codigo, s.seccion";
+            Query q = getEntityManager().createQuery(query);
             q.setParameter("periodo", periodo);
             secciones = q.getResultList();
         } catch (NoResultException e) {

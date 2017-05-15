@@ -6,10 +6,8 @@
 package edu.school.entities;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,13 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -57,12 +53,6 @@ public class Alumno implements Serializable {
     @Size(max = 45)
     @Column(name = "id_colegio")
     private String idColegio;
-    @OneToMany(mappedBy = "alumnoId")
-    private Collection<PagoAlumno> pagoAlumnoCollection;
-    @OneToMany(mappedBy = "alumnoId")
-    private Collection<SeccionHasAlumno> seccionHasAlumnoCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "alumnoId")
-    private Collection<AlumnoHasRepresentante> alumnoHasRepresentanteCollection;
     @JoinColumn(name = "datos_persona_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private DatosPersona datosPersonaId;
@@ -104,33 +94,6 @@ public class Alumno implements Serializable {
 
     public void setIdColegio(String idColegio) {
         this.idColegio = idColegio;
-    }
-
-    @XmlTransient
-    public Collection<PagoAlumno> getPagoAlumnoCollection() {
-        return pagoAlumnoCollection;
-    }
-
-    public void setPagoAlumnoCollection(Collection<PagoAlumno> pagoAlumnoCollection) {
-        this.pagoAlumnoCollection = pagoAlumnoCollection;
-    }
-
-    @XmlTransient
-    public Collection<SeccionHasAlumno> getSeccionHasAlumnoCollection() {
-        return seccionHasAlumnoCollection;
-    }
-
-    public void setSeccionHasAlumnoCollection(Collection<SeccionHasAlumno> seccionHasAlumnoCollection) {
-        this.seccionHasAlumnoCollection = seccionHasAlumnoCollection;
-    }
-
-    @XmlTransient
-    public Collection<AlumnoHasRepresentante> getAlumnoHasRepresentanteCollection() {
-        return alumnoHasRepresentanteCollection;
-    }
-
-    public void setAlumnoHasRepresentanteCollection(Collection<AlumnoHasRepresentante> alumnoHasRepresentanteCollection) {
-        this.alumnoHasRepresentanteCollection = alumnoHasRepresentanteCollection;
     }
 
     public DatosPersona getDatosPersonaId() {

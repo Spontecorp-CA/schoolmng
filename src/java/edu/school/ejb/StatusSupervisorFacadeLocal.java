@@ -33,4 +33,6 @@ public interface StatusSupervisorFacadeLocal {
     List<StatusSupervisor> findAllByStatus(int status);
 
     StatusSupervisor findBySupervisor(Supervisor supervisor);
+
+    List<StatusSupervisor> findColegioSupervisor(final int status);
 }

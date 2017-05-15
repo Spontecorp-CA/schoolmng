@@ -49,4 +49,6 @@ public interface SeccionFacadeLocal {
 
     List<Seccion> findAllOrderedByGrado(final Curso curso, final Periodo periodo);
 
+    List<Seccion> findAllOrderedBySeccion(Periodo periodo);
+
 }

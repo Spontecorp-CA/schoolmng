@@ -26,8 +26,14 @@
                                 <h:form id="form2" 
                                         enctype="multipart/form-data">
                                     <div class="x_content">
-                                        <span class="section">Redacción de Circular</span>
-
+                                        <div class="row">
+                                            <div class="col-md-9 col-sm-12 col-xs-12">
+                                                <span class="section">Redacción de Circular</span>
+                                            </div>
+                                            <div class="col-md-3 col-sm-12 col-xs-12">
+                                                #{writeMailController.codigoCircular}
+                                            </div>
+                                        </div>
                                         <div class="input-group">
                                             <div class="container">
                                                 <div class="row" style="margin-left: 35%;">

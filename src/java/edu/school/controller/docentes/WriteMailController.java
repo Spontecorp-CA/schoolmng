@@ -2,6 +2,7 @@ package edu.school.controller.docentes;
 
 import edu.school.controller.ejb.CircularControllerLocal;
 import edu.school.controller.ejb.MailControllerLocal;
+import edu.school.ejb.CircularStatusFacadeLocal;
 import edu.school.ejb.CursoFacadeLocal;
 import edu.school.ejb.DocenteFacadeLocal;
 import edu.school.ejb.EmailAccountFacadeLocal;
@@ -12,6 +13,7 @@ import edu.school.ejb.SeccionHasDocenteFacadeLocal;
 import edu.school.ejb.StatusSupervisorFacadeLocal;
 import edu.school.ejb.SupervisorFacadeLocal;
 import edu.school.entities.Circular;
+import edu.school.entities.CircularStatus;
 import edu.school.entities.Curso;
 import edu.school.entities.Docente;
 import edu.school.entities.EmailAccount;
@@ -85,6 +87,8 @@ public class WriteMailController implements Serializable {
     private EtapaFacadeLocal etapaFacade;
     @EJB
     private CursoFacadeLocal cursoFacade;
+    @EJB
+    private CircularStatusFacadeLocal circularStatusFacade;
 
     private Etapa etapa;
     private Curso grado;
@@ -99,6 +103,7 @@ public class WriteMailController implements Serializable {
     private boolean enableSeccionesDropbox;
     private User user;
 
+    private String codigoCircular = "";
     private String para;
     private String subject;
     private String message;
@@ -137,6 +142,8 @@ public class WriteMailController implements Serializable {
         fileLabel = "  No ha seleccionado archivo";
         grupos = makeGrupos();
         secciones = new ArrayList<>();
+        
+        checkSavedCircular();
     }
 
     public String getGrupo() {
@@ -149,6 +156,14 @@ public class WriteMailController implements Serializable {
 
     public List<String> getGrupos() {
         return grupos;
+    }
+
+    public String getCodigoCircular() {
+        return codigoCircular;
+    }
+
+    public void setCodigoCircular(String codigoCircular) {
+        this.codigoCircular = codigoCircular;
     }
 
     public String getPara() {
@@ -354,16 +369,11 @@ public class WriteMailController implements Serializable {
     }
 
     public void ongrupoChange() {
-//        String cargo = lookupCargoSupervisor();
         Optional<StatusSupervisor> optStatSup = circularController.lookupCargoSupervisor(user);
         defineTipoAndCargoSupervisor(optStatSup);
 
         Periodo periodo = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
 
-//        System.out.println("cargo: " + cargo
-//                            + " tipoSupervisor: " + tipoSupervisor 
-//                            + ", grupoAEnviar: " + grupoAEnviar);
-//        
         switch (grupoAEnviar) {
             case Constantes.GRUPO_ETAPA:
                 if (tipoSupervisor.equals(Constantes.SUPERVISOR_COLEGIO)) {
@@ -389,7 +399,7 @@ public class WriteMailController implements Serializable {
             case Constantes.GRUPO_SECCION:
                 switch (tipoSupervisor) {
                     case Constantes.SUPERVISOR_COLEGIO:
-                        secciones = seccionFacade.findAllOrdered();
+                        secciones = seccionFacade.findAllOrderedBySeccion(periodo);
                         break;
                     case Constantes.SUPERVISOR_ETAPA:
                         secciones = seccionFacade.findAllOrderedByEtapa(etapa);
@@ -513,7 +523,6 @@ public class WriteMailController implements Serializable {
 
     public void saveCircular() {
         String subgrupo = "";
-        System.out.println("grupo a enviar: " + grupoAEnviar);
         switch (grupoAEnviar) {
             case Constantes.GRUPO_COLEGIO:
                 subgrupo = Constantes.GRUPO_COLEGIO;
@@ -528,19 +537,6 @@ public class WriteMailController implements Serializable {
                 subgrupo = seccion.getCursoId().getNombre() + "-" + seccion.getSeccion();
                 break;
         }
-        System.out.println("El subgrupo: " + subgrupo);
-        System.out.println("para: " + para);
-        System.out.println("asunto: " + subject);
-        System.out.println("mensaje: " + message);
-        Optional<Part> optFile = Optional.ofNullable(file);
-        if (optFile.isPresent()) {
-            System.out.println("el archivo: " + file.getName());
-        } else {
-            System.out.println("el archivo: no tiene archivo adjunto");
-            file = null;
-        }
-
-        System.out.println("el directorio " + directory);
 
         circular = circularController.makeCircular(grupoAEnviar, subgrupo, para,
                 subject, message, file, directory, user);
@@ -549,57 +545,12 @@ public class WriteMailController implements Serializable {
     }
 
     public void checkSupervisorChain() {
-        boolean isSupervisor = circularController.isSupervisor(user);
-        boolean isSupervisorColegio = circularController.isColegioSupervisor(user);
-        boolean isSupervisorEtapa = circularController.isEtapaSupervisor(user);
-        boolean isSupervisorGrado = circularController.isGradoSupervisor(user);
-
         circularController.setSeccion(seccion);
         
-        if (isSupervisor) {
-            // debe chequear si es supervisor del colegio envía la circular
-            if (isSupervisorColegio) {
-                // prepara la circular a enviar
-                circular = circularController.makeCircular(grupoAEnviar, "colegio",
-                        para, subject, message, file, directory, user);
-                // si está correctamente preparado lo envía
-                if (null != circular) {
-                    String filePath = directory + file.getSubmittedFileName();
-                    List<String> destinatarios = circularController.mailListColegio();
-                    // lo envía y muestra los mensajes si fue exitoso o no
-                    if (circularController.sendCircular(circular, destinatarios)) {
-                        JsfUtils.messageSuccess("Correo enviado con éxito");
-                        this.clearFields();
-
-                        Path path = Paths.get(filePath);
-                        try {
-                            Files.deleteIfExists(path);
-                        } catch (IOException ex) {
-                            Logger.getLogger(WriteMailController.class.getName())
-                                    .log(Level.SEVERE, "No pudo borrar el temporal", ex);
-                        }
-                    } else {
-                        JsfUtils.messageError("Ha ocurrido un problema el correo no se ha podido enviar");
-                    }
-                } else { // problemas preparando el mail
-                    JsfUtils.messageError("No se ha podido preparar el correo a enviar");
-                }
-            } else if (isSupervisorEtapa || isSupervisorGrado) {
-                // envía al supervisor inmediato
-                Supervisor inmediato = circularController.findInmmediateSupervisor(user);
-                circularController.checkEnvio(grupoAEnviar, user);
-            }
-        } else {
-
-            System.out.println("el user es " + user.getUsr());
-            System.out.println("la seccion es " + seccion.getCodigo());
-            
-            Supervisor inmediato = circularController.findInmmediateSupervisor(user);
-            
-            System.out.println("El inmediato es " + inmediato.getUserId().getUsr());
-            circularController.checkEnvio(grupoAEnviar, user);
-        }
-
+        saveCircular();
+        List<Supervisor> supervisores = circularController.findAllInmediateSupervisor(user);
+        circularController.checkEnvio(grupoAEnviar, user, supervisores, circular);
+        
     }
 
     private void defineTipoAndCargoSupervisor(Optional<StatusSupervisor> optStatSup) {
@@ -618,5 +569,31 @@ public class WriteMailController implements Serializable {
                 tipoSupervisor = Constantes.SUPERVISOR_GRADO;
             }
         }
+    }
+    
+    private void checkSavedCircular(){
+        Optional<CircularStatus> optCircularStatus;
+        optCircularStatus = Optional.ofNullable(circularStatusFacade
+                .findByUserAndStatus(user, Constantes.CIRCULAR_NO_ENVIADA));
+        
+        if(optCircularStatus.isPresent()){
+            circular = optCircularStatus.get().getCircularId();
+            codigoCircular = circular.getCodigoCircular();
+            
+            grupoAEnviar = circular.getGrupoDestino();
+            
+            switch(grupoAEnviar){
+                case Constantes.GRUPO_ETAPA:
+                    etapa = etapaFacade.findByNombre(circular.getGrupoDestino());
+                    break;
+              case Constantes.GRUPO_GRADO:
+                    grado = cursoFacade.findByName(circular.getGrupoDestino());
+                    break;
+            }
+
+            para = circular.getDestinatario() == null?"":circular.getDestinatario();
+            subject = circular.getAsunto() == null ? "" : circular.getAsunto();
+            message = circular.getMessage() == null ? "" : circular.getMessage();
+        }        
     }
 }

@@ -50,9 +50,9 @@ public class CircularStatus implements Serializable {
     @Column(name = "fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
-    @Size(max = 10)
+    //@Size(max = 10)
     @Column(name = "status")
-    private int status;
+    private Integer status;
     @JoinColumn(name = "circular_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Circular circularId;
@@ -82,11 +82,11 @@ public class CircularStatus implements Serializable {
         this.fecha = fecha;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
