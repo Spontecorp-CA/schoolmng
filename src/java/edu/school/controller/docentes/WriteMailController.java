@@ -540,7 +540,7 @@ public class WriteMailController implements Serializable {
 
         circular = circularController.makeCircular(grupoAEnviar, subgrupo, para,
                 subject, message, file, directory, user);
-        JsfUtils.messageSuccess("Guardada circular "
+        JsfUtils.messageSuccess("Guardada la circular "
                 + circular.getCodigoCircular() + " con éxito");
     }
 

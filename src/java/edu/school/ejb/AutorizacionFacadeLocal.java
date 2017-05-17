@@ -6,6 +6,7 @@
 package edu.school.ejb;
 
 import edu.school.entities.Autorizacion;
+import edu.school.entities.Supervisor;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -30,4 +31,6 @@ public interface AutorizacionFacadeLocal {
     List<Autorizacion> findRange(int[] range);
 
     int count();
+
+    long countBySupervisor(Supervisor supervisor);
 }

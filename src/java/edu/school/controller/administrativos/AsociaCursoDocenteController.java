@@ -149,7 +149,8 @@ public class AsociaCursoDocenteController implements Serializable {
     }
 
     private List<Seccion> makeSeccionList() {
-        return seccionFacade.findAllOrderedByCurso(new Periodo(2));
+        Periodo periodo = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
+        return seccionFacade.findAllOrderedByCurso(periodo);
     }
 
     public void clearFields() {

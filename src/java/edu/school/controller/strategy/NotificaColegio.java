@@ -41,7 +41,7 @@ public class NotificaColegio implements NotificacionService{
                     + user.getUsr() + " con la circular: " + circular.getCodigoCircular());
         });
         CircularStatus circularStatus = circularStatusFacade.findByCircular(circular);
-        circularStatus.setStatus(Constantes.CIRCULAR_PENDIENTE_APROBAR_ETAPA);
+        circularStatus.setStatus(Constantes.CIRCULAR_PENDIENTE_APROBAR_COLEGIO);
         circularStatus.setFecha(new Date());
         circularStatusFacade.edit(circularStatus);
     }

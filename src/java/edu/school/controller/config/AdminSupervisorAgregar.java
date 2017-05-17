@@ -30,10 +30,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -127,8 +127,7 @@ public class AdminSupervisorAgregar implements Serializable {
                 .findAllByStatus(Constantes.SUPERVISOR_ACTIVO);
         for (StatusSupervisor ss : ssList) {
             String[] datos = new String[2];
-            StringBuffer sbnombre = new StringBuffer();
-            StringBuffer sbgrupo = new StringBuffer();
+            StringBuilder sbnombre = new StringBuilder();
             User user = ss.getSupervisorId().getUserId();
             DatosPersona dp = datosPersonaFacade.findByCi(user.getCi());
             sbnombre.append(dp.getApellido()).append(", ").append(dp.getNombre());
@@ -269,14 +268,19 @@ public class AdminSupervisorAgregar implements Serializable {
                         break;
                     case Constantes.GRUPO_COLEGIO:
                         Colegio colegio = colegioFacade.findByRif(rifColegio);
+                        // no importa que el colegio ya tenga un supervisor
+                        // puede agregar otros
                         try {
-                            ss = statusSupervisorFacade.findByGrupo(colegio);
-                            if (null != ss) {
-                                // el colegio ya tiene un supervisor va a agregar otro
-                                showSupervisorFound(ss);
+                            Optional<List<StatusSupervisor>> optSsList = 
+                                    Optional.ofNullable(statusSupervisorFacade
+                                            .findColegioSupervisor(Constantes.SUPERVISOR_ACTIVO));
+                            if(optSsList.isPresent()){
+                                optSsList.get().forEach(stSup -> {
+                                    showSupervisorFound(stSup);
+                                });
                             }
                             createStatusSupervisor(superv, colegio, dp);
-                        } catch (SupervisorNotFoundException e) {
+                        } catch (Exception e) {
                             JsfUtils.messageWarning("No hay supervisor para el colegio");
                         }
                         break;
@@ -428,7 +432,6 @@ public class AdminSupervisorAgregar implements Serializable {
 
     private void showSupervisorFound(StatusSupervisor ss) {
         Supervisor sup = ss.getSupervisorId();
-        System.out.println("Encontró a " + sup.getUserId());
     }
 
     public void clearFields() {
@@ -439,7 +442,6 @@ public class AdminSupervisorAgregar implements Serializable {
 
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
-        System.out.println("oldValue: " + oldValue);
         Object newValue = event.getNewValue();
         System.out.println("newValue: " + newValue);
 

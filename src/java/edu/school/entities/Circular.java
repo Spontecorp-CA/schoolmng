@@ -54,7 +54,7 @@ public class Circular implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "fecha")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     @Basic(optional = false)
     @NotNull
@@ -81,8 +81,6 @@ public class Circular implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "codigo_circular")
     private String codigoCircular;
-    @Column(name = "status")
-    private int status;
     @Size(max = 255)
     @Column(name = "filepath")
     private String filepath;
@@ -176,14 +174,6 @@ public class Circular implements Serializable {
 
     public void setCodigoCircular(String codigoCircular) {
         this.codigoCircular = codigoCircular;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 
     public String getFilepath() {
