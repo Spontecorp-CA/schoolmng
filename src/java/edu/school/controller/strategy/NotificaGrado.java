@@ -20,32 +20,18 @@ import javax.ejb.Stateless;
 @Stateless
 public class NotificaGrado implements NotificacionService {
 
-    private User user;
-    private List<Supervisor> supervisores;
-    private Circular circular;
-    @EJB
-    private CircularStatusFacadeLocal circularStatusFacade;
-
     public NotificaGrado() {
     }
 
-    public NotificaGrado(User user, List<Supervisor> supervisores,
-            Circular circular) {
-        this.supervisores = supervisores;
-        this.user = user;
-    }
-
     @Override
-    public void notifica() {
+    public int notifica(User user, List<Supervisor> supervisores,
+            Circular circular) {
         supervisores.forEach(sup -> {
             System.out.println(sup.getUserId().getUsr() + " es supervisor de "
                     + user.getUsr() + " con la circular: " + circular.getCodigoCircular());
         });
 
-        CircularStatus circularStatus = circularStatusFacade.findByCircular(circular);
-        circularStatus.setStatus(Constantes.CIRCULAR_PENDIENTE_APROBAR_GRADO);
-        circularStatus.setFecha(new Date());
-        circularStatusFacade.edit(circularStatus);
+        return Constantes.CIRCULAR_PENDIENTE_APROBAR_ETAPA;
     }
 
 }

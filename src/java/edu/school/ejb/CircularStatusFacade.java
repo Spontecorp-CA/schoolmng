@@ -30,7 +30,10 @@ public class CircularStatusFacade extends AbstractFacade<CircularStatus>
         CircularStatus circularStatus = null;
         try {
             String query = "FROM CircularStatus cs WHERE cs.circularId = :circular";
-            TypedQuery<CircularStatus> q = em.createQuery(query, CircularStatus.class);
+            
+            System.out.println("CircularStatusFacade: el em es " + getEntityManager().getClass().getName());
+            
+            TypedQuery<CircularStatus> q = getEntityManager().createQuery(query, CircularStatus.class);
             q.setParameter("circular", circular);
             circularStatus = q.getSingleResult();
         } catch (Exception e) {

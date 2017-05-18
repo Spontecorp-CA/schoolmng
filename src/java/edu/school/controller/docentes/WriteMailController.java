@@ -142,7 +142,7 @@ public class WriteMailController implements Serializable {
         fileLabel = "  No ha seleccionado archivo";
         grupos = makeGrupos();
         secciones = new ArrayList<>();
-        
+
         checkSavedCircular();
     }
 
@@ -522,35 +522,42 @@ public class WriteMailController implements Serializable {
     }
 
     public void saveCircular() {
-        String subgrupo = "";
-        switch (grupoAEnviar) {
-            case Constantes.GRUPO_COLEGIO:
-                subgrupo = Constantes.GRUPO_COLEGIO;
-                break;
-            case Constantes.GRUPO_ETAPA:
-                subgrupo = etapa.getNombre();
-                break;
-            case Constantes.GRUPO_GRADO:
-                subgrupo = grado.getNombre();
-                break;
-            case Constantes.GRUPO_SECCION:
-                subgrupo = seccion.getCursoId().getNombre() + "-" + seccion.getSeccion();
-                break;
-        }
+        if (null != grupoAEnviar) {
+            String subgrupo = "";
+            switch (grupoAEnviar) {
+                case Constantes.GRUPO_COLEGIO:
+                    subgrupo = Constantes.GRUPO_COLEGIO;
+                    break;
+                case Constantes.GRUPO_ETAPA:
+                    subgrupo = etapa.getNombre();
+                    break;
+                case Constantes.GRUPO_GRADO:
+                    subgrupo = grado.getNombre();
+                    break;
+                case Constantes.GRUPO_SECCION:
+                    subgrupo = seccion.getCursoId().getNombre() + "-" + seccion.getSeccion();
+                    break;
+            }
 
-        circular = circularController.makeCircular(grupoAEnviar, subgrupo, para,
-                subject, message, file, directory, user);
-        JsfUtils.messageSuccess("Guardada la circular "
-                + circular.getCodigoCircular() + " con éxito");
+            circular = circularController.makeCircular(grupoAEnviar, subgrupo, para,
+                    subject, message, file, directory, user);
+            JsfUtils.messageSuccess("Guardada la circular "
+                    + circular.getCodigoCircular() + " con éxito");
+        } else {
+            JsfUtils.messageWarning("Debe seleccionar a que grupo enviará la circular");
+        }
     }
 
     public void checkSupervisorChain() {
-        circularController.setSeccion(seccion);
-        
-        saveCircular();
-        List<Supervisor> supervisores = circularController.findAllInmediateSupervisor(user);
-        circularController.checkEnvio(grupoAEnviar, user, supervisores, circular);
-        
+        if (null != grupoAEnviar) {
+            circularController.setSeccion(seccion);
+
+            saveCircular();
+            List<Supervisor> supervisores = circularController.findAllInmediateSupervisor(user);
+            circularController.checkEnvio(grupoAEnviar, user, supervisores, circular);
+        } else {
+            JsfUtils.messageWarning("Debe seleccionar a que grupo enviará la circular");
+        }
     }
 
     private void defineTipoAndCargoSupervisor(Optional<StatusSupervisor> optStatSup) {
@@ -570,30 +577,30 @@ public class WriteMailController implements Serializable {
             }
         }
     }
-    
-    private void checkSavedCircular(){
+
+    private void checkSavedCircular() {
         Optional<CircularStatus> optCircularStatus;
         optCircularStatus = Optional.ofNullable(circularStatusFacade
                 .findByUserAndStatus(user, Constantes.CIRCULAR_NO_ENVIADA));
-        
-        if(optCircularStatus.isPresent()){
+
+        if (optCircularStatus.isPresent()) {
             circular = optCircularStatus.get().getCircularId();
             codigoCircular = circular.getCodigoCircular();
-            
+
             grupoAEnviar = circular.getGrupoDestino();
-            
-            switch(grupoAEnviar){
+
+            switch (grupoAEnviar) {
                 case Constantes.GRUPO_ETAPA:
                     etapa = etapaFacade.findByNombre(circular.getGrupoDestino());
                     break;
-              case Constantes.GRUPO_GRADO:
+                case Constantes.GRUPO_GRADO:
                     grado = cursoFacade.findByName(circular.getGrupoDestino());
                     break;
             }
 
-            para = circular.getDestinatario() == null?"":circular.getDestinatario();
+            para = circular.getDestinatario() == null ? "" : circular.getDestinatario();
             subject = circular.getAsunto() == null ? "" : circular.getAsunto();
             message = circular.getMessage() == null ? "" : circular.getMessage();
-        }        
+        }
     }
 }

@@ -3,7 +3,6 @@ package edu.school.controller.ejb;
 import edu.school.controller.strategy.NotificaColegio;
 import edu.school.controller.strategy.NotificaEtapa;
 import edu.school.controller.strategy.NotificaGrado;
-import edu.school.controller.strategy.NotificaSeccion;
 import edu.school.ejb.StatusSupervisorFacadeLocal;
 import edu.school.ejb.SupervisorFacadeLocal;
 import edu.school.entities.Supervisor;
@@ -53,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.servlet.http.Part;
 
@@ -94,22 +94,21 @@ public class CircularControler implements CircularControllerLocal {
     @Inject
     private Mail mail;
 
-//    @Inject
-//    @Notificacion(COLEGIO)
-//    private NotificacionService notificacionColegio;
-//    @Inject
-//    @Notificacion(ETAPA)
-//    private NotificacionService notificacionEtapa;
-//    @Inject
-//    @Notificacion(GRADO)
-//    private NotificacionService notificacionGrado;
-//    @Inject
-//    @Notificacion(SECCION)
-//    private NotificacionService notificacionSeccion;
+    private NotificacionService notificacionSeccion;
     private Seccion seccion;
+    private final Map<String, NotificacionService> notificacionMap;
 
     private static final LogFiler LOGGER = LogFiler.getInstance();
 
+    public CircularControler(){
+        this.notificacionMap = new HashMap<>();
+    }
+    
+    @PostConstruct
+    public void init(){
+        makeNotificacionMap();
+    }
+    
     public Seccion getSeccion() {
         return seccion;
     }
@@ -122,20 +121,22 @@ public class CircularControler implements CircularControllerLocal {
     @Override
     public void checkEnvio(final String grupoAEnviar, final User user,
             final List<Supervisor> supervisorList, Circular circular) {
-        Map<String, NotificacionService> notificacionMap = new HashMap<>();
-
-        notificacionMap.put(Constantes.GRUPO_COLEGIO, new NotificaColegio(user,
-                supervisorList, circular));
-        notificacionMap.put(Constantes.GRUPO_ETAPA, new NotificaColegio(user,
-                supervisorList, circular));
-        notificacionMap.put(Constantes.GRUPO_GRADO, new NotificaEtapa(user,
-                supervisorList, circular));
-        notificacionMap.put(Constantes.GRUPO_SECCION, new NotificaGrado(user,
-                supervisorList, circular));
 
         NotificacionService notificacion = notificacionMap.get(grupoAEnviar);
-        notificacion.notifica();
-
+        
+        int status = notificacion.notifica(user, supervisorList, circular);
+        
+        CircularStatus cs = circularStatusFacade.findByCircular(circular);
+        cs.setStatus(status);
+        cs.setFecha(new Date());
+        circularStatusFacade.edit(cs);
+    }
+    
+    private void makeNotificacionMap(){
+        notificacionMap.put(Constantes.GRUPO_COLEGIO, new NotificaColegio());
+        notificacionMap.put(Constantes.GRUPO_ETAPA, new NotificaColegio());
+        notificacionMap.put(Constantes.GRUPO_GRADO, new NotificaEtapa());
+        notificacionMap.put(Constantes.GRUPO_SECCION, new NotificaGrado());
     }
 
     @Override
@@ -311,7 +312,7 @@ public class CircularControler implements CircularControllerLocal {
 
         circular = circularFacade.findCircularByCodigoCircular(codigo);
 
-        System.out.println("Circular es: " + circular.getId());
+        System.out.println("CircularController.makeCircular: Circular es: " + circular.getId());
 
         CircularStatus status = new CircularStatus();
         status.setCircularId(circular);
@@ -579,16 +580,11 @@ public class CircularControler implements CircularControllerLocal {
                     StatusSupervisor sttSprv = statusSupervisorFacade.findBySupervisor(supervisor);
                     Etapa etapa = sttSprv.getCursoId().getEtapaId();
 
-                    System.out.println("la etapa es " + etapa.getNombre());
-
                     inmediate = statusSupervisorFacade.findByGrupo(etapa).getSupervisorId();
                 }
             } else {
                 // busca el supervisor del grado y se lo asigna
                 Curso curso = findCursoBySeccion(seccion);
-
-                System.out.println("el grado de la sección " + seccion.getCodigo()
-                        + " es " + (findCursoBySeccion(seccion)).getNombre());
 
                 inmediate = statusSupervisorFacade.findByGrupo(curso).getSupervisorId();
             }
@@ -618,9 +614,7 @@ public class CircularControler implements CircularControllerLocal {
 
                     if (optSuperEtapa.isPresent()) {
                         inmediates.add(optSuperEtapa.get());
-                    } else {
-                        System.out.println("no trajo nada");
-                    }
+                    } 
                 } else {
                     inmediates = getAllColegioSupervisores();
                 }
@@ -628,9 +622,6 @@ public class CircularControler implements CircularControllerLocal {
                 inmediates = new ArrayList<>();
                 // busca el supervisor del grado y se lo asigna
                 Curso curso = findCursoBySeccion(seccion);
-
-                System.out.println("el grado de la sección " + seccion.getCodigo()
-                        + " es " + (findCursoBySeccion(seccion)).getNombre());
 
                 Supervisor supervisor = statusSupervisorFacade
                         .findByGrupo(curso).getSupervisorId();
