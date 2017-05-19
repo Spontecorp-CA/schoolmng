@@ -25,9 +25,6 @@ public class CircularFacade extends AbstractFacade<Circular> implements Circular
 
     @Override
     public Circular findCircularByCodigoCircular(String codigo){
-        
-        System.out.println("llegó a buscar la circular");
-        
         Circular circular = null;
         try {
             String query = "FROM Circular c WHERE c.codigoCircular = :codigo";

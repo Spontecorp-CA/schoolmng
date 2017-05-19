@@ -535,7 +535,7 @@ public class WriteMailController implements Serializable {
                     subgrupo = grado.getNombre();
                     break;
                 case Constantes.GRUPO_SECCION:
-                    subgrupo = seccion.getCursoId().getNombre() + "-" + seccion.getSeccion();
+                    subgrupo = seccion.getCodigo();//getCursoId().getNombre() + "-" + seccion.getSeccion();
                     break;
             }
 
@@ -554,6 +554,10 @@ public class WriteMailController implements Serializable {
 
             saveCircular();
             List<Supervisor> supervisores = circularController.findAllInmediateSupervisor(user);
+            
+            System.out.println("WriteMailController.checkSupervisorChain: " 
+                    + " el supervisor es: " + supervisores.get(0).getUserId().getUsr());
+            
             circularController.checkEnvio(grupoAEnviar, user, supervisores, circular);
         } else {
             JsfUtils.messageWarning("Debe seleccionar a que grupo enviará la circular");

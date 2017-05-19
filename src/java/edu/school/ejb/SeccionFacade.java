@@ -86,7 +86,7 @@ public class SeccionFacade extends AbstractFacade<Seccion> implements SeccionFac
             q.setParameter("codigo", codigo);
             curso = (Seccion) q.getSingleResult();
         } catch (NoResultException e) {
-            LOGGER.logger.log(Level.WARNING, "No se encontró una seccion con código {0}",
+            LogFiler.logger.log(Level.WARNING, "No se encontró una seccion con código {0}",
                             codigo);
         }
         return curso;

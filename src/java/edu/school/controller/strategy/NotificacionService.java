@@ -1,9 +1,5 @@
 package edu.school.controller.strategy;
 
-import edu.school.entities.Circular;
-import edu.school.entities.Supervisor;
-import edu.school.entities.User;
-import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -17,5 +13,5 @@ import javax.ejb.Local;
 @Local
 public interface NotificacionService {
     
-    public int notifica(User user, List<Supervisor> supervisores, Circular circulars);
+    public int notifica();
 }

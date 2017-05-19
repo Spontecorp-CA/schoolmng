@@ -2,7 +2,6 @@ package edu.school.ejb;
 
 import edu.school.entities.StatusSupervisor;
 import edu.school.entities.Supervisor;
-import edu.school.excepciones.SupervisorNotFoundException;
 import java.util.Collection;
 import java.util.List;
 import javax.ejb.Local;
@@ -28,7 +27,7 @@ public interface StatusSupervisorFacadeLocal {
 
     int count();
 
-    StatusSupervisor findByGrupo(Object obj) throws SupervisorNotFoundException;
+    StatusSupervisor findByGrupo(Object obj);
 
     List<StatusSupervisor> findAllByStatus(int status);
 
