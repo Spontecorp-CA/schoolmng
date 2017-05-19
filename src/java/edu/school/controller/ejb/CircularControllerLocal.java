@@ -23,7 +23,8 @@ public interface CircularControllerLocal {
      */
     boolean isSupervisor(final User user);
     
-    void checkEnvio(final String grupoAEnviar, final User user);
+    void checkEnvio(final String grupoAEnviar, final User user, 
+            final List<Supervisor> supervisorList, final Circular circular);
 
     boolean isColegioSupervisor(final User user);
     
@@ -52,5 +53,9 @@ public interface CircularControllerLocal {
     Optional<StatusSupervisor> lookupCargoSupervisor(User user);
     
     Supervisor findInmmediateSupervisor(User user);
+    
+    List<Supervisor> findAllInmediateSupervisor(User user);
+    
+    void setSeccion(Seccion seccion);
     
 }

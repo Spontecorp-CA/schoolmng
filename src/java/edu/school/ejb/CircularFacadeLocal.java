@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface CircularFacadeLocal {
     
-    Circular create(Circular circular);
+    void create(Circular circular);
     
     void batchCreate(Collection<Circular> collection);
 
@@ -19,6 +19,8 @@ public interface CircularFacadeLocal {
     void remove(Circular circular);
 
     Circular find(Object id);
+    
+    Circular findCircularByCodigoCircular(String codigo);
 
     List<Circular> findAll();
 

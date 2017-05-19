@@ -77,7 +77,7 @@ public class RegisterController implements Serializable{
             return;
         }
         user = userFacade.findByCi(ciNumber);
-        datosPersona = datosPersonaFacade.find(ciNumber);
+        datosPersona = datosPersonaFacade.findByCi(ciNumber);
         
         if(user == null || datosPersona == null){
             FacesContext.getCurrentInstance()

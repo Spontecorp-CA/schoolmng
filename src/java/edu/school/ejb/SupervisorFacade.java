@@ -44,7 +44,7 @@ public class SupervisorFacade extends AbstractFacade<Supervisor>
             supervisor = q.getSingleResult();
         } catch (NoResultException e) {
             Logger.getLogger(SupervisorFacade.class.getName())
-                    .log(Level.WARNING, "Ha ocurrido un error {0}", e);
+                    .log(Level.WARNING, "El usuario {0} no es supervisor", user.getUsr());
         }
         return supervisor;
     }
@@ -59,7 +59,7 @@ public class SupervisorFacade extends AbstractFacade<Supervisor>
             supervisores = q.getResultList();
         } catch (Exception e) {
             Logger.getLogger(SupervisorFacade.class.getName())
-                    .log(Level.SEVERE, "Ha ocurrido un error {0}", e);
+                    .log(Level.SEVERE, "El usuario con C.I {0} no es supervisor", ci);
         }
         return supervisores;
     }
@@ -77,7 +77,7 @@ public class SupervisorFacade extends AbstractFacade<Supervisor>
             supervisores = q.getResultList();
         } catch (NoResultException e) {
             Logger.getLogger(SupervisorFacade.class.getName())
-                    .log(Level.WARNING, "Ha ocurrido un error {0}", e);
+                    .log(Level.WARNING, "El usuario {0} no es supervisor", user.getUsr());
         }
         return supervisores;
     }

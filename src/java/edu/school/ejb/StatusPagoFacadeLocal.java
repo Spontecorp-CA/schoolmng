@@ -9,7 +9,7 @@ import javax.ejb.Local;
 @Local
 public interface StatusPagoFacadeLocal {
 
-    StatusPago create(StatusPago statusPago);
+    void create(StatusPago statusPago);
     
     void batchCreate(Collection<StatusPago> collection);
 

@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface PagoHasStatusFacadeLocal {
 
-    PagoHasStatus create(PagoHasStatus pagoHasStatus);
+    void create(PagoHasStatus pagoHasStatus);
 
     void batchCreate(Collection<PagoHasStatus> lista);
     

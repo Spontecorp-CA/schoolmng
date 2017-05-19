@@ -1,26 +1,23 @@
 package edu.school.controller.strategy;
 
-import edu.school.entities.User;
+import edu.school.utilities.Constantes;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author jgcastillo
  */
+@Stateless
 @Notificacion(Notificaciones.COLEGIO)
-public class NotificaColegio implements NotificacionService{
+public class NotificaColegio implements NotificacionService {
 
-    private User user;
-    
-    public NotificaColegio(){}
-    
-    public NotificaColegio(User user){
-        this.user = user;
+    public NotificaColegio() {
     }
-    
+
     @Override
-    public void notifica() {
-        System.out.println("No necesita permiso, envía de una vez, "
-                + "es supervisor de ...");
+    public int notifica() {
+        
+        return Constantes.CIRCULAR_PENDIENTE_APROBAR_COLEGIO;
     }
 
 }

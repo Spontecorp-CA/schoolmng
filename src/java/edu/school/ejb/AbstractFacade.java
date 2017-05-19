@@ -1,5 +1,6 @@
 package edu.school.ejb;
 
+import edu.school.utilities.JsfUtils;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -26,11 +27,10 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
 
-    public T create(T entity) {
+    public void create(T entity) {
         if(!constraintValidationsDetected(entity)){
             getEntityManager().persist(entity);
         }
-        return entity;
     }
     
     public void batchCreate(Collection<T> col) {

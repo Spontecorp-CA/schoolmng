@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface PlantillaCircularFacadeLocal {
 
-    PlantillaCircular create(PlantillaCircular plantillaCircular);
+    void create(PlantillaCircular plantillaCircular);
 
     void batchCreate(Collection<PlantillaCircular> collection);
 

@@ -1,27 +1,24 @@
 package edu.school.controller.strategy;
 
-import edu.school.entities.User;
+import edu.school.utilities.Constantes;
+import javax.ejb.Stateless;
 
 /**
+ * Notificacion de Grado
  *
  * @author jgcastillo
  */
 @Notificacion(Notificaciones.GRADO)
-public class NotificaGrado implements NotificacionService{
-
-    private User user;
+@Stateless
+public class NotificaGrado implements NotificacionService {
 
     public NotificaGrado() {
     }
 
-    public NotificaGrado(User user) {
-        this.user = user;
-    }
-    
     @Override
-    public void notifica() {
-        System.out.println("Envía al supervidor de etapa para su revisión y reenvío al "
-                + "supervisor e colegio, es supervisor del grado ");
+    public int notifica() {
+        
+        return Constantes.CIRCULAR_PENDIENTE_APROBAR_GRADO;
     }
-    
+
 }

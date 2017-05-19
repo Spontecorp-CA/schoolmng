@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface EtapaFacadeLocal {
 
-    Etapa create(Etapa nivel);
+    void create(Etapa nivel);
     
     void batchCreate(Collection<Etapa> collection);
 

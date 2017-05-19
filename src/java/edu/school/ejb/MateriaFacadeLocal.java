@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface MateriaFacadeLocal {
 
-    Materia create(Materia materia);
+    void create(Materia materia);
     
     void batchCreate(Collection<Materia> collection);
 

@@ -1,27 +1,23 @@
 package edu.school.controller.strategy;
 
-import edu.school.entities.User;
+import edu.school.utilities.Constantes;
+import javax.ejb.Stateless;
 
 /**
- *
+ * Notificacion de Etapa
  * @author jgcastillo
  */
 @Notificacion(Notificaciones.ETAPA)
+@Stateless
 public class NotificaEtapa implements NotificacionService{
-
-    private User user;
 
     public NotificaEtapa() {
     }
-
-    public NotificaEtapa(User user) {
-        this.user = user;
-    }
     
     @Override
-    public void notifica() {
-        System.out.println("Envía al supervisor de colegio para "
-                + "su posterior envío, es supervisor de la etapa ...");
+    public int notifica() {
+        
+        return Constantes.CIRCULAR_PENDIENTE_APROBAR_ETAPA;
     }
     
 }

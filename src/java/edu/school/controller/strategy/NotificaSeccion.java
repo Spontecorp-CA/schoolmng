@@ -1,31 +1,23 @@
 package edu.school.controller.strategy;
 
-import edu.school.ejb.SupervisorFacadeLocal;
-import edu.school.entities.Supervisor;
-import edu.school.entities.User;
-import java.util.Optional;
-import javax.ejb.EJB;
+import edu.school.utilities.Constantes;
+import javax.ejb.Stateless;
 
 /**
- *
+ * Notificacion de Sección
  * @author jgcastillo
  */
 @Notificacion(Notificaciones.SECCION)
+@Stateless
 public class NotificaSeccion implements NotificacionService{
-
-    private User user;
 
     public NotificaSeccion() {
     }
-
-    public NotificaSeccion(User user) {
-        this.user = user;
-    }
     
     @Override
-    public void notifica() {
-        System.out.println("Si no es supervisor, identifica al supervisor de "
-                                    + "grado para su revisión y posterior envío");
+    public int notifica() {
+        
+        return Constantes.CIRCULAR_PENDIENTE_APROBAR_GRADO;
     }
     
 }

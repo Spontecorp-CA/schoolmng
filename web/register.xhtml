@@ -76,7 +76,8 @@
                                         placeholder="Repita la clave"
                                         required="true"
                                         requiredMessage="Debe repetir la clave"
-                                        styleClass="form-control"/>
+                                        styleClass="form-control"
+                                        validatorMessage="Las claves ingresadas no coinciden"/>
                         </div>
                         <div>
                             <p:commandButton value="Aceptar"
@@ -89,7 +90,8 @@
 
                         <div class="separator">
                             <p:messages id="messages" closable="true" 
-                                        autoUpdate="true"/>
+                                        autoUpdate="true"
+                                        showDetail="true"/>
                             <p class="change_link">¿Ya está registrado?
                                 <p:commandLink value="Ingresar"
                                                action="index?faces-redirect=true;"

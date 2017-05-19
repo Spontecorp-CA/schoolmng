@@ -30,11 +30,13 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import edu.school.ejb.SeccionHasDocenteFacadeLocal;
 import edu.school.ejb.EtapaFacadeLocal;
+import edu.school.ejb.PeriodoFacadeLocal;
 import edu.school.ejb.SeccionHasAlumnoFacadeLocal;
 import edu.school.ejb.SeccionFacadeLocal;
 import edu.school.entities.Colegio;
 import edu.school.entities.Curso;
 import edu.school.entities.Etapa;
+import edu.school.entities.Periodo;
 import edu.school.entities.Seccion;
 import edu.school.entities.SeccionHasAlumno;
 import edu.school.entities.SeccionHasDocente;
@@ -63,6 +65,8 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     private AlumnoFacadeLocal alumnoFacade;
     @EJB
     private AlumnoHasRepresentanteFacadeLocal ahrFacade;
+    @EJB
+    private PeriodoFacadeLocal periodoFacade;
     @EJB
     private EtapaFacadeLocal etapaFacade;
     @EJB
@@ -93,6 +97,7 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         defineRoles();
         loadPersonal();
         relacionAlumnoRepresentante();
+        createPeriodo();
         createEtapas();
         createCursos();
         createSecciones();
@@ -442,6 +447,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         System.out.println("Se relacionan " + ahrList.size() + " alumnos a sus representantes");
     }
 
+    private void createPeriodo(){
+        Periodo periodo = new Periodo();
+        periodo.setNombre("2016-2017");
+        periodo.setStatus(Constantes.PERIODO_ACTIVO);
+        
+        periodoFacade.create(periodo);
+    }
+    
     private void createEtapas() {
         
         Colegio colegio = colegioFacade.findAll().get(0);
@@ -576,10 +589,13 @@ public class DataPruebaController implements DataPruebaControllerLocal {
     private void createSecciones() {
         List<Seccion> secciones = new ArrayList<>();
         Seccion seccion = new Seccion();
+        
+        Periodo periodo = periodoFacade.findByStatus(Constantes.PERIODO_ACTIVO);
 
         Curso curso = cursoFacade.findByName("Maternal");
         seccion.setCodigo("0MA");
         seccion.setCursoId(curso);
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
@@ -587,12 +603,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("01A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("01B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("Prescolar 2");
@@ -600,12 +618,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("02A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("02B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("Prescolar 3");
@@ -613,6 +633,7 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("03A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("1er grado");
@@ -620,12 +641,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("11A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("11B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("2do grado");
@@ -633,12 +656,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("12A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("12B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("3er grado");
@@ -646,12 +671,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("13A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("13B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("4to grado");
@@ -659,12 +686,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("24A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("24B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("5to grado");
@@ -672,12 +701,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("25A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("25B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("6to grado");
@@ -685,12 +716,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("26A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("26B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("7mo grado");
@@ -698,12 +731,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("37A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("37B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("8vo grado");
@@ -711,12 +746,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("38A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("38B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("9no grado");
@@ -724,12 +761,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("39A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("39B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("4to año");
@@ -737,12 +776,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("41A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("41B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         curso = cursoFacade.findByName("5to año");
@@ -750,12 +791,14 @@ public class DataPruebaController implements DataPruebaControllerLocal {
         seccion.setCodigo("42A");
         seccion.setCursoId(curso);
         seccion.setSeccion("A");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccion = new Seccion();
         seccion.setCodigo("42B");
         seccion.setCursoId(curso);
         seccion.setSeccion("B");
+        seccion.setPeriodoId(periodo);
         secciones.add(seccion);
 
         seccionFacade.batchCreate(secciones);

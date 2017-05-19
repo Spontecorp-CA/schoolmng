@@ -9,7 +9,7 @@ import javax.ejb.Local;
 @Local
 public interface StatusSupervisorFacadeLocal {
     
-    StatusSupervisor create(StatusSupervisor supervisor);
+    void create(StatusSupervisor supervisor);
 
     void batchCreate(Collection<StatusSupervisor> collection);
 
@@ -32,4 +32,6 @@ public interface StatusSupervisorFacadeLocal {
     List<StatusSupervisor> findAllByStatus(int status);
 
     StatusSupervisor findBySupervisor(Supervisor supervisor);
+
+    List<StatusSupervisor> findColegioSupervisor(final int status);
 }

@@ -8,7 +8,7 @@ import javax.ejb.Local;
 @Local
 public interface ComunicacionFacadeLocal {
 
-    Comunicacion create(Comunicacion comunicacion);
+    void create(Comunicacion comunicacion);
     
     void batchCreate(Collection<Comunicacion> collection);
 

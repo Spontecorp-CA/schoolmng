@@ -2,6 +2,8 @@ package edu.school.ejb;
 
 import edu.school.entities.User;
 import edu.school.utilities.Constantes;
+import edu.school.utilities.LogFiler;
+import java.util.logging.Level;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -49,6 +51,7 @@ public class UserFacade extends AbstractFacade<User> implements UserFacadeLocal 
             q.setParameter("ci", ci);
             user = (User) q.getSingleResult();
         } catch (NoResultException e) {
+            LogFiler.logger.log(Level.WARNING, "La CI: {0} no se encuentra registrada", ci);
         }
         return user;
     }

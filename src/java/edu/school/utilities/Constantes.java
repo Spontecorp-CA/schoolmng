@@ -59,11 +59,13 @@ public final class Constantes {
     
     public static final int CIRCULAR_ENVIADA = 0;
     public static final int CIRCULAR_NO_ENVIADA = 1;
+    public static final int CIRCULAR_NO_APROBADA = 2;
     public static final int CIRCULAR_PENDIENTE_APROBAR_GRADO = 2;
     public static final int CIRCULAR_PENDIENTE_APROBAR_ETAPA = 3;
-    public static final int CIRCULAR_APROBADA_GRADO = 4;
-    public static final int CIRCULAR_APROBADA_ETAPA = 5;
-    public static final int CIRCULAR_NO_APROBADA = 6;
+    public static final int CIRCULAR_PENDIENTE_APROBAR_COLEGIO = 4;
+    public static final int CIRCULAR_APROBADA_GRADO = 5;
+    public static final int CIRCULAR_APROBADA_ETAPA = 6;
+    public static final int CIRCULAR_APROBADA_COLEGIO = 7;
     
     private Constantes(){}
 }

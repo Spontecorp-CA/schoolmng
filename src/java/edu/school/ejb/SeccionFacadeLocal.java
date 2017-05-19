@@ -12,7 +12,7 @@ import javax.ejb.Local;
 @Local
 public interface SeccionFacadeLocal {
 
-    Seccion create(Seccion curso);
+    void create(Seccion curso);
     
     void batchCreate(Collection<Seccion> collection);
 
@@ -48,5 +48,7 @@ public interface SeccionFacadeLocal {
     List<Seccion> findAllOrderedByEtapa(final Etapa etapa);
 
     List<Seccion> findAllOrderedByGrado(final Curso curso, final Periodo periodo);
+
+    List<Seccion> findAllOrderedBySeccion(Periodo periodo);
 
 }

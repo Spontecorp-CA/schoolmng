@@ -57,6 +57,7 @@ public class SeccionHasDocenteFacade extends AbstractFacade<SeccionHasDocente>
     @Override
     public List<Seccion> findAllByDocente(Docente docente) {
         List<Seccion> lista = null;
+        
         try {
             String query = "FROM SeccionHasDocente chd WHERE chd.docenteId = :docente";
             Query q = getEntityManager().createQuery(query);
@@ -64,7 +65,9 @@ public class SeccionHasDocenteFacade extends AbstractFacade<SeccionHasDocente>
             List<SeccionHasDocente> chdList = q.getResultList();
             lista = new ArrayList<>();
             for(SeccionHasDocente chd : chdList){
-                lista.add(chd.getSeccionId());
+                if(chd.getSeccionId().getPeriodoId().getStatus() == Constantes.PERIODO_ACTIVO){
+                    lista.add(chd.getSeccionId());
+                }
             }
         } catch (NoResultException e) {
             LOGGER.logger.log(Level.WARNING, "No encontró secciones para el docente {0}",
